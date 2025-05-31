@@ -1,0 +1,6 @@
+.header-bg {
+    background-image: url('../storage/photos/backgroundheader.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 350px;
+} 
