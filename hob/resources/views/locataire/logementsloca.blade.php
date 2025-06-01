@@ -98,7 +98,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -115,12 +115,13 @@
                 icon.style.color = icon.getAttribute('data-favorited') === 'true' ? '#e74c3c' : '#ccc';
             });
 
+            // Add click event listeners
             favoriteIcons.forEach(function(icon) {
-                icon.addEventListener('click', function () {
+                icon.addEventListener('click', function() {
                     const listingId = this.getAttribute('data-id');
                     console.log('Clicked favorite icon for listing', listingId);
                     
-                    fetch(/locataire/favorite/${listingId}, {
+                    fetch(`/locataire/favorite/${listingId}`, {
                         method: 'POST',
                         headers: { 
                             'X-CSRF-TOKEN': csrfToken,
@@ -138,8 +139,8 @@
                     .then(data => {
                         console.log('Response from backend:', data);
                         if (data.success) {
-                            icon.setAttribute('data-favorited', data.is_favorited ? 'true' : 'false');
-                            icon.style.color = data.is_favorited ? '#e74c3c' : '#ccc';
+                            this.setAttribute('data-favorited', data.is_favorited ? 'true' : 'false');
+                            this.style.color = data.is_favorited ? '#e74c3c' : '#ccc';
                         }
                     })
                     .catch(error => {
@@ -150,7 +151,7 @@
             });
         });
     </script>
-@endsection
+@endpush
 
 <style>
     .container {

@@ -8,6 +8,125 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            background: #eaf1f7 !important;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar,
+        .navbar-custom,
+        .navbar-expand-lg {
+            box-shadow: none !important;
+        }
+        .main-header-bg {
+            background: url('/images/image.png') center/cover no-repeat;
+            min-height: 220px;
+            position: relative;
+        }
+        .navbar-custom {
+            background: transparent !important;
+            backdrop-filter: none;
+            border-radius: 0;
+            position: relative;
+            z-index: 2;
+        }
+        .navbar-brand img {
+            height: 150px;
+            background: none !important;
+            box-shadow: none !important;
+            transition: transform 0.3s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .navbar-brand img:hover {
+            transform: scale(1.10) rotate(-2deg);
+        }
+        .navbar-custom .nav-link, .navbar-custom .fa, .navbar-custom .fas, .navbar-custom .far, .navbar-custom .dropdown-toggle {
+            color: #244F76 !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.2s;
+        }
+        .navbar-custom .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2.5px;
+            background: #7C9FC0;
+            transition: width .3s cubic-bezier(.68,-0.55,.27,1.55);
+            position: absolute;
+            left: 0; bottom: 0;
+            border-radius: 2px;
+        }
+        .navbar-custom .nav-link:hover::after, .navbar-custom .nav-link.active::after {
+            width: 100%;
+        }
+        .navbar-custom .nav-link.active, .navbar-custom .nav-link:focus, .navbar-custom .nav-link:hover {
+            color: #7C9FC0 !important;
+        }
+        .header-welcome {
+            position: absolute;
+            left: 50%;
+            top: 60%;
+            transform: translate(-50%, -50%);
+            color: #244F76;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 8px #fff;
+            z-index: 2;
+            animation: fadeInUp 1.1s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translate(-50%, 30px); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+        .main-content {
+            flex: 1 0 auto;
+            padding-bottom: 40px;
+        }
+        .footer-custom {
+            background: #7C9FC0;
+            color: #fff;
+            padding: 30px 0 10px 0;
+            font-size: 1rem;
+            border-top: 1px solid #d1dbe6;
+        }
+        .footer-custom .footer-logo {
+            height: 150px;
+            margin-bottom: 10px;
+            transition: transform 0.3s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .footer-custom .footer-logo:hover {
+            transform: scale(1.10) rotate(-2deg);
+        }
+        .footer-custom a {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .footer-custom a:hover {
+            color: #244F76;
+        }
+        .footer-custom .footer-section {
+            margin-bottom: 15px;
+        }
+        .footer-custom .footer-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .footer-custom .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-custom .footer-links li {
+            margin-bottom: 4px;
+        }
+        .footer-custom .footer-bottom {
+            text-align: center;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            color: #fff;
+        }
         .dropdown-menu-messages {
             min-width: 320px;
             max-width: 350px;
@@ -180,129 +299,154 @@
         #chatBoxContainer .chat-footer button {
             font-size: 20px;
         }
+        /* Ensure dropdown icons and toggles are always #244F76 */
+        .navbar-custom .dropdown-toggle::after {
+            color: #244F76 !important;
+        }
+        .navbar-custom .dropdown-menu {
+            min-width: 320px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(36,79,118,0.08);
+            border: 1px solid #eaf1f7;
+        }
+        .navbar-custom .dropdown-menu .dropdown-header {
+            color: #244F76;
+        }
+        .navbar-custom .dropdown-item {
+            color: #244F76;
+        }
+        .navbar-custom .dropdown-item:hover, .navbar-custom .dropdown-item:focus {
+            background: #eaf1f7;
+            color: #244F76;
+        }
+        /* Icon animations */
+        .navbar-custom .fa-cog:hover {
+            animation: spinCog 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        @keyframes spinCog {
+            0% { transform: rotate(0deg); }
+            60% { transform: rotate(180deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .navbar-custom .fa-bell[data-has-unread="true"] {
+            animation: bellPulse 1.2s infinite alternate;
+        }
+        @keyframes bellPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.15) rotate(-8deg); }
+        }
     </style>
     @stack('styles')
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center">
-                <img src="/images/findStay-removebg-preview.png" alt="Findstay Logo" style="height:32px; margin-right:8px;">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        @if(auth()->user()->role_uti === 'proprietaire')
-                            <a class="nav-link" href="{{ route('proprietaire.accueilproprietaire') }}">Accueil</a>
-                        @else
-                            <a class="nav-link" href="{{ route('locataire.accueillocataire') }}">Accueil</a>
-                        @endif
-                    </li>
-                    <li class="nav-item">
-                        @if(auth()->user()->role_uti === 'proprietaire')
-                            <a class="nav-link" href="{{ route('proprietaire.logements') }}">Nos logements</a>
-                        @else
-                            <a class="nav-link" href="{{ route('logementsloca') }}">Nos logements</a>
-                        @endif
-                    </li>
-                    <li class="nav-item">
-                        <span class="nav-link disabled">Mes réservations</span>
-                    </li>
-                    <li class="nav-item">
-                        @if(auth()->user()->role_uti === 'proprietaire')
-                            <a class="nav-link" href="{{ route('proprietaire.annoncesproprietaire.index') }}">Mes annonces</a>
-                        @else
-                            <a class="nav-link" href="{{ route('locataire.annonceslocataire.index') }}">Mes annonces</a>
-                        @endif
-                    </li>
-                    @if(auth()->user()->role_uti === 'locataire')
+    <div class="main-header-bg">
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="/images/findStay-removebg-preview.png" alt="Findstay Logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.accueilproprietaire') : route('locataire.accueillocataire') }}">Accueil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.logements') : route('logementsloca') }}">Nos logements</a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link disabled">Mes réservations</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.annoncesproprietaire.index') : route('locataire.annonceslocataire.index') }}">Mes annonces</a>
+                        </li>
+                        @if(auth()->user()->role_uti === 'locataire')
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('locataire.favorites') }}">Mes favoris</a>
                         </li>
-                    @endif
-                </ul>
-                <div class="d-flex align-items-center gap-3 ms-auto">
-                    <!-- Chat Icon -->
-                    <div class="dropdown">
-                        <a href="#" id="chatDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative">
-                            <i class="fas fa-comments fa-lg"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ auth()->user()->receivedMessages()->where('is_read', false)->count() }}
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-messages p-3" aria-labelledby="chatDropdown">
-                            <h6 class="dropdown-header">Conversations</h6>
-                            <div style="max-height: 300px; overflow-y: auto;">
-                                @foreach (Conversation::where("expediteur_id", auth()->id())->orWhere("destinataire_id", auth()->id())->with(["expediteur", "destinataire"])->latest("date_debut_conv")->get() as $conv)
-                                    @php
-                                        $otherUser = ($conv->expediteur_id === auth()->id()) ? $conv->destinataire : $conv->expediteur;
-                                    @endphp
-                                    <li class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-2 flex-grow-1">
-                                            <a class="dropdown-item d-flex align-items-center gap-2 flex-grow-1 open-conversation-link" href="#" data-conversation-id="{{ $conv->id }}">
-                                                <img src="{{ $otherUser->photodeprofil_uti ?? asset('images/default-avatar.png') }}" alt="{{ $otherUser->prenom }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                                                <span>{{ $otherUser->prenom }} {{ $otherUser->nom_uti }}</span>
-                                            </a>
-                                        </div>
-                                        <button type="button" class="btn btn-link text-danger p-0 ms-2 delete-conversation-btn" data-conversation-id="{{ $conv->id }}" title="Supprimer">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </li>
-                                @endforeach
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ route('conversations.index') }}" class="dropdown-item text-center">Voir tous les messages</a>
-                        </ul>
-                    </div>
-                    <!-- Notifications Icon -->
-                    <div class="dropdown">
-                        <a href="#" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative">
-                            <i class="fas fa-bell fa-lg"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ auth()->user()->notifications()->whereNull('read_at')->count() }}
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-notifications p-3" aria-labelledby="notifDropdown">
-                            <h6 class="dropdown-header">Notifications</h6>
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <a href="{{ route('notifications.index') }}" class="dropdown-item text-center p-0" style="flex:1;">Voir toutes les notifications</a>
-                                <button id="deleteAllNotificationsBtn" class="btn btn-link text-danger p-0 ms-2" style="white-space:nowrap;">Supprimer toutes</button>
-                            </div>
-                            <div style="max-height: 300px; overflow-y: auto;" id="notifListContainer">
-                                @forelse(auth()->user()->notifications()->whereNull('read_at')->get() as $notification)
-                                    <div class="notif-item">
-                                        <img src="{{ $notification->data['avatar'] ?? asset('images/default-avatar.png') }}" class="notif-avatar" alt="avatar" style="background: #fff;">
-                                        <div class="notif-content">
-                                            <div class="notif-name">
-                                                {{ $notification->data['name'] ?? 'Utilisateur' }}
-                                            </div>
-                                            <div class="notif-message">
-                                                @if(isset($notification->data['type']) && $notification->data['type'] === 'reservation')
-                                                    demande de reservation
-                                                @elseif(isset($notification->data['type']) && $notification->data['type'] === 'comment')
-                                                    {{ $notification->data['name'] ?? 'Utilisateur' }} a commenté votre poste
-                                                @elseif(isset($notification->data['type']) && $notification->data['type'] === 'reservation_status')
-                                                    {{ $notification->data['message'] ?? '' }}
-                                                @else
-                                                    {{ $notification->data['message'] ?? $notification->data['body'] ?? '' }}
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                @empty
-                                    <span class="dropdown-item text-muted">Aucune notification</span>
-                                @endforelse
-                            </div>
-                        </ul>
-                    </div>
-                    <!-- Settings Icon and Profile Picture Grouped -->
-                    <div class="d-flex align-items-center gap-2">
-                        <img src="{{ auth()->user()->photodeprofil_uti ? asset('storage/' . auth()->user()->photodeprofil_uti) : asset('images/default-avatar.png') }}" class="rounded-circle" width="40" height="40" alt="profile">
+                        @endif
+                    </ul>
+                    <div class="d-flex align-items-center gap-3 ms-auto">
+                        <!-- Chat Icon -->
                         <div class="dropdown">
-                            <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0"><i class="fas fa-cog fa-lg"></i></a>
+                            <a href="#" id="chatDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative dropdown-toggle">
+                                <i class="fas fa-comments fa-lg"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ auth()->user()->receivedMessages()->where('is_read', false)->count() }}
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-messages p-3" aria-labelledby="chatDropdown">
+                                <h6 class="dropdown-header">Conversations</h6>
+                                <div style="max-height: 300px; overflow-y: auto;">
+                                    @foreach (App\Models\Conversation::where('expediteur_id', auth()->id())->orWhere('destinataire_id', auth()->id())->with(['expediteur', 'destinataire'])->latest('date_debut_conv')->get() as $conv)
+                                        @php
+                                            $otherUser = ($conv->expediteur_id === auth()->id()) ? $conv->destinataire : $conv->expediteur;
+                                        @endphp
+                                        <li class="d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2 flex-grow-1">
+                                                <a class="dropdown-item d-flex align-items-center gap-2 flex-grow-1 open-conversation-link" href="#" data-conversation-id="{{ $conv->id }}">
+                                                    <img src="{{ $otherUser->photodeprofil_uti ?? asset('images/default-avatar.png') }}" alt="{{ $otherUser->prenom }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    <span>{{ $otherUser->prenom }} {{ $otherUser->nom_uti }}</span>
+                                                </a>
+                                            </div>
+                                            <button type="button" class="btn btn-link text-danger p-0 ms-2 delete-conversation-btn" data-conversation-id="{{ $conv->id }}" title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </li>
+                                    @endforeach
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a href="{{ route('conversations.index') }}" class="dropdown-item text-center">Voir tous les messages</a>
+                            </ul>
+                        </div>
+                        <!-- Notification Icon -->
+                        <div class="dropdown">
+                            <a href="#" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative dropdown-toggle">
+                                <i class="fas fa-bell fa-lg"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ auth()->user()->notifications()->whereNull('read_at')->count() }}
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-notifications p-3" aria-labelledby="notifDropdown">
+                                <h6 class="dropdown-header">Notifications</h6>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <a href="{{ route('notifications.index') }}" class="dropdown-item text-center p-0" style="flex:1;">Voir toutes les notifications</a>
+                                    <button id="deleteAllNotificationsBtn" class="btn btn-link text-danger p-0 ms-2" style="white-space:nowrap;">Supprimer toutes</button>
+                                </div>
+                                <div style="max-height: 300px; overflow-y: auto;" id="notifListContainer">
+                                    @forelse(auth()->user()->notifications()->whereNull('read_at')->get() as $notification)
+                                        <div class="notif-item">
+                                            <img src="{{ $notification->data['avatar'] ?? asset('images/default-avatar.png') }}" class="notif-avatar" alt="avatar" style="background: #fff;">
+                                            <div class="notif-content">
+                                                <div class="notif-name">
+                                                    {{ $notification->data['name'] ?? 'Utilisateur' }}
+                                                </div>
+                                                <div class="notif-message">
+                                                    @if(isset($notification->data['type']) && $notification->data['type'] === 'reservation')
+                                                        demande de reservation
+                                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'comment')
+                                                        {{ $notification->data['name'] ?? 'Utilisateur' }} a commenté votre poste
+                                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'reservation_status')
+                                                        {{ $notification->data['message'] ?? '' }}
+                                                    @else
+                                                        {{ $notification->data['message'] ?? $notification->data['body'] ?? '' }}
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <span class="dropdown-item text-muted">Aucune notification</span>
+                                    @endforelse
+                                </div>
+                            </ul>
+                        </div>
+                        <!-- Settings Icon Dropdown -->
+                        <div class="dropdown ms-2">
+                            <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0 dropdown-toggle" style="box-shadow:none;">
+                                <i class="fas fa-cog fa-lg"></i>
+                            </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
                                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Modifier le profil</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.password.form') }}">Changer le mot de passe</a></li>
@@ -319,14 +463,49 @@
                     </div>
                 </div>
             </div>
+        </nav>
+        <div class="header-welcome">
+            @yield('header')
         </div>
-    </nav>
-    <main class="py-4">
+    </div>
+    <main class="main-content container">
         @yield('content')
     </main>
+    <footer class="footer-custom mt-auto">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center text-md-start footer-section">
+                    <img src="/images/findStay-removebg-preview.png" alt="Findstay Logo" class="footer-logo">
+                    <div>Trouvez votre chez-vous avec FindStay. Facile, rapide, fiable</div>
+                </div>
+                <div class="col-md-3 text-center footer-section">
+                    <div class="footer-title">Nos Services</div>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">On Quelques chiffres</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 text-center footer-section">
+                    <div class="footer-title">Contact</div>
+                    <div>FindStay@gmail.com</div>
+                </div>
+                <div class="col-md-3 text-center footer-section">
+                    <div class="footer-title">Navigation</div>
+                    <ul class="footer-links">
+                        <li><a href="/">Accueil</a></li>
+                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.logements') : route('logementsloca') }}">Nos logements</a></li>
+                        <li><a href="#">Mes réservations</a></li>
+                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.annoncesproprietaire.index') : route('locataire.annonceslocataire.index') }}">Mes annonces</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom mt-3">
+                © 2025 FindStay. Tous droits réservés.
+            </div>
+        </div>
+    </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
-    <!-- Conversation Chat Box: fixed to the left, content loaded via AJAX from _modal.blade.php -->
     <div id="chatBoxContainer" style="display:none;"></div>
     <script>
         function attachCloseChatHandler() {

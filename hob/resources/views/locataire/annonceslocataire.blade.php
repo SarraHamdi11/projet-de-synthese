@@ -24,161 +24,171 @@
     @endif
 
     {{-- Formulaire création --}}
-    <div class="bg-white shadow-xl rounded-xl p-6 md:p-8 mb-8">
-        <h2 class="text-center mb-8 text-3xl font-bold" style="font-family: 'Inknut Antiqua', serif; color: #244F76;">Créer une annonce</h2>
-
-        <form id="form-annonce" method="POST" action="{{ route('locataire.annoncelocataire.store') }}" enctype="multipart/form-data" class="space-y-6">
-            @csrf
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                <div>
-                    <label for="titre_anno" class="block mb-2 text-sm font-semibold text-gray-700">Titre</label>
-                    <input type="text" name="titre_anno" id="titre_anno" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" value="{{ old('titre_anno') }}" required>
-                    @error('titre_anno')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div>
-                    <label for="type_log" class="block mb-2 text-sm font-semibold text-gray-700">Type de logement</label>
-                    <select name="type_log" id="type_log" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" required>
-                        <option value="studio" {{ old('type_log') == 'studio' ? 'selected' : '' }}>Studio</option>
-                        <option value="appartement" {{ old('type_log') == 'appartement' ? 'selected' : '' }}>Appartement</option>
-                        <option value="maison" {{ old('type_log') == 'maison' ? 'selected' : '' }}>Maison</option>
-                    </select>
-                    @error('type_log')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div>
-                    <label for="prix_log" class="block mb-2 text-sm font-semibold text-gray-700">Budget (MAD/mois)</label>
-                    <input type="number" name="prix_log" id="prix_log" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" value="{{ old('prix_log') }}" required>
-                    @error('prix_log')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div>
-                    <label for="ville" class="block mb-2 text-sm font-semibold text-gray-700">Ville</label>
-                    <select name="ville" id="ville" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" required>
-                        <option value="">Sélectionnez une ville</option>
-                        <option value="Tétouan" {{ old('ville') == 'Tétouan' ? 'selected' : '' }}>Tétouan</option>
-                        <option value="Tanger" {{ old('ville') == 'Tanger' ? 'selected' : '' }}>Tanger</option>
-                        <option value="Martil" {{ old('ville') == 'Martil' ? 'selected' : '' }}>Martil</option>
-                        <option value="Rincon" {{ old('ville') == 'Rincon' ? 'selected' : '' }}>Rincon</option>
-                        <option value="Hoceima" {{ old('ville') == 'Hoceima' ? 'selected' : '' }}>Hoceima</option>
-                        <option value="Chaouen" {{ old('ville') == 'Chaouen' ? 'selected' : '' }}>Chaouen</option>
-                    </select>
-                    @error('ville')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div>
-                    <label for="nombre_colocataire_log" class="block mb-2 text-sm font-semibold text-gray-700">Nombre de colocataires</label>
-                    <input type="number" name="nombre_colocataire_log" id="nombre_colocataire_log" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" value="{{ old('nombre_colocataire_log') }}" required>
-                    @error('nombre_colocataire_log')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div>
-                    <label for="localisation_log" class="block mb-2 text-sm font-semibold text-gray-700">Localisation</label>
-                    <input type="text" name="localisation_log" id="localisation_log" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" value="{{ old('localisation_log') }}" required>
-                    @error('localisation_log')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
-                <div>
-                    <label for="photos_locataire" class="block mb-2 text-sm font-semibold text-gray-700">Photos (plusieurs possibles)</label>
-                    <input type="file" name="photos[]" id="photos_locataire" multiple accept="image/jpeg,image/png,image/jpg" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5">
-                    @error('photos.*')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                    @error('photos')
-                        <small class="text-red-500 mt-1">{{ $message }}</small>
-                    @enderror
-                </div>
+    <h2 class="mb-4" style="color:#244F76; font-weight:bold; font-size:2rem; text-align:left;">Creer une annonce :</h2>
+    <div class="card shadow-lg rounded-4 border-0 mb-8 mx-auto" style="background: #fff; max-width: 700px;">
+      <div class="card-body p-4 p-md-5">
+        <form id="form-annonce" method="POST" action="{{ route('locataire.annoncelocataire.store') }}" enctype="multipart/form-data">
+          @csrf
+          <div class="row g-4">
+            <div class="col-md-6">
+              <label for="titre_anno" class="form-label">Titre</label>
+              <input type="text" name="titre_anno" id="titre_anno" class="form-control rounded-3" style="border: 1.5px solid #244F76;" value="{{ old('titre_anno') }}" required>
+              @error('titre_anno')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
             </div>
-            <div class="col-span-1 md:col-span-2">
-                <label for="description_anno" class="block mb-2 text-sm font-semibold text-gray-700">Description</label>
-                <textarea name="description_anno" id="description_anno" rows="4" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" required>{{ old('description_anno') }}</textarea>
-                @error('description_anno')
-                    <small class="text-red-500 mt-1">{{ $message }}</small>
-                @enderror
+            <div class="col-md-6">
+              <label for="type_log" class="form-label">Type de logement</label>
+              <select name="type_log" id="type_log" class="form-control rounded-3" style="border: 1.5px solid #244F76;" required>
+                <option value="studio" {{ old('type_log') == 'studio' ? 'selected' : '' }}>Studio</option>
+                <option value="appartement" {{ old('type_log') == 'appartement' ? 'selected' : '' }}>Appartement</option>
+                <option value="maison" {{ old('type_log') == 'maison' ? 'selected' : '' }}>Maison</option>
+              </select>
+              @error('type_log')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
             </div>
-            <div class="text-center pt-4">
-                {{-- Couleur du bouton Lancer l'annonce mise à jour --}}
-                <button type="submit" class="text-white font-semibold px-8 py-3 rounded-lg hover:bg-green-700 transition duration-300" style="background-color: #047857;">Lancer l'annonce</button>
+            <div class="col-md-6">
+              <label for="prix_log" class="form-label">Budget (MAD/mois)</label>
+              <input type="number" name="prix_log" id="prix_log" class="form-control rounded-3" style="border: 1.5px solid #244F76;" value="{{ old('prix_log') }}" required>
+              @error('prix_log')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
             </div>
+            <div class="col-md-6">
+              <label for="ville" class="form-label">Ville</label>
+              <select name="ville" id="ville" class="form-control rounded-3" style="border: 1.5px solid #244F76;" required>
+                <option value="">Sélectionnez une ville</option>
+                <option value="Tétouan" {{ old('ville') == 'Tétouan' ? 'selected' : '' }}>Tétouan</option>
+                <option value="Tanger" {{ old('ville') == 'Tanger' ? 'selected' : '' }}>Tanger</option>
+                <option value="Martil" {{ old('ville') == 'Martil' ? 'selected' : '' }}>Martil</option>
+                <option value="Rincon" {{ old('ville') == 'Rincon' ? 'selected' : '' }}>Rincon</option>
+                <option value="Hoceima" {{ old('ville') == 'Hoceima' ? 'selected' : '' }}>Hoceima</option>
+                <option value="Chaouen" {{ old('ville') == 'Chaouen' ? 'selected' : '' }}>Chaouen</option>
+              </select>
+              @error('ville')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
+            </div>
+            <div class="col-md-6">
+              <label for="nombre_colocataire_log" class="form-label">Nombre de colocataires</label>
+              <input type="number" name="nombre_colocataire_log" id="nombre_colocataire_log" class="form-control rounded-3" style="border: 1.5px solid #244F76;" value="{{ old('nombre_colocataire_log') }}" required>
+              @error('nombre_colocataire_log')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
+            </div>
+            <div class="col-md-6">
+              <label for="localisation_log" class="form-label">Localisation</label>
+              <input type="text" name="localisation_log" id="localisation_log" class="form-control rounded-3" style="border: 1.5px solid #244F76;" value="{{ old('localisation_log') }}" required>
+              @error('localisation_log')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
+            </div>
+            <div class="col-md-6">
+              <label for="photos_locataire" class="form-label">Photos (plusieurs possibles)</label>
+              <input type="file" name="photos[]" id="photos_locataire" multiple accept="image/jpeg,image/png,image/jpg" class="form-control rounded-3" style="border: 1.5px solid #244F76;">
+              @error('photos.*')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
+              @error('photos')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
+            </div>
+            <div class="col-12">
+              <label for="description_anno" class="form-label">Description</label>
+              <textarea name="description_anno" id="description_anno" rows="4" class="form-control rounded-3" style="border: 1.5px solid #244F76;" required>{{ old('description_anno') }}</textarea>
+              @error('description_anno')
+                <small class="text-danger mt-1">{{ $message }}</small>
+              @enderror
+            </div>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn" style="background:#21825C; color:#fff; font-weight:600;">Publier l'annonce</button>
+          </div>
         </form>
+      </div>
     </div>
 
     {{-- Liste des annonces --}}
     <h2 class="text-center mb-10 text-3xl font-bold" style="font-family: 'Inknut Antiqua', serif; color: #244F76;">Liste des annonces</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="annoncesList">
-        @if(isset($annonces) && $annonces->count() > 0)
-            @forelse ($annonces as $annonce)
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden flex flex-col">
-                    <div class="p-6 flex flex-col flex-grow">
-                        <div>
-                            <h5 class="text-xl font-bold mb-3 capitalize" style="font-family: 'Inknut Antiqua', serif; color: #244F76;">{{ $annonce->titre_anno }}</h5>
-                            <div class="space-y-2 text-sm text-gray-600 mb-4">
-                                <p class="line-clamp-3">{{ $annonce->description_anno }}</p>
-                                <p><span class="mr-2">💰</span><strong>Prix:</strong> {{ $annonce->logement->prix_log ?? 'N/A' }} MAD/mois</p>
-                                <p><span class="mr-2">📍</span><strong>Localisation:</strong> {{ $annonce->logement->localisation_log ?? 'N/A' }}</p>
-                                <p><span class="mr-2">🗓</span><strong>Publiée le:</strong> {{ \Carbon\Carbon::parse($annonce->date_publication_anno)->isoFormat('D MMMM YYYY') }}</p>
-                                <p><span class="mr-2">👥</span><strong>Nombre de colocataires:</strong> {{ $annonce->logement->nombre_colocataire_log ?? 'N/A' }}</p>
-                                <p><span class="mr-2">🏠</span><strong>Type:</strong> {{ $annonce->logement->type_log ?? 'N/A' }}</p>
-                                <p><span class="mr-2">🌆</span><strong>Ville:</strong> {{ $annonce->logement->ville ?? 'N/A' }}</p>
-                            </div>
-                        </div>
-                        <div class="mt-auto pt-4 flex gap-3">
-                            {{-- Couleur du bouton Modifier mise à jour --}}
-                            <a href="{{ route('locataire.modifierannoncelocataire.edit', $annonce->id) }}" class="flex-1 text-center text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 hover:opacity-90" style="background-color: #EBDFD5;">
-                                Modifier
-                            </a>
-                            <form action="{{ route('locataire.annoncelocataire.destroy', $annonce->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression?');" class="flex-1">
-                                @csrf
-                                @method('DELETE')
-                                {{-- Couleur du bouton Supprimer mise à jour --}}
-                                <button type="submit" class="w-full text-center text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300 hover:opacity-90" style="background-color: #EBDFD5;">
-                                    Supprimer
-                                </button>
-                            </form>
-                        </div>
+    <div class="row" id="annoncesList">
+      @if(isset($annonces) && $annonces->count() > 0)
+        @foreach ($annonces as $annonce)
+          <div class="col-md-4 mb-4">
+            <div class="bg-white rounded-4 border" style="border: 1.5px solid #244F76;">
+              <div class="p-4 d-flex flex-column h-100">
+                {{-- Photo slider --}}
+                @php
+                  $photos = $annonce->logement && $annonce->logement->photos ? json_decode($annonce->logement->photos, true) : [];
+                  $carouselId = 'carouselAnnonce' . $annonce->id;
+                @endphp
+                <div class="mb-3">
+                  @if($photos && count($photos) > 0)
+                    <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel">
+                      <div class="carousel-inner rounded-3" style="height:180px;overflow:hidden;">
+                        @foreach($photos as $idx => $photo)
+                          <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
+                            <img src="{{ asset($photo) }}" class="d-block w-100 h-100 object-fit-cover" alt="Photo logement" style="object-fit:cover;max-height:180px;">
+                          </div>
+                        @endforeach
+                      </div>
+                      @if(count($photos) > 1)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="visually-hidden">Next</span>
+                        </button>
+                      @endif
                     </div>
+                  @else
+                    <img src="{{ asset('images/default.jpg') }}" class="d-block w-100 rounded-3" alt="Photo logement" style="object-fit:cover;max-height:180px;">
+                  @endif
                 </div>
-            @empty
-                <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center text-gray-500 py-10">
-                    <p class="text-xl">Aucune annonce disponible pour le moment.</p>
+                <div>
+                  <h5 class="mb-2" style="font-weight:bold; font-size:1.1rem; color:#244F76;">{{ $annonce->titre_anno }}</h5>
+                  <div class="mb-2" style="font-size:0.97rem;">{{ $annonce->description_anno }}</div>
+                  <div class="mb-1" style="font-size:0.93rem;"><span class="me-2">💰</span><strong>Prix:</strong> {{ $annonce->logement->prix_log ?? 'N/A' }} MAD/mois</div>
+                  <div class="mb-1" style="font-size:0.93rem;"><span class="me-2">📍</span><strong>Localisation:</strong> {{ $annonce->logement->localisation_log ?? 'N/A' }}</div>
+                  <div class="mb-1" style="font-size:0.93rem;"><span class="me-2">🗓</span><strong>Publiée le:</strong> {{ \Carbon\Carbon::parse($annonce->date_publication_anno)->isoFormat('D MMM YYYY') }}</div>
                 </div>
-            @endforelse
-        @else
-            <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center text-gray-500 py-10">
-                <p class="text-xl">Aucune annonce disponible pour le moment.</p>
+                <div class="mt-3 d-flex gap-2">
+                  <a href="{{ route('locataire.modifierannoncelocataire.edit', $annonce->id) }}" class="btn btn-sm" style="background:#EBDFD5; color:#244F76; font-weight:600;">Modifier</a>
+                  <form action="{{ route('locataire.annoncelocataire.destroy', $annonce->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression?');" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-sm" style="background:#EBDFD5; color:#244F76; font-weight:600;">Supprimer</button>
+                  </form>
+                </div>
+              </div>
             </div>
-        @endif
+          </div>
+        @endforeach
+      @else
+        <div class="col-12 text-center text-gray-500 py-10">
+          <p class="text-xl">Aucune annonce disponible pour le moment.</p>
+        </div>
+      @endif
     </div>
 
-    {{-- Pagination personnalisée --}}
+    {{-- Pagination Bootstrap --}}
     @if(isset($annonces) && $annonces->hasPages())
-    <div class="mt-12 flex justify-center">
-        <nav aria-label="Pagination">
-            <ul class="inline-flex items-center -space-x-px">
-                <li>
-                    <a href="{{ $annonces->previousPageUrl() }}" class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 {{ $annonces->onFirstPage() ? 'opacity-50 cursor-not-allowed' : '' }}">
-                        Précédent
-                    </a>
+    <div class="mt-4 d-flex justify-content-center">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item {{ $annonces->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $annonces->previousPageUrl() }}">Précédent</a>
                 </li>
                 @foreach($annonces->getUrlRange(1, $annonces->lastPage()) as $page => $url)
-                <li>
-                    <a href="{{ $url }}" class="py-2 px-3 leading-tight {{ $page == $annonces->currentPage() ? 'text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700' : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700' }}">
-                        {{ $page }}
-                    </a>
+                <li class="page-item {{ $page == $annonces->currentPage() ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                 </li>
                 @endforeach
-                <li>
-                    <a href="{{ $annonces->nextPageUrl() }}" class="py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 {{ $annonces->hasMorePages() ? '' : 'opacity-50 cursor-not-allowed' }}">
-                        Suivant
-                    </a>
+                <li class="page-item {{ $annonces->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $annonces->nextPageUrl() }}">Suivant</a>
                 </li>
             </ul>
         </nav>
