@@ -58,7 +58,15 @@
                 </div>
                 <div>
                     <label for="ville" class="block mb-2 text-sm font-semibold text-gray-700">Ville</label>
-                    <input type="text" name="ville" id="ville" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" value="{{ old('ville') }}" required>
+                    <select name="ville" id="ville" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" required>
+                        <option value="">Sélectionnez une ville</option>
+                        <option value="Tétouan" {{ old('ville') == 'Tétouan' ? 'selected' : '' }}>Tétouan</option>
+                        <option value="Tanger" {{ old('ville') == 'Tanger' ? 'selected' : '' }}>Tanger</option>
+                        <option value="Martil" {{ old('ville') == 'Martil' ? 'selected' : '' }}>Martil</option>
+                        <option value="Rincon" {{ old('ville') == 'Rincon' ? 'selected' : '' }}>Rincon</option>
+                        <option value="Hoceima" {{ old('ville') == 'Hoceima' ? 'selected' : '' }}>Hoceima</option>
+                        <option value="Chaouen" {{ old('ville') == 'Chaouen' ? 'selected' : '' }}>Chaouen</option>
+                    </select>
                     @error('ville')
                         <small class="text-red-500 mt-1">{{ $message }}</small>
                     @enderror

@@ -1,7 +1,48 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <h2>Mes Favoris</h2>
+    <div class="row">
+        @forelse($favorites as $favorite)
+            @if($favorite->logement)
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        @php
+                            $photos = json_decode($favorite->logement->photos, true);
+                            $firstPhoto = $photos[0] ?? null;
+                        @endphp
+                        @if($firstPhoto)
+                            <img src="{{ asset($firstPhoto) }}" class="card-img-top" alt="Photo du logement" style="height: 200px; object-fit: cover;">
+                        @else
+                            <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Image par défaut" style="height: 200px; object-fit: cover;">
+                        @endif
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $favorite->logement->type_log }} à {{ $favorite->logement->ville }}</h5>
+                            <p class="card-text">
+                                <strong>Prix:</strong> {{ $favorite->logement->prix_log }} MAD<br>
+                                <strong>Type:</strong> {{ $favorite->logement->type_log }}<br>
+                                <strong>Ville:</strong> {{ $favorite->logement->ville }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @empty
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Vous n'avez pas encore de favoris.
+                </div>
+            </div>
+        @endforelse
+    </div>
+</div>
+@endsection
+
 @section('scripts')
     <script>
         function toggleFavorite(listingId) {
-            const icon = document.querySelector(`[data-id="${listingId}"]`);
+            const icon = document.querySelector([data-id="${listingId}"]);
             const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
             if (!token) {
@@ -9,7 +50,7 @@
                 return;
             }
 
-            fetch(`{{ route('favorite.toggle', ['id' => '']) }}${listingId}`, {
+            fetch({{ url('locataire/favorite') }}/${listingId}, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': token,

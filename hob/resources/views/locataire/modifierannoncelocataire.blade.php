@@ -54,10 +54,18 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="ville" class="block mb-2 font-semibold text-gray-700">Ville</label>
-                        <input type="text" name="ville" id="ville" class="w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" value="{{ old('ville', $annonce->logement->ville) }}" required>
+                        <label for="ville" class="block mb-2 text-sm font-semibold text-gray-700">Ville</label>
+                        <select name="ville" id="ville" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-300 focus:border-blue-300 p-2.5" required>
+                            <option value="">Sélectionnez une ville</option>
+                            <option value="Tétouan" {{ old('ville', $annonce->logement->ville ?? '') == 'Tétouan' ? 'selected' : '' }}>Tétouan</option>
+                            <option value="Tanger" {{ old('ville', $annonce->logement->ville ?? '') == 'Tanger' ? 'selected' : '' }}>Tanger</option>
+                            <option value="Martil" {{ old('ville', $annonce->logement->ville ?? '') == 'Martil' ? 'selected' : '' }}>Martil</option>
+                            <option value="Rincon" {{ old('ville', $annonce->logement->ville ?? '') == 'Rincon' ? 'selected' : '' }}>Rincon</option>
+                            <option value="Hoceima" {{ old('ville', $annonce->logement->ville ?? '') == 'Hoceima' ? 'selected' : '' }}>Hoceima</option>
+                            <option value="Chaouen" {{ old('ville', $annonce->logement->ville ?? '') == 'Chaouen' ? 'selected' : '' }}>Chaouen</option>
+                        </select>
                         @error('ville')
-                            <small class="text-danger">{{ $message }}</small>
+                            <small class="text-red-500 mt-1">{{ $message }}</small>
                         @enderror
                     </div>
                     <div class="mb-3">

@@ -61,7 +61,13 @@
                         @else
                             <img src="{{ asset('images/default.jpg') }}" alt="Image par défaut">
                         @endif
-                        <span class="favorite-icon" data-id="{{ $listing->id }}" data-favorited="{{ in_array($listing->id, array_column(session('favorites', []), 'id')) ? 'true' : 'false' }}">❤</span>
+                        @php
+                            $isFavorited = false;
+                            if (Auth::check()) {
+                                $isFavorited = \App\Models\Favorite::where('user_id', Auth::id())->where('logement_id', $listing->id)->exists();
+                            }
+                        @endphp
+                        <span class="favorite-icon" data-id="{{ $listing->id }}" data-favorited="{{ $isFavorited ? 'true' : 'false' }}">❤</span>
                     </div>
                     <div class="listing-details">
                         <div class="listing-header">
@@ -93,32 +99,54 @@
 @endsection
 
 @section('scripts')
-    <div id="favorite-toggle-route" data-route="{{ route('favorite.toggle', ['id' => ':id']) }}" style="display:none;"></div>
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="csrf_token" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const favoriteToggleRoute = document.getElementById('favorite-toggle-route').getAttribute('data-route');
-            const csrfToken = document.getElementById('csrf_token').value;
-            const alertBox = document.querySelector('.alert-success');
-            if (alertBox) {
-                 setTimeout(() => { alertBox.classList.add('hide'); }, 5000); }
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const favoriteIcons = document.querySelectorAll('.favorite-icon');
-            if (favoriteIcons.length === 0) { console.log("Aucune icône de favori trouvée."); return; }
+            
+            if (favoriteIcons.length === 0) { 
+                console.log("Aucune icône de favori trouvée."); 
+                return; 
+            }
+
+            // Set initial color based on data-favorited
             favoriteIcons.forEach(function(icon) {
-                 icon.addEventListener('click', function () {
-                     const listingId = this.getAttribute('data-id');
-                     fetch(favoriteToggleRoute.replace(':id', listingId), {
-                         method: 'POST',
-                         headers: { 'X-CSRF-TOKEN': csrfToken, 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                         body: JSON.stringify({})
-                     })
-                     .then(response => response.json())
-                     .then(data => {
-                         if (data.success) {
-                             icon.setAttribute('data-favorited', data.is_favorited ? 'true' : 'false');
-                         }
-                     });
-                 });
+                icon.style.color = icon.getAttribute('data-favorited') === 'true' ? '#e74c3c' : '#ccc';
+            });
+
+            favoriteIcons.forEach(function(icon) {
+                icon.addEventListener('click', function () {
+                    const listingId = this.getAttribute('data-id');
+                    console.log('Clicked favorite icon for listing', listingId);
+                    
+                    fetch(/locataire/favorite/${listingId}, {
+                        method: 'POST',
+                        headers: { 
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Response from backend:', data);
+                        if (data.success) {
+                            icon.setAttribute('data-favorited', data.is_favorited ? 'true' : 'false');
+                            icon.style.color = data.is_favorited ? '#e74c3c' : '#ccc';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Une erreur est survenue lors de la mise à jour des favoris.');
+                    });
+                });
             });
         });
     </script>

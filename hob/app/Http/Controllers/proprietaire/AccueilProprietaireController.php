@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Annonce;
 use App\Models\Reservation;
 use App\Models\Conversation;
+use App\Models\Message;
 
 class AccueilProprietaireController extends Controller
 {
@@ -40,7 +41,9 @@ class AccueilProprietaireController extends Controller
             ->get();
 
         // Unread message count for the authenticated user (as receiver)
-        $unreadMessages = $user->receivedMessages()->where('is_read', false)->count();
+        $unreadMessages = Message::where('receiver_id', $user->id)
+            ->where('is_read', false)
+            ->count();
 
         // Sample statistics
         $stats = [

@@ -308,7 +308,12 @@
                                 <li><a class="dropdown-item" href="{{ route('profile.password.form') }}">Changer le mot de passe</a></li>
                                 <li><a class="dropdown-item text-danger" href="{{ route('profile.delete.form') }}">Supprimer le compte</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ route('logout') }}">Déconnexion</a></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">Déconnexion</button>
+                                    </form>
+                                </li>
                             </ul>
                         </div>
                     </div>

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Logement; // Assuming a Logement model exists
 use Carbon\Carbon;
 use App\Models\Utilisateur;
+use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
 
 class LogementlocaController extends Controller
 {
@@ -31,64 +33,34 @@ class LogementlocaController extends Controller
 
     public function toggleFavorite(Request $request, $id)
     {
-        Log::info('Appel de toggleFavorite avec ID:', ['id' => $id]);
-
-        // Récupérer le logement depuis la base de données
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Non authentifié'], 401);
+        }
         $listing = Logement::find((int) $id);
-
         if (!$listing) {
-            Log::error('Logement non trouvé pour l\'ID:', ['id' => $id]);
             return response()->json(['error' => 'Logement non trouvé'], 404);
         }
-
-        $favorites = session('favorites', []);
-        Log::info('Favoris avant modification:', $favorites);
-
-        $index = array_search((int) $id, array_column($favorites, 'id'));
-
-        if ($index === false) {
-            // Stocker tous les champs nécessaires pour l'affichage des favoris
-            $favoriteData = $listing->only([
-                'id',
-                'prix_log',
-                'type_log',
-                'photos',
-                'ville',
-                'equipements',
-                'etage',
-                'nombre_colocataire_log',
-            ]);
-            $favorites[] = $favoriteData;
-            session(['favorites' => $favorites]);
-            Log::info('Logement ajouté aux favoris:', $favoriteData);
-            Log::info('Favoris après ajout:', session('favorites', []));
-            return response()->json(['success' => 'Ajouté aux favoris', 'is_favorited' => true]);
-        } else {
-            unset($favorites[$index]);
-            session(['favorites' => array_values($favorites)]);
-            Log::info('Logement retiré des favoris, ID:', ['id' => $id]);
-            Log::info('Favoris après retrait:', session('favorites', []));
+        $favorite = Favorite::where('user_id', $user->id)->where('logement_id', $listing->id)->first();
+        if ($favorite) {
+            $favorite->delete();
             return response()->json(['success' => 'Retiré des favoris', 'is_favorited' => false]);
+        } else {
+            Favorite::create([
+                'user_id' => $user->id,
+                'logement_id' => $listing->id,
+            ]);
+            return response()->json(['success' => 'Ajouté aux favoris', 'is_favorited' => true]);
         }
     }
 
     public function showFavorites(Request $request)
     {
-        $favorites = session('favorites', []);
-        Log::info('Affichage des favoris:', $favorites);
-
-        // Filter out invalid favorites by checking if they exist in the database
-        $validFavorites = [];
-        foreach ($favorites as $favorite) {
-            $logement = Logement::find($favorite['id']);
-            if ($logement) {
-                $validFavorites[] = $favorite;
-            }
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour accéder à vos favoris.');
         }
-
-        // Update the session with only valid favorites
-        session(['favorites' => $validFavorites]);
-
+        $favorites = Favorite::with('logement')->where('user_id', $user->id)->get();
         return view('locataire.favorites', compact('favorites'));
     }
 
