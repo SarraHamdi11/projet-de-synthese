@@ -19,6 +19,9 @@ class Utilisateur extends Authenticatable
     protected $hidden = [
         'mot_de_passe_uti', 'remember_token'
     ];
+        protected $primaryKey = 'id';
+        
+
     public function getAuthPassword()
     {
         return $this->mot_de_passe_uti;
@@ -112,4 +115,28 @@ class Utilisateur extends Authenticatable
     {
         return ''; // Disable remember token column
     }
+
+     public function annonces()
+    {
+        return $this->hasMany(Annonce::class, 'proprietaire_id', 'id');
+    }
+
+    // Relationship with Avis through Annonce
+   
+
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+   
+
+   
+
+    // Optionally, disable remember token if not needed
+    
+   
+
+   
 }

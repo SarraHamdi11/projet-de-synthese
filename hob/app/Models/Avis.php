@@ -13,10 +13,25 @@ class Avis extends Model
         'contenu', 'note', 'annonce_id', 'locataire_id'
 
     ];
-    public function annonce (){
-        $this->belongsTo(Annonce::class);
-    }
+    
+    
+    protected $table = 'avis';
+    protected $primaryKey = 'id';
+
+   
     public function Utilisateur (){
         $this->belongsTo(Utilisateur::class);
+    }
+    
+    // Relationship with Utilisateur (locataire)
+     public function annonce()
+    {
+        return $this->belongsTo(Annonce::class, 'annonce_id', 'id');
+    }
+
+    // Relationship with Utilisateur (locataire)
+    public function locataire()
+    {
+        return $this->belongsTo(Utilisateur::class, 'locataire_id', 'id');
     }
 }

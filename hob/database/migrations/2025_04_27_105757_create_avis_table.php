@@ -15,7 +15,7 @@ return new class extends Migration
          {
             $table->id();
             $table->text('contenu');
-            $table->integer('note');
+            $table->integer('note')->default(0);;
             $table->foreignId('annonce_id')->constrained()->onDelete('cascade');
             $table->foreignId('locataire_id')->constrained('utilisateurs')->onDelete('cascade');
             $table->timestamps();

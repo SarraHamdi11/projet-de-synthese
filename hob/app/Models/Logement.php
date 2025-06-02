@@ -20,13 +20,17 @@ class Logement extends Model
         'photos' => 'array', // باش Laravel يعرف بلي photos هو array
     ];
 
-    public function reservation()
+   public function reservation()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->hasMany(Reservation::class, 'logement_id', 'id');
     }
-    public function Annonce(){
-        return $this->hasMany(Annonce::class, 'logement_id');
+
+    // Relationship with Annonce
+    public function annonce()
+    {
+        return $this->hasOne(Annonce::class, 'logement_id', 'id');
     }
+    
     public function user()
     {
         return $this->belongsTo(User::class);
