@@ -77,15 +77,7 @@
 
                 <div class="mb-3">
                     <label for="ville_proprietaire" class="form-label fw-semibold">Ville</label>
-                    <select name="ville" id="ville_proprietaire" class="form-control" required>
-                        <option value="">Sélectionnez une ville</option>
-                        <option value="Tétouan" {{ old('ville') == 'Tétouan' ? 'selected' : '' }}>Tétouan</option>
-                        <option value="Tanger" {{ old('ville') == 'Tanger' ? 'selected' : '' }}>Tanger</option>
-                        <option value="Martil" {{ old('ville') == 'Martil' ? 'selected' : '' }}>Martil</option>
-                        <option value="Rincon" {{ old('ville') == 'Rincon' ? 'selected' : '' }}>Rincon</option>
-                        <option value="Hoceima" {{ old('ville') == 'Hoceima' ? 'selected' : '' }}>Hoceima</option>
-                        <option value="Chaouen" {{ old('ville') == 'Chaouen' ? 'selected' : '' }}>Chaouen</option>
-                    </select>
+                    <input type="text" name="ville" id="ville_proprietaire" class="form-control" value="{{ old('ville') }}" required>
                     @error('ville')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
@@ -143,14 +135,15 @@
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title fw-bold fs-4 mb-3 text-lowercase">{{ $annonce->titre_anno }}</h5>
                         @if($annonce->logement && $annonce->logement->photos)
-                            <div class="mb-3">
+                            <div class="slider mb-3">
                                 @php
                                     $photos = json_decode($annonce->logement->photos, true);
-                                    $firstPhoto = $photos[0] ?? null;
                                 @endphp
-                                @if($firstPhoto)
-                                    <img src="{{ asset($firstPhoto) }}" alt="Photo de l'annonce" class="rounded w-100" style="height: 150px; object-fit: cover;">
-                                @endif
+                                @foreach($photos as $photo)
+                                    <div>
+                                        <img src="{{ asset($photo) }}" alt="Photo de l'annonce" class="rounded w-100" style="height: 150px; object-fit: cover;">
+                                    </div>
+                                @endforeach
                             </div>
                         @else
                             <p class="text-muted mb-3">Aucune photo disponible</p>
@@ -214,6 +207,20 @@
 
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function(){
+        $('.slider').slick({
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        });
+    });
+</script>
 @endsection
 
 @section('scripts')

@@ -160,6 +160,44 @@
         background: linear-gradient(135deg, #447892 0%, #244F76 100%);
         border-radius: 2px;
     }
+    
+    .btn-modifier-custom {
+        background: #EBDFD5;
+        color: #244F76;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        padding: 10px 28px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.2s, color 0.2s;
+    }
+    
+    .btn-modifier-custom:hover {
+        background: #d6c3b2;
+        color: #244F76;
+    }
+    
+    .btn-supprimer-custom {
+        background: #EBDFD5;
+        color: #244F76;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        padding: 10px 28px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.2s, color 0.2s;
+    }
+    
+    .btn-supprimer-custom:hover {
+        background: #d6c3b2;
+        color: #244F76;
+    }
 </style>
 
 <div class="container mx-auto px-4 py-5">
@@ -391,7 +429,7 @@
 
                             <div class="d-flex gap-2 mt-4">
                                 <a href="{{ route('locataire.modifierannoncelocataire.edit', $annonce->id) }}" 
-                                   class="btn btn-secondary-custom btn-sm flex-fill">
+                                   class="btn btn-modifier-custom flex-fill">
                                     <i class="fas fa-edit me-1"></i>Modifier
                                 </a>
                                 <form action="{{ route('locataire.annoncelocataire.destroy', $annonce->id) }}" 
@@ -399,7 +437,7 @@
                                       class="flex-fill">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                    <button type="submit" class="btn btn-supprimer-custom w-100">
                                         <i class="fas fa-trash me-1"></i>Supprimer
                                     </button>
                                 </form>
@@ -454,58 +492,147 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-annonce');
-
-    if (!form) {
-        // console.error('Formulaire #form-annonce introuvable'); // Vous pouvez décommenter pour le débogage
-        return;
-    }
+    if (!form) return;
 
     form.addEventListener('submit', async function(event) {
         event.preventDefault();
 
         const formData = new FormData(form);
-        // CSRF token est déjà inclus via @csrf dans le formulaire, pas besoin de l'ajouter ici via JS si le formulaire est soumis normalement.
-        // Si vous faites une requête AJAX pure sans soumission de formulaire, alors oui, il faut l'ajouter.
-
         try {
-            // La route est déjà dans l'attribut action du formulaire
             const response = await axios.post(form.action, formData, {
-                headers: {
-                    'Accept': 'application/json',
-                    // 'X-Requested-With': 'XMLHttpRequest', // Axios ajoute cela par défaut
-                    // 'Content-Type': 'multipart/form-data', // Axios détecte cela à partir de FormData
-                }
+                headers: { 'Accept': 'application/json' }
             });
 
             const json = response.data;
-
             if (json.success && json.annonce) {
-                // Logique pour ajouter la nouvelle annonce à la liste dynamiquement
-                // Cette partie dépendra de la structure exacte de votre json.annonce
-                // et de comment vous voulez l'afficher.
-                // Par exemple, recharger la page ou injecter l'HTML.
-                // Pour l'instant, affichons un message et rechargeons la page pour la simplicité.
-                alert(json.message || 'Annonce créée avec succès!');
-                window.location.reload(); 
+                // Remove empty state if present
+                const emptyState = document.querySelector('#annoncesList .col-12');
+                if (emptyState) emptyState.remove();
+
+                // Build card HTML
+                const annonce = json.annonce;
+                const logement = annonce.logement || {};
+                let photos = logement.photos;
+                if (typeof photos === 'string') {
+                    try { photos = JSON.parse(photos); } catch { photos = []; }
+                }
+                if (!Array.isArray(photos)) photos = [];
+                const carouselId = 'carouselAnnonce' + annonce.id;
+                const prix = logement.prix_log ?? 'N/A';
+                const localisation = logement.localisation_log ?? 'N/A';
+                const titre = annonce.titre_anno;
+                const description = annonce.description_anno.length > 100 ? annonce.description_anno.substring(0, 100) + '...' : annonce.description_anno;
+                const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+                const editUrl = `/locataire/annonceslocataire/${annonce.id}/edit`;
+                const deleteUrl = `/locataire/annonceslocataire/${annonce.id}`;
+                let photoHtml = '';
+                if (photos.length > 0) {
+                    photoHtml = `
+                        <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner" style="height:220px;">
+                                ${photos.map((photo, idx) => `
+                                    <div class="carousel-item${idx === 0 ? ' active' : ''}">
+                                        <img src="/${photo}" class="d-block w-100 h-100" alt="Photo logement" style="object-fit:cover;">
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ${photos.length > 1 ? `
+                                <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    photoHtml = `<img src="/images/default.jpg" class="d-block w-100" alt="Photo logement" style="object-fit:cover;height:220px;">`;
+                }
+                const cardHtml = `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card-annonce">
+                            <div class="position-relative">
+                                ${photoHtml}
+                                <div class="position-absolute top-0 end-0 m-3">
+                                    <span class="price-badge">${prix} MAD/mois</span>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h5 class="title-font mb-3" style="font-weight:600; font-size:1.3rem; color:#244F76;">${titre}</h5>
+                                <p class="text-muted mb-3" style="font-size:0.95rem; line-height:1.5;">${description}</p>
+                                <div class="mb-3">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-map-marker-alt me-2" style="color:#447892;"></i>
+                                        <span class="location-badge">${localisation}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center text-muted" style="font-size:0.9rem;">
+                                        <i class="fas fa-calendar-alt me-2"></i>
+                                        <span>${date}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-4">
+                                    <a href="${editUrl}" class="btn btn-modifier-custom flex-fill">
+                                        <i class="fas fa-edit me-1"></i>Modifier
+                                    </a>
+                                    <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Confirmer la suppression?');" class="flex-fill">
+                                        <input type="hidden" name="_token" value="${document.querySelector('input[name=_token]').value}">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-supprimer-custom w-100">
+                                            <i class="fas fa-trash me-1"></i>Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Prepend the new card
+                const annoncesList = document.getElementById('annoncesList');
+                annoncesList.insertAdjacentHTML('afterbegin', cardHtml);
+
+                // Reset form fields
+                form.reset();
+
+                // Show success message
+                let successDiv = document.getElementById('annonce-success-message');
+                if (!successDiv) {
+                    successDiv = document.createElement('div');
+                    successDiv.id = 'annonce-success-message';
+                    successDiv.className = 'alert alert-success alert-custom d-flex align-items-center';
+                    successDiv.style.marginBottom = '24px';
+                    successDiv.innerHTML = `
+                        <svg class="me-3" width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div><strong>Succès!</strong> Annonce publiée avec succès !</div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                    const container = document.querySelector('.container');
+                    if (container) container.prepend(successDiv);
+                } else {
+                    successDiv.style.display = '';
+                }
+                setTimeout(() => { if(successDiv) successDiv.style.display = 'none'; }, 4000);
             } else {
-                // Gérer les erreurs de validation ou autres problèmes
                 let errorMessage = json.message || 'Une erreur est survenue.';
                 if (json.errors) {
-                    errorMessage += '\n' + Object.values(json.errors).flat().join('\n');
+                    errorMessage += '\\n' + Object.values(json.errors).flat().join('\\n');
                 }
-                alert(errorMessage);
+                console.error(errorMessage);
             }
-
         } catch (error) {
             console.error('Erreur lors de la soumission du formulaire:', error);
             let errorText = 'Une erreur réseau est survenue.';
             if (error.response && error.response.data && error.response.data.message) {
                 errorText = error.response.data.message;
-            if (error.response.data.errors) {
-                    errorText += '\n' + Object.values(error.response.data.errors).flat().join('\n');
+                if (error.response.data.errors) {
+                    errorText += '\\n' + Object.values(error.response.data.errors).flat().join('\\n');
                 }
             }
-            alert(errorText);
+            console.error(errorText);
         }
     });
 });

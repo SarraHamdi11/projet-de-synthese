@@ -1,400 +1,484 @@
 @extends('layouts.app')
 
-@section('title', 'Logements pour Locataires - FindStay')
+@section('title', 'Logements - FindStay')
 
 @section('content')
-    <div class="container">
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+    <div class="container-fluid bg-light min-vh-100 py-4">
+        <div class="container">
+            <!-- Header Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="fw-bold text-primary mb-1">Découvrez nos logements</h2>
+                            <p class="text-muted mb-0">Trouvez votre logement idéal parmi notre sélection premium</p>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                                <i class="fas fa-home me-1"></i>{{ count($listings) }} logements
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
 
-        <div class="filters">
-            <form method="GET" action="{{ route('logementsloca') }}">
-                @csrf
-                <div class="filter-section">
-                    <h3>Prix</h3>
-                    <div class="price-range">
-                        <input type="number" name="min_price" placeholder="Min" value="{{ request()->input('min_price') }}">
-                        <input type="number" name="max_price" placeholder="Max" value="{{ request()->input('max_price') }}">
-                    </div>
-                </div>
-                <div class="filter-section">
-                    <h3>Type de recherche</h3>
-                    <label><input type="checkbox" name="search_type[]" value="logement" {{ in_array('logement', request()->input('search_type', [])) ? 'checked' : '' }}> Logement</label>
-                </div>
-                <div class="filter-section">
-                    <h3>Type de logement</h3>
-                    <label><input type="checkbox" name="logement_type[]" value="Studio" {{ in_array('Studio', request()->input('logement_type', [])) ? 'checked' : '' }}> Studio</label>
-                    <label><input type="checkbox" name="logement_type[]" value="Appartement" {{ in_array('Appartement', request()->input('logement_type', [])) ? 'checked' : '' }}> Appartement</label>
-                </div>
-                <div class="filter-section">
-                    <h3>Nombre de colocataires</h3>
-                    <label><input type="checkbox" name="colocataires[]" value="1" {{ in_array('1', request()->input('colocataires', [])) ? 'checked' : '' }}> Solo</label>
-                    <label><input type="checkbox" name="colocataires[]" value="2" {{ in_array('2', request()->input('colocataires', [])) ? 'checked' : '' }}> 2</label>
-                </div>
-                <div class="filter-section">
-                    <h3>Date d'emménagement</h3>
-                    <input type="date" name="move_in_date" value="{{ request()->input('move_in_date') }}">
-                </div>
-                <div class="filter-section">
-                    <h3>Ville</h3>
-                    <input type="text" name="city" placeholder="Martil, Casablanca..." value="{{ request()->input('city') }}">
-                </div>
-                <button type="submit">🔍</button>
-            </form>
-        </div>
+            <div class="row g-4">
+                <!-- Filters Sidebar -->
+                <div class="col-lg-3">
+                    <div class="card shadow-sm border-0 sticky-top filter-sidebar">
+                        <div class="card-header bg-primary text-white border-0">
+                            <h5 class="mb-0">
+                                <i class="fas fa-filter me-2"></i>Filtres de recherche
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <form method="GET" action="{{ route('logementsloca') }}" class="needs-validation" novalidate>
+                                
+                                <!-- Search Bar -->
+                                <div class="p-3 border-bottom bg-light">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0">
+                                            <i class="fas fa-search text-muted"></i>
+                                        </span>
+                                        <input type="text" 
+                                               name="city" 
+                                               class="form-control border-start-0 ps-0" 
+                                               placeholder="Martil, colocation, non-fumeur" 
+                                               value="{{ request()->input('city') }}">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
 
-        <div class="listings-grid">
-            @forelse($listings as $listing)
-                <div class="listing-card">
-                    <div class="listing-image">
-                        @if($listing->photos)
-                            @php $photos = json_decode($listing->photos, true); @endphp
-                            @if(is_array($photos) && count($photos) > 0)
-                                @php $photoPath = (substr($photos[0], 0, 7) === 'images/') ? $photos[0] : 'images/' . $photos[0]; @endphp
-                                <img src="{{ asset($photoPath) }}" alt="Photo du logement">
-                            @else
-                                <img src="{{ asset('images/default.jpg') }}" alt="Image par défaut">
-                            @endif
-                        @else
-                            <img src="{{ asset('images/default.jpg') }}" alt="Image par défaut">
-                        @endif
-                        @php
-                            $isFavorited = false;
-                            if (Auth::check()) {
-                                $isFavorited = \App\Models\Favorite::where('user_id', Auth::id())->where('logement_id', $listing->id)->exists();
-                            }
-                        @endphp
-                        <span class="favorite-icon" data-id="{{ $listing->id }}" data-favorited="{{ $isFavorited ? 'true' : 'false' }}">❤</span>
-                    </div>
-                    <div class="listing-details">
-                        <div class="listing-header">
-                            <span class="listing-type">{{ $listing->type_log }}</span>
-                            <span class="listing-price">{{ number_format($listing->prix_log, 0, ',', '.') }} MAD</span>
-                        </div>
-                        <p class="listing-city">{{ $listing->ville }}</p>
-                        <p class="listing-description">@if($listing->equipements) @foreach(json_decode($listing->equipements, true) as $equipement) <span>{{ $equipement }}</span>@if(!$loop->last), @endif @endforeach @else Aucun @endif</p>
-                        <p class="listing-proprietaire"><strong>Propriétaire:</strong> {{ $listing->proprietaire->nom_uti ?? 'Non spécifié' }}</p>
-                        <div class="listing-rating">
-                            @for ($i = 0; $i < 5; $i++)
-                                <span class="star">★</span>
-                            @endfor
-                        </div>
-                        <div class="action-buttons">
-                            <a href="{{ route('showReservation', $listing->id) }}" class="reserve-btn">RÉSERVER</a>
-                            <a href="{{ route('showDetails', $listing->id) }}" class="details-btn">DÉTAILS</a>
-                            @if($listing->proprietaire_id)
-                                <a href="{{ route('conversations.show', $listing->proprietaire_id) }}" class="contact-btn">CONTACTER</a>
-                            @endif
+                                <!-- Price Range -->
+                                <div class="p-3 border-bottom">
+                                    <h6 class="fw-bold text-dark mb-3">
+                                        <i class="fas fa-tag me-2 text-primary"></i>Prix (MAD)
+                                    </h6>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <div class="form-floating">
+                                                <input type="number" 
+                                                       name="min_price" 
+                                                       class="form-control form-control-sm" 
+                                                       id="minPrice"
+                                                       placeholder="Min" 
+                                                       value="{{ request()->input('min_price') }}">
+                                                <label for="minPrice" class="form-label-sm">Min</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-floating">
+                                                <input type="number" 
+                                                       name="max_price" 
+                                                       class="form-control form-control-sm" 
+                                                       id="maxPrice"
+                                                       placeholder="Max" 
+                                                       value="{{ request()->input('max_price') }}">
+                                                <label for="maxPrice" class="form-label-sm">Max</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Search Type -->
+                                <div class="p-3 border-bottom">
+                                    <h6 class="fw-bold text-dark mb-3">
+                                        <i class="fas fa-search me-2 text-primary"></i>Type de recherche
+                                    </h6>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="search_type[]" value="logement" 
+                                               id="searchLogement" {{ in_array('logement', request()->input('search_type', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="searchLogement">
+                                            <i class="fas fa-home me-2 text-muted"></i>Logement
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="search_type[]" value="colocation" 
+                                               id="searchColocation" {{ in_array('colocation', request()->input('search_type', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="searchColocation">
+                                            <i class="fas fa-users me-2 text-muted"></i>Colocation
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Property Type -->
+                                <div class="p-3 border-bottom">
+                                    <h6 class="fw-bold text-dark mb-3">
+                                        <i class="fas fa-building me-2 text-primary"></i>Type de logement
+                                    </h6>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="logement_type[]" value="Studio" 
+                                               id="typeStudio" {{ in_array('Studio', request()->input('logement_type', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="typeStudio">
+                                            <i class="fas fa-door-open me-2 text-muted"></i>Studio
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="logement_type[]" value="Appartement" 
+                                               id="typeAppartement" {{ in_array('Appartement', request()->input('logement_type', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="typeAppartement">
+                                            <i class="fas fa-building me-2 text-muted"></i>Appartement
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="logement_type[]" value="Colocation" 
+                                               id="typeColocation" {{ in_array('Colocation', request()->input('logement_type', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="typeColocation">
+                                            <i class="fas fa-users me-2 text-muted"></i>Colocation
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Roommates -->
+                                <div class="p-3 border-bottom">
+                                    <h6 class="fw-bold text-dark mb-3">
+                                        <i class="fas fa-user-friends me-2 text-primary"></i>Nombre de colocataires
+                                    </h6>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="colocataires[]" value="Solo" 
+                                               id="colocSolo" {{ in_array('Solo', request()->input('colocataires', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="colocSolo">
+                                            <i class="fas fa-user me-2 text-muted"></i>Solo
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="colocataires[]" value="2" 
+                                               id="coloc2" {{ in_array('2', request()->input('colocataires', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="coloc2">
+                                            <i class="fas fa-users me-2 text-muted"></i>2
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="colocataires[]" value="3+" 
+                                               id="coloc3plus" {{ in_array('3+', request()->input('colocataires', [])) ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-medium" for="coloc3plus">
+                                            <i class="fas fa-users me-2 text-muted"></i>3+
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Move-in Date -->
+                                <div class="p-3">
+                                    <h6 class="fw-bold text-dark mb-3">
+                                        <i class="fas fa-calendar me-2 text-primary"></i>Date d'emménagement
+                                    </h6>
+                                    <input type="month" 
+                                           name="move_in_date" 
+                                           class="form-control" 
+                                           value="{{ request()->input('move_in_date', '2025-04') }}">
+                                </div>
+
+                                <!-- Reset Button -->
+                                <div class="p-3 pt-0">
+                                    <button type="button" class="btn btn-outline-secondary w-100" onclick="this.form.reset();">
+                                        <i class="fas fa-redo me-2"></i>Réinitialiser
+                                    </button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>
-            @empty
-                <p>Aucun logement trouvé.</p>
-            @endforelse
+
+                <!-- Listings Grid -->
+                <div class="col-lg-9">
+                    <div class="row g-4" id="listingsContainer">
+                        @forelse($listings as $listing)
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card h-100 shadow-sm border-0 listing-card position-relative overflow-hidden">
+                                    <!-- Image Container -->
+                                    <div class="position-relative overflow-hidden" style="height: 220px;">
+                                        @if($listing->photos)
+                                            @php $photos = json_decode($listing->photos, true); @endphp
+                                            @if(is_array($photos) && count($photos) > 0)
+                                                @foreach($photos as $index => $photo)
+                                                    @php $photoPath = (substr($photo, 0, 7) === 'images/') ? $photo : 'images/' . $photo; @endphp
+                                                    <img src="{{ asset($photoPath) }}" 
+                                                         alt="Photo du logement" 
+                                                         class="card-img-top w-100 h-100 object-fit-cover {{ $index > 0 ? 'd-none' : '' }}"
+                                                         style="transition: transform 0.3s ease;">
+                                                @endforeach
+                                            @else
+                                                <img src="{{ asset('images/default.jpg') }}" 
+                                                     alt="Image par défaut" 
+                                                     class="card-img-top w-100 h-100 object-fit-cover">
+                                            @endif
+                                        @else
+                                            <img src="{{ asset('images/default.jpg') }}" 
+                                                 alt="Image par défaut" 
+                                                 class="card-img-top w-100 h-100 object-fit-cover">
+                                        @endif
+                                        
+                                        <!-- Overlay Gradient -->
+                                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-bottom opacity-0 hover-overlay"></div>
+                                        
+                                        <!-- Favorite Button -->
+                                        <button class="btn btn-sm position-absolute top-0 end-0 m-2 border-0 bg-white bg-opacity-75 rounded-circle p-2 favorite-btn">
+                                            <i class="fas fa-heart text-danger"></i>
+                                        </button>
+                                        
+                                        <!-- Property Type Badge -->
+                                        <span class="badge bg-primary position-absolute bottom-0 start-0 m-2 px-3 py-2 rounded-pill">
+                                            {{ $listing->type_log }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Card Body -->
+                                    <div class="card-body d-flex flex-column p-3">
+                                        <!-- Header -->
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="card-title mb-0 fw-bold text-dark">{{ $listing->ville }}</h6>
+                                            <span class="fs-5 fw-bold text-primary">{{ number_format($listing->prix_log, 0, ',', '.') }} MAD</span>
+                                        </div>
+
+                                        <!-- Equipment/Amenities -->
+                                        <div class="mb-3 flex-grow-1">
+                                            @if($listing->equipements)
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    @foreach(array_slice(json_decode($listing->equipements, true), 0, 3) as $equipement)
+                                                        <span class="badge bg-light text-dark border small">{{ $equipement }}</span>
+                                                    @endforeach
+                                                    @if(count(json_decode($listing->equipements, true)) > 3)
+                                                        <span class="badge bg-light text-muted border small">+{{ count(json_decode($listing->equipements, true)) - 3 }}</span>
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <span class="text-muted small">Aucun équipement spécifié</span>
+                                            @endif
+                                        </div>
+
+                                        <!-- Rating -->
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center gap-1">
+                                                @for($i = 0; $i < 5; $i++)
+                                                    <i class="fas fa-star text-warning small"></i>
+                                                @endfor
+                                                <span class="text-muted small ms-1">(4.8)</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Action Buttons -->
+                                        <div class="d-grid gap-2">
+                                            <a href="{{ route('showReservation', $listing->id) }}" class="btn btn-primary w-100 rounded-pill fw-medium">
+                                                <i class="fas fa-calendar-check me-2"></i>Réserver
+                                            </a>
+                                            <a href="{{ route('showDetails', $listing->id) }}" class="btn btn-outline-primary w-100 rounded-pill fw-medium">
+                                                <i class="fas fa-info-circle me-2"></i>Détails
+                                            </a>
+                                            @if($listing->proprietaire_id)
+                                                <a href="{{ route('conversations.show', $listing->proprietaire_id) }}" class="btn btn-outline-secondary w-100 rounded-pill fw-medium">
+                                                    <i class="fas fa-envelope me-2"></i>Contact
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-12">
+                                <div class="text-center py-5">
+                                    <div class="mb-4">
+                                        <i class="fas fa-search fa-3x text-muted"></i>
+                                    </div>
+                                    <h4 class="text-muted">Aucun logement trouvé</h4>
+                                    <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                                    <button type="button" class="btn btn-outline-primary" onclick="document.querySelector('form').reset();">
+                                        Réinitialiser les filtres
+                                    </button>
+                                </div>
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-@endsection
 
-@push('scripts')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const favoriteIcons = document.querySelectorAll('.favorite-icon');
-            
-            if (favoriteIcons.length === 0) { 
-                console.log("Aucune icône de favori trouvée."); 
-                return; 
+    <style>
+        :root {
+            --bs-primary: #244F76;
+            --bs-primary-rgb: 36, 79, 118;
+            --bs-secondary: #447892;
+            --bs-light: #7C9FC0;
+            --bs-cream: #EBDFD5;
+        }
+
+        .filter-sidebar {
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--bs-primary) transparent;
+        }
+
+        .filter-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .filter-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .filter-sidebar::-webkit-scrollbar-thumb {
+            background-color: var(--bs-primary);
+            border-radius: 3px;
+        }
+
+        @media (min-width: 992px) {
+            .col-lg-9 {
+                position: relative;
+                z-index: 1;
             }
+        }
 
-            // Set initial color based on data-favorited
-            favoriteIcons.forEach(function(icon) {
-                icon.style.color = icon.getAttribute('data-favorited') === 'true' ? '#e74c3c' : '#ccc';
+        .listing-card {
+            transition: all 0.3s ease;
+            border-radius: 15px !important;
+        }
+
+        .listing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(36, 79, 118, 0.15) !important;
+        }
+
+        .listing-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .hover-overlay {
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%);
+            transition: opacity 0.3s ease;
+        }
+
+        .listing-card:hover .hover-overlay {
+            opacity: 1;
+        }
+
+        .favorite-btn {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.1);
+            background-color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary) !important;
+            border-color: var(--bs-primary) !important;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--bs-secondary) !important;
+            border-color: var(--bs-secondary) !important;
+        }
+
+        .text-primary {
+            color: var(--bs-primary) !important;
+        }
+
+        .bg-primary {
+            background-color: var(--bs-primary) !important;
+        }
+
+        .border-primary {
+            border-color: var(--bs-primary) !important;
+        }
+
+        .pagination .page-link {
+            color: var(--bs-primary);
+            border-color: #dee2e6;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .pagination .page-link:hover {
+            background-color: rgba(36, 79, 118, 0.1);
+            border-color: var(--bs-primary);
+        }
+
+        .bg-primary-subtle {
+            background-color: rgba(36, 79, 118, 0.1) !important;
+        }
+
+        .card {
+            border-radius: 15px;
+        }
+
+        .form-floating > .form-control-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .form-floating > .form-label-sm {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .listing-card:hover {
+                transform: none;
+            }
+            
+            .sticky-top {
+                position: relative !important;
+            }
+        }
+
+        .object-fit-cover {
+            object-fit: cover;
+        }
+
+        .bg-gradient-to-bottom {
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enhanced form interactions
+            const filterInputs = document.querySelectorAll('input[type="checkbox"], input[type="month"]');
+            filterInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    // Optional: Auto-submit form when filters change
+                    // this.form.submit();
+                });
             });
 
-            // Add click event listeners
-            favoriteIcons.forEach(function(icon) {
-                icon.addEventListener('click', function() {
-                    const listingId = this.getAttribute('data-id');
-                    console.log('Clicked favorite icon for listing', listingId);
-                    
-                    fetch(`/locataire/favorite/${listingId}`, {
-                        method: 'POST',
-                        headers: { 
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({})
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Response from backend:', data);
-                        if (data.success) {
-                            this.setAttribute('data-favorited', data.is_favorited ? 'true' : 'false');
-                            this.style.color = data.is_favorited ? '#e74c3c' : '#ccc';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Une erreur est survenue lors de la mise à jour des favoris.');
-                    });
+            // Favorite button functionality
+            const favoriteButtons = document.querySelectorAll('.favorite-btn');
+            favoriteButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.classList.toggle('favorited');
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('fas');
+                    icon.classList.toggle('far');
+                });
+            });
+
+            // Enhanced card hover effects
+            const cards = document.querySelectorAll('.listing-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
                 });
             });
         });
     </script>
-@endpush
-
-<style>
-    .container {
-        display: flex;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-        gap: 20px;
-    }
-
-    .filters {
-        width: 250px;
-        padding: 15px;
-        background: #f5f5f5;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .filter-section {
-        margin-bottom: 20px;
-    }
-
-    .filter-section h3 {
-        font-size: 16px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        color: #333;
-        text-transform: uppercase;
-    }
-
-    .filter-section label {
-        display: block;
-        margin: 8px 0;
-        font-size: 14px;
-        color: #666;
-    }
-
-    .price-range {
-        display: flex;
-        gap: 10px;
-    }
-
-    .price-range input,
-    .filter-section input[type="text"],
-    .filter-section input[type="date"] {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 14px;
-    }
-
-    .filters button {
-        padding: 8px 15px;
-        background: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        width: 100%;
-    }
-
-    .listings-grid {
-        flex-grow: 1;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 20px;
-    }
-
-    .listing-card {
-        background: #fff;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
-    }
-
-    .listing-image {
-        position: relative;
-    }
-
-    .listing-image img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-    }
-
-    .favorite-icon { position: absolute; top: 10px; right: 10px; font-size: 24px; cursor: pointer; color: #fff; transition: color 0.2s; text-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-    .favorite-icon[data-favorited="true"] { color: #e74c3c; }
-
-    .listing-details {
-        padding: 15px;
-    }
-
-    .listing-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .listing-type {
-        font-size: 14px;
-        font-weight: bold;
-        color: #666;
-        text-transform: uppercase;
-    }
-
-    .listing-price {
-        font-size: 16px;
-        font-weight: bold;
-        color: #e74c3c;
-    }
-
-    .listing-city {
-        font-size: 14px;
-        font-weight: bold;
-        color: #333;
-        margin: 0;
-    }
-
-    .listing-description {
-        font-size: 14px;
-        color: #666;
-        margin: 5px 0 10px;
-        line-height: 1.4;
-    }
-
-    .listing-rating {
-        margin-bottom: 10px;
-    }
-
-    .star {
-        color: #ddd;
-        font-size: 16px;
-    }
-
-    .star.filled {
-        color: #f1c40f;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 15px;
-    }
-
-    .reserve-btn, .details-btn, .contact-btn {
-        padding: 8px 15px;
-        border-radius: 20px;
-        text-decoration: none;
-        font-weight: bold;
-        text-transform: uppercase;
-        font-size: 12px;
-        transition: all 0.3s ease;
-    }
-
-    .reserve-btn {
-        background: #3498db;
-        color: white;
-    }
-
-    .reserve-btn:hover {
-        background: #2980b9;
-    }
-
-    .details-btn {
-        background: #9b59b6;
-        color: white;
-    }
-
-    .details-btn:hover {
-        background: #8e44ad;
-    }
-
-    .contact-btn {
-        background: #2ecc71;
-        color: white;
-    }
-
-    .contact-btn:hover {
-        background: #27ae60;
-    }
-
-    .pagination {
-        text-align: center;
-        margin-top: 30px;
-    }
-
-    .pagination a {
-        display: inline-block;
-        padding: 8px 12px;
-        margin: 0 5px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        text-decoration: none;
-        color: #007bff;
-        font-size: 14px;
-        transition: background 0.3s;
-    }
-
-    .pagination a:hover {
-        background: #f5f5f5;
-    }
-
-    .pagination a.active {
-        background: #007bff;
-        color: #fff;
-        border-color: #007bff;
-    }
-
-    .alert-success {
-        position: fixed;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #dbf5e0;
-        color: #2d7033;
-        padding: 15px 25px;
-        border: 1px solid #c3e6cb;
-        border-radius: 10px;
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 9999;
-        min-width: 300px;
-        max-width: 90%;
-        opacity: 1;
-        transition: opacity 0.5s ease-out;
-    }
-
-    .alert-success.hide {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .listing-proprietaire {
-        font-size: 14px;
-        color: #666;
-        margin: 5px 0;
-    }
-</style>
+@endsection

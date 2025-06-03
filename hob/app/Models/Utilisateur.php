@@ -125,10 +125,11 @@ class Utilisateur extends Authenticatable
    
 
 
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
-    }
+    // Remove the incorrect notifications relationship since we're using the Notifiable trait
+    // public function notifications()
+    // {
+    //     return $this->hasMany(Notification::class);
+    // }
 
    
 

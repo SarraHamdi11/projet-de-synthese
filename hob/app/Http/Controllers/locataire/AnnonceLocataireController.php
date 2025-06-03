@@ -39,7 +39,7 @@ class AnnonceLocataireController extends Controller
     // ✅ Enregistrement إعلان جديد
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'titre_anno' => 'required|string|max:255',
             'description_anno' => 'required|string',
             'type_log' => 'required|in:studio,appartement,maison',
@@ -91,7 +91,7 @@ class AnnonceLocataireController extends Controller
             $annonce->date_publication_anno = now();
             $annonce->logement_id = $logement->id;
             $annonce->proprietaire_id = $userId;
-            $annonce->statut_anno = 'disponible';
+            $annonce->statut_anno = 'active';
             $annonce->save();
 
             if ($request->ajax()) {
@@ -99,10 +99,19 @@ class AnnonceLocataireController extends Controller
                     'message' => 'Annonce créée avec succès.',
                     'success' => true,
                     'annonce' => $annonce->load('logement'),
-                ], 200);
+                ], 201);
             }
 
             return redirect()->back()->with('success', 'Annonce créée avec succès.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'message' => 'Erreur de validation.',
+                    'success' => false,
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+            return redirect()->back()->withErrors($e->errors());
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json([

@@ -112,23 +112,66 @@ body { font-family: 'Poppins', sans-serif; background: #fff !important; }
 .card-3d .location { color: #666; font-size: 0.95rem; }
 .card-3d .stars { color: #ffc107; font-size: 1.1rem; }
 .testimonial-card {
-  background: var(--white);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 24px #44789222, 0 1.5px 6px #7C9FC0;
-  border: none;
-  padding: 2rem 1.2rem 1.2rem 1.2rem;
-  min-height: 270px;
-  display: flex; flex-direction: column; align-items: flex-start;
-  transition: box-shadow 0.4s, transform 0.4s;
-  animation: rotateIn 1.2s cubic-bezier(.4,2,.3,1);
+  min-width: 220px;
+  max-width: 260px;
+  flex: 0 0 220px;
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(36,79,118,0.08), 0 1.5px 6px #7C9FC022;
+  border: 1px solid #e6e6e6;
+  margin-bottom: 1.2rem;
+  transition: box-shadow 0.3s, transform 0.3s, border 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 1.2rem 1rem 1.2rem 1rem;
 }
-@keyframes rotateIn { from { opacity:0; transform:rotateY(-30deg) scale(0.9);} to {opacity:1;transform:rotateY(0) scale(1);} }
-.testimonial-card:hover { box-shadow: 0 16px 48px #44789233, 0 8px 24px #244F7633; transform: rotateY(4deg) scale(1.03); }
-.testimonial-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--light-blue); margin-right: 0.8rem; }
-.testimonial-name { font-family: 'Inknut Antiqua', serif; color: var(--dark-blue); font-weight: bold; font-size: 1.08em; }
-.testimonial-role { color: var(--light-blue); font-size: 0.97em; }
-.testimonial-quote { font-size: 2.2rem; color: var(--medium-blue); margin-left: auto; opacity: 0.7; }
-.testimonial-content { font-family: 'Poppins', sans-serif; color: #333; font-size: 1.05em; margin-top: 0.5rem; }
+.testimonial-card:hover {
+  box-shadow: 0 8px 32px rgba(36,79,118,0.16), 0 4px 16px #44789233;
+  transform: translateY(-6px) scale(1.03);
+  border: 1.5px solid #44789233;
+  z-index: 2;
+}
+.testimonial-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #7C9FC0;
+  margin-right: 0.8rem;
+}
+.testimonial-name {
+  font-family: 'Inknut Antiqua', serif;
+  color: #244F76;
+  font-weight: bold;
+  font-size: 1.08em;
+}
+.testimonial-role {
+  color: #7C9FC0;
+  font-size: 0.97em;
+}
+.testimonial-quote {
+  font-size: 2.2rem;
+  color: #447892;
+  margin-left: auto;
+  opacity: 0.7;
+}
+.testimonial-content {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  font-size: 1.05em;
+  margin-top: 0.5rem;
+}
+.testimonial-card .rating {
+  margin-top: 0.3rem;
+}
+@media (max-width: 1200px) {
+  .testimonial-card { min-width: 180px; max-width: 200px; flex: 0 0 180px; }
+}
+@media (max-width: 768px) {
+  .testimonial-card { min-width: 80vw; max-width: 80vw; flex: 0 0 80vw; }
+}
 .faq-section .faq-question { font-family: 'Inknut Antiqua', serif; color: var(--dark-blue); font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: color 0.3s; }
 .faq-section .faq-question:hover { color: var(--medium-blue); }
 .faq-section .faq-answer { font-family: 'Poppins', sans-serif; color: #555; display: none; transition: all 0.4s; }
@@ -174,58 +217,215 @@ body { font-family: 'Poppins', sans-serif; background: #fff !important; }
 
 /* Témoignages - carrousel horizontal */
 .testimonials-carousel-wrapper {
-  overflow: hidden;
   position: relative;
-  width: 100%;
+  overflow: hidden;
+  padding: 0 60px;
   margin-bottom: 3rem;
+  background: linear-gradient(120deg, #f7fafc 80%, #e3eaf3 100%);
+  border-radius: 1.7rem;
+  box-shadow: 0 8px 32px rgba(36,79,118,0.10), 0 2px 8px #44789222;
+  padding-top: 2.2rem;
+  padding-bottom: 2.7rem;
+  margin-top: 2.5rem;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
 }
 .testimonials-carousel {
   display: flex;
-  transition: transform 1s cubic-bezier(.4,2,.3,1);
-  will-change: transform;
+  gap: 24px;
+  transition: transform 0.9s cubic-bezier(.4,2,.3,1);
+  margin: 0;
+  padding: 0;
 }
 .testimonial-card {
   min-width: 320px;
-  max-width: 320px;
-  margin-right: 24px;
   flex: 0 0 320px;
-  height: 100%;
-  background: var(--white);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 24px #44789222, 0 1.5px 6px #7C9FC0;
-  border: none;
-  padding: 2rem 1.2rem 1.2rem 1.2rem;
-  display: flex; flex-direction: column; align-items: flex-start;
-  transition: box-shadow 0.4s, transform 0.4s;
-  animation: rotateIn 1.2s cubic-bezier(.4,2,.3,1);
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
-@media (max-width: 1200px) {
-  .testimonial-card, .testimonials-carousel .testimonial-card { min-width: 260px; max-width: 260px; flex: 0 0 260px; }
-}
-@media (max-width: 768px) {
-  .testimonial-card, .testimonials-carousel .testimonial-card { min-width: 90vw; max-width: 90vw; flex: 0 0 90vw; }
+.testimonial-card:hover {
+  transform: translateY(-5px);
 }
 .testimonials-carousel-controls {
   position: absolute;
   top: 50%;
-  left: 0; right: 0;
+  left: 1.5rem;
+  right: 1.5rem;
+  transform: translateY(-50%);
   display: flex;
   justify-content: space-between;
-  transform: translateY(-50%);
   pointer-events: none;
+  z-index: 3;
 }
-.testimonials-carousel-controls button {
-  background: rgba(68,120,146,0.12);
+.carousel-control {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  border: none;
+  color: #244F76;
+  font-size: 1.7rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+  pointer-events: all;
+  box-shadow: 0 2px 12px #44789222;
+  opacity: 0.92;
+}
+.carousel-control:hover {
+  background: #244F76;
+  color: #fff;
+  box-shadow: 0 6px 24px #44789233;
+  transform: scale(1.08);
+  opacity: 1;
+}
+.carousel-control.prev { margin-left: -20px; }
+.carousel-control.next { margin-right: -20px; }
+@media (max-width: 1200px) {
+  .testimonials-carousel-wrapper { padding: 0 30px; }
+  .testimonials-carousel-controls { left: 0.5rem; right: 0.5rem; }
+}
+@media (max-width: 768px) {
+  .testimonials-carousel-wrapper { padding: 0 10px; }
+  .testimonials-carousel-controls { left: 0.1rem; right: 0.1rem; }
+}
+
+/* Les derniers logements ajoutés */
+.logements-carousel-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  background: linear-gradient(120deg, #f7fafc 80%, #e3eaf3 100%);
+  border-radius: 1.7rem;
+  box-shadow: 0 8px 32px rgba(36,79,118,0.10), 0 2px 8px #44789222;
+  padding: 2.2rem 1.5rem 2.7rem 1.5rem;
+  margin-bottom: 3.5rem;
+  margin-top: 2.5rem;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+}
+.logements-carousel {
+  display: flex;
+  transition: transform 0.9s cubic-bezier(.4,2,.3,1);
+  will-change: transform;
+  gap: 1.2rem;
+}
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  background: #fff;
   border: none;
   border-radius: 50%;
-  width: 40px; height: 40px;
-  font-size: 1.5rem;
-  color: var(--medium-blue);
-  box-shadow: 0 2px 8px #44789222;
+  width: 48px;
+  height: 48px;
+  font-size: 1.7rem;
+  color: #244F76;
+  box-shadow: 0 2px 12px #44789222;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
   pointer-events: all;
-  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.92;
 }
-.testimonials-carousel-controls button:hover { background: var(--medium-blue); color: #fff; }
+.carousel-arrow.left { left: 0.7rem; }
+.carousel-arrow.right { right: 0.7rem; }
+.carousel-arrow:hover {
+  background: #244F76;
+  color: #fff;
+  box-shadow: 0 6px 24px #44789233;
+  transform: translateY(-50%) scale(1.08);
+  opacity: 1;
+}
+.logement-card {
+  min-width: 260px;
+  max-width: 280px;
+  flex: 0 0 260px;
+  background: #fff;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 12px rgba(36,79,118,0.08), 0 1.5px 6px #7C9FC022;
+  border: 1px solid #e6e6e6;
+  margin-bottom: 1.2rem;
+  transition: box-shadow 0.3s, transform 0.3s, border 0.3s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.logement-card:hover {
+  box-shadow: 0 8px 32px rgba(36,79,118,0.16), 0 4px 16px #44789233;
+  transform: translateY(-6px) scale(1.03);
+  border: 1.5px solid #44789233;
+  z-index: 2;
+}
+.logement-card .card-img-top {
+  height: 150px;
+  object-fit: cover;
+  border-top-left-radius: 1.2rem;
+  border-top-right-radius: 1.2rem;
+}
+.logement-card .card-body {
+  padding: 1rem 1.1rem 1.2rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.logement-card .card-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #244F76;
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.logement-card .price {
+  color: #28a745;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.1rem;
+}
+.logement-card .location {
+  color: #666;
+  font-size: 0.97rem;
+  margin-bottom: 0.1rem;
+}
+.logement-card .stars {
+  color: #ffc107;
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+.logement-card .btn {
+  background: #244F76;
+  border: none;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  border-radius: 0.7rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #44789222;
+}
+.logement-card .btn:hover {
+  background: #447892;
+  box-shadow: 0 4px 16px #44789233;
+}
+@media (max-width: 1200px) {
+  .logements-carousel-wrapper { padding: 1.2rem 0.2rem 1.7rem 0.2rem; }
+  .carousel-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
+}
+@media (max-width: 768px) {
+  .logements-carousel-wrapper { padding: 0.7rem 0.1rem 1.2rem 0.1rem; min-height: 220px; }
+  .carousel-arrow { width: 36px; height: 36px; font-size: 1rem; }
+}
 </style>
 
 <div class="container py-5">
@@ -261,35 +461,25 @@ body { font-family: 'Poppins', sans-serif; background: #fff !important; }
       </div>
     </div>
   </div>
-  <!-- Logements -->
+  <!-- Les derniers logements ajoutés -->
   <h2 class="section-title fade-in-left">Les derniers logements ajoutés</h2>
-  <div class="row g-4 mb-5 fade-in-up">
+  <div class="logements-carousel-wrapper position-relative mb-5 fade-in-up">
+    <button class="carousel-arrow left" onclick="slideLogements(-1)"><i class="fa fa-chevron-left"></i></button>
+    <div class="logements-carousel d-flex" id="logementsCarousel">
     @forelse($latestAnnonces as $annonce)
-      <div class="col-12 col-md-6 col-lg-3">
-        <div class="card card-3d h-100">
+        <div class="logement-card card card-3d h-100 me-3">
           @if($annonce->logement && $annonce->logement->photos)
-            @php
-              $photos = is_array($annonce->logement->photos) ? $annonce->logement->photos : json_decode($annonce->logement->photos, true);
-              $firstPhoto = $photos[0] ?? null;
-              if ($firstPhoto && strpos($firstPhoto, 'logements/') !== 0) {
-                  $firstPhoto = 'logements/' . $firstPhoto;
-              }
-              $fullPath = 'storage/' . $firstPhoto;
-            @endphp
-            @if($firstPhoto && file_exists(public_path($fullPath)))
-              <img src="{{ asset($fullPath) }}" class="card-img-top" alt="Logement">
-            @else
-              <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Logement">
-            @endif
+            @php $photos = is_array($annonce->logement->photos) ? $annonce->logement->photos : json_decode($annonce->logement->photos, true); @endphp
+            <img src="{{ asset($photos[0] ?? 'images/default.jpg') }}" alt="Logement" class="card-img-top">
           @else
-            <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Logement">
+            <img src="{{ asset('images/default.jpg') }}" alt="Logement" class="card-img-top">
           @endif
-          <div class="card-body">
-            <h3 class="card-title">{{ $annonce->titre_anno ?? 'Logement' }}</h3>
-            <div class="price">{{ number_format($annonce->logement->prix_log ?? 0, 0, ',', ' ') }} DH / MOIS</div>
-            <div class="location">{{ $annonce->logement->localisation_log ?? 'Non spécifié' }}</div>
-            <div class="stars">★★★★★</div>
-          </div>
+          <div class="card-body" style="padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <h3 class="card-title" style="margin-bottom: 0.4rem;">{{ $annonce->titre_anno ?? 'Logement' }}</h3>
+            <div class="price" style="margin-bottom: 0.3rem;">{{ number_format($annonce->logement->prix_log ?? 0, 0, ',', ' ') }} DH / MOIS</div>
+            <div class="location" style="margin-bottom: 0.3rem;">{{ $annonce->logement->localisation_log ?? 'Non spécifié' }}</div>
+            <div class="stars" style="margin-bottom: 0.5rem;">★★★★★</div>
+            <a href="{{ route('showDetails', $annonce->logement->id) }}" class="btn btn-primary mt-2 w-100" style="background: #244F76; border: none; font-weight: 600; margin-top: 0.7rem;">Détails</a>
         </div>
       </div>
     @empty
@@ -297,36 +487,209 @@ body { font-family: 'Poppins', sans-serif; background: #fff !important; }
         <p class="text-center text-muted">Aucun logement disponible pour le moment.</p>
       </div>
     @endforelse
+    </div>
+    <button class="carousel-arrow right" onclick="slideLogements(1)"><i class="fa fa-chevron-right"></i></button>
   </div>
   <!-- Témoignages - Carrousel horizontal -->
   <h2 class="section-title fade-in-right">Ce que nos clients nous disent</h2>
   <div class="testimonials-carousel-wrapper">
     <div class="testimonials-carousel" id="testimonialsCarousel">
-      <!-- 10 cartes statiques -->
-      @foreach($avisClients as $avis)
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Yassine El Amrani</div>
+            <div class="testimonial-role">Étudiant à Rabat</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"Grâce à FindStay, j'ai trouvé un studio à deux pas de mon université. Plateforme fiable et propriétaires sérieux !"</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Salma Benali</div>
+            <div class="testimonial-role">Jeune active à Casablanca</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"J'ai adoré la simplicité d'utilisation du site. J'ai pu visiter plusieurs appartements en toute sécurité."</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
         <div class="testimonial-card">
           <div class="d-flex align-items-center mb-2">
             <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="avatar" class="testimonial-avatar">
             <div>
-              <div class="testimonial-name">{{ $avis->prenom }} {{ $avis->nom_uti }}</div>
-              <div class="testimonial-role">Étudiant</div>
+            <div class="testimonial-name">Othmane Idrissi</div>
+            <div class="testimonial-role">Doctorant à Fès</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"Service client très réactif, j'ai eu toutes les réponses à mes questions rapidement. Je recommande !"</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Imane Chafai</div>
+            <div class="testimonial-role">Étudiante à Marrakech</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"J'ai trouvé un appartement moderne et bien situé. Merci à toute l'équipe FindStay !"</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Hamza Bouzid</div>
+            <div class="testimonial-role">Ingénieur à Tanger</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"La réservation en ligne est très pratique. J'ai pu emménager rapidement sans stress."</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/women/50.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Nisrine El Fassi</div>
+            <div class="testimonial-role">Étudiante à Agadir</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"J'ai apprécié la transparence des annonces et la sécurité des paiements."</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/men/60.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Anas El Alaoui</div>
+            <div class="testimonial-role">Étudiant à Oujda</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"Site très intuitif, j'ai trouvé un logement en quelques clics seulement."</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/women/77.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Fatima Zahra Kabbaj</div>
+            <div class="testimonial-role">Jeune diplômée à Meknès</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"J'ai pu comparer plusieurs offres et choisir celle qui me convenait le mieux. Merci FindStay !"</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/men/70.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Mohamed El Idrissi</div>
+            <div class="testimonial-role">Étudiant à Settat</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"Plateforme très pratique, je la recommande à tous mes amis !"</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/women/80.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Rania Berrada</div>
+            <div class="testimonial-role">Étudiante à El Jadida</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"J'ai trouvé un logement rapidement et sans mauvaise surprise. Merci !"</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
+          </div>
+        </div>
             </div>
-            <div class="testimonial-quote">&ldquo;</div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/men/81.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Zakaria El Ghazali</div>
+            <div class="testimonial-role">Étudiant à Safi</div>
+          </div>
+          <div class="testimonial-quote">"</div>
           </div>
           <div class="testimonial-content">
-            <p class="testimonial-text">{{ $avis->contenu }}</p>
-            <div class="testimonial-author">
-              <div class="author-info">
+          <p class="testimonial-text">"Le site est bien fait, les annonces sont claires et détaillées. Je recommande vivement !"</p>
                 <div class="rating">
-                  @for($i = 1; $i <= 5; $i++)
-                    <i class="fas fa-star {{ $i <= $avis->note ? 'text-warning' : 'text-muted' }}"></i>
-                  @endfor
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
                 </div>
               </div>
             </div>
+      <div class="testimonial-card">
+        <div class="d-flex align-items-center mb-2">
+          <img src="https://randomuser.me/api/portraits/women/90.jpg" alt="avatar" class="testimonial-avatar">
+          <div>
+            <div class="testimonial-name">Soukaina El Mansouri</div>
+            <div class="testimonial-role">Étudiante à Kénitra</div>
+          </div>
+          <div class="testimonial-quote">"</div>
+        </div>
+        <div class="testimonial-content">
+          <p class="testimonial-text">"J'ai été rassurée par la sécurité des paiements et la rapidité du service."</p>
+          <div class="rating">
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i>
           </div>
         </div>
-      @endforeach
+      </div>
+    </div>
+    <div class="testimonials-carousel-controls">
+      <button class="carousel-control prev" onclick="slideTestimonials(-1)"><i class="fas fa-chevron-left"></i></button>
+      <button class="carousel-control next" onclick="slideTestimonials(1)"><i class="fas fa-chevron-right"></i></button>
     </div>
   </div>
   <!-- FAQ -->
@@ -436,28 +799,50 @@ document.addEventListener('DOMContentLoaded', animateCounters);
         }
     }
 
-// Carrousel horizontal automatique pour les témoignages
-const carousel = document.getElementById('testimonialsCarousel');
 let testimonialIndex = 0;
-const testimonialCards = carousel.querySelectorAll('.testimonial-card');
-const visibleCards = () => {
+const testimonialCards = document.querySelectorAll('.testimonial-card');
+const cardWidth = testimonialCards[0].offsetWidth + 24; // card width + gap
+
+function slideTestimonials(direction) {
+  const maxIndex = testimonialCards.length - 3; // Show 3 cards at once
+  testimonialIndex = Math.max(0, Math.min(maxIndex, testimonialIndex + direction));
+  
+  const carousel = document.getElementById('testimonialsCarousel');
+  carousel.style.transform = `translateX(-${testimonialIndex * cardWidth}px)`;
+}
+
+// Auto-slide every 5 seconds
+let autoSlideInterval = setInterval(() => slideTestimonials(1), 5000);
+
+// Pause auto-slide on hover
+const carouselWrapper = document.querySelector('.testimonials-carousel-wrapper');
+carouselWrapper.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+carouselWrapper.addEventListener('mouseleave', () => {
+  autoSlideInterval = setInterval(() => slideTestimonials(1), 5000);
+});
+
+let logementIndex = 0;
+function visibleLogementCards() {
   if(window.innerWidth < 600) return 1;
   if(window.innerWidth < 900) return 2;
   if(window.innerWidth < 1200) return 3;
   return 4;
-};
-function scrollTestimonials() {
-  testimonialIndex = (testimonialIndex + 1) % (testimonialCards.length - visibleCards() + 1);
-  carousel.style.transform = `translateX(-${testimonialIndex * (testimonialCards[0].offsetWidth + 24)}px)`;
 }
-let testimonialInterval = setInterval(scrollTestimonials, 5000);
+function slideLogements(dir) {
+  const carousel = document.getElementById('logementsCarousel');
+  const cards = carousel.querySelectorAll('.logement-card');
+  const maxIndex = Math.max(0, cards.length - visibleLogementCards());
+  logementIndex += dir;
+  if(logementIndex < 0) logementIndex = 0;
+  if(logementIndex > maxIndex) logementIndex = maxIndex;
+  carousel.style.transform = `translateX(-${logementIndex * (cards[0].offsetWidth + 24)}px)`;
+}
 window.addEventListener('resize', () => {
+  const carousel = document.getElementById('logementsCarousel');
+  const cards = carousel.querySelectorAll('.logement-card');
   carousel.style.transition = 'none';
-  carousel.style.transform = `translateX(-${testimonialIndex * (testimonialCards[0].offsetWidth + 24)}px)`;
+  carousel.style.transform = `translateX(-${logementIndex * (cards[0].offsetWidth + 24)}px)`;
   setTimeout(()=>carousel.style.transition = '', 100);
 });
-// Pause défilement au survol
-carousel.addEventListener('mouseenter', ()=>clearInterval(testimonialInterval));
-carousel.addEventListener('mouseleave', ()=>testimonialInterval = setInterval(scrollTestimonials, 5000));
 </script>
 @endsection
