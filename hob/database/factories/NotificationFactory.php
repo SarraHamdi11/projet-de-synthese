@@ -17,7 +17,7 @@ class NotificationFactory extends Factory
             'type' => $this->faker->randomElement(['reservation', 'message', 'systeme']),
             'read_at' => null,
             'notifiable_type' => 'App\\Models\\Utilisateur',
-            'notifiable_id' => Utilisateur::factory(),
+            'notifiable' => Utilisateur::factory(),
         ];
     }
 }
