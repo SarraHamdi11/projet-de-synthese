@@ -26,6 +26,7 @@
                 </div>
 
                 <div class="card-body p-4">
+                    <div style="background: #cce5ff; color: #004085; padding: 8px; text-align: center; font-weight: bold;">DEBUG: MESSAGES SHOW VIEW</div>
                     {{-- Messages container with loading animation --}}
                     <div id="messages" class="mb-4" data-auth-id="{{ Auth::id() }}" style="height: 400px; overflow-y: auto;">
                         <div class="text-center py-3" id="loading">

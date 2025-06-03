@@ -49,6 +49,12 @@ class ConversationController extends Controller
         // Get messages between the two users
         $messages = $conversation->allMessages();
 
+        // Mark messages as read
+        \App\Models\Message::where('receiver_id', $user->id)
+            ->where('sender_id', $proprietaire->id)
+            ->where('is_read', false)
+            ->update(['is_read' => true, 'read_at' => now()]);
+
         return view('conversations.show', compact('conversation', 'messages', 'proprietaire'));
     }
 

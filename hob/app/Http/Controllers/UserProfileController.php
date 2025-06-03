@@ -123,6 +123,6 @@ class UserProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('status', 'account-deleted');
+        return redirect()->route('visitor')->with('status', 'account-deleted');
     }
 }

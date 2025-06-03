@@ -125,11 +125,10 @@ class Utilisateur extends Authenticatable
    
 
 
-    // Remove the incorrect notifications relationship since we're using the Notifiable trait
-    // public function notifications()
-    // {
-    //     return $this->hasMany(Notification::class);
-    // }
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')->orderBy('created_at', 'desc');
+    }
 
    
 

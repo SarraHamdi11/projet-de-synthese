@@ -4,6 +4,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <div style="background: #ffeeba; color: #856404; padding: 8px; text-align: center; font-weight: bold;">DEBUG: LOCATAIRE CONVERSATION VIEW</div>
             <div class="card chat-card">
                 <div class="card-header chat-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
@@ -22,6 +23,9 @@
 
                 <div class="card-body chat-body">
                     <div class="chat-messages" id="chat-messages">
+                        @php
+                            $lastSentMessage = $messages->where('sender_id', auth()->id())->last();
+                        @endphp
                         @foreach($messages as $message)
                             <div class="message {{ $message->sender_id === auth()->id() ? 'sent' : 'received' }}">
                                 @if($message->sender_id !== auth()->id())
@@ -47,7 +51,7 @@
                         <input type="hidden" name="receiver_id" value="{{ $proprietaire->id }}">
                         <div class="input-group">
                             <input type="text" name="message" class="form-control" placeholder="Écrivez votre message..." required>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn send-btn">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -65,10 +69,15 @@
     height: 80vh;
     display: flex;
     flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(36,80,122,0.08);
 }
 
 .chat-header {
-    background-color: #f8f9fa;
+    background-color: #24507a !important;
+    color: #fff !important;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     border-bottom: 1px solid #dee2e6;
     padding: 1rem;
 }
@@ -126,12 +135,12 @@
 .message-content {
     background-color: white;
     padding: 0.75rem;
-    border-radius: 1rem;
+    border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .message.sent .message-content {
-    background-color: #007bff;
+    background-color: #24507a;
     color: white;
 }
 
@@ -163,6 +172,8 @@
 .chat-form {
     padding: 1rem;
     background-color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     border-top: 1px solid #dee2e6;
 }
 
@@ -182,14 +193,21 @@
     box-shadow: none;
 }
 
-.chat-form button {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.send-btn {
+    background: #24507a !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 22px;
+    box-shadow: none !important;
+    transition: background 0.2s;
+}
+
+.send-btn:hover, .send-btn:focus {
+    background: #18375b !important;
+    color: #fff !important;
 }
 </style>
 @endpush

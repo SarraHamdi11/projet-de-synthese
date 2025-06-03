@@ -18,6 +18,10 @@ use App\Http\Controllers\locataire\AccueilLocataireController;
 use App\Http\Controllers\locataire\AnnonceLocataireController;
 use App\Http\Controllers\proprietaire\AccueilProprietaireController;
 use App\Http\Controllers\proprietaire\annonceproprietaireController;
+use App\Http\Controllers\LocataireController;
+use App\Http\Controllers\ProprietaireController;
+use App\Http\Controllers\locataire\LocataireProfileController;
+use App\Http\Controllers\proprietaire\ProprietaireProfileController;
 
 
 // auth
@@ -26,7 +30,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signup']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
@@ -103,6 +107,13 @@ Route::middleware(['auth'])->group(function () {
         return response()->json(['success' => true]);
     })->name('notifications.markAllRead');
 
+    Route::post('/notifications/{id}/mark-read', function($id) {
+        if (Auth::user()) {
+            Auth::user()->notifications()->where('id', $id)->update(['read_at' => now()]);
+        }
+        return response()->json(['success' => true]);
+    })->name('notifications.markRead');
+
     Route::post('/notifications/delete-all', function() {
         if (Auth::user()) {
             Auth::user()->notifications()->delete();
@@ -139,3 +150,6 @@ Route::post('/locataire/reservation', [LogementlocaController::class, 'storeRese
 Route::post('/locataire/favorite/{id}', [LogementlocaController::class, 'toggleFavorite'])->name('favorite.toggle');
 Route::get('/locataire/favorites', [LogementlocaController::class, 'showFavorites'])->name('locataire.favorites');
 Route::post('/toggle-favorite/{logement}', [FavoriController::class, 'toggle'])->name('toggle.favorite');
+
+Route::get('/locataire/myprofile', [LocataireProfileController::class, 'myProfile'])->name('locataire.myprofile');
+Route::get('/proprietaire/myprofile', [ProprietaireProfileController::class, 'myProfile'])->name('proprietaire.myprofile');
