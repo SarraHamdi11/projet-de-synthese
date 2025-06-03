@@ -2,22 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Avis;
+use App\Models\Logement;
+use App\Models\Statistique;
 use App\Models\Utilisateur;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    public function visitor()
-    {
-        return view('visitor');
+   
+public function visitor()
+{
+    // Récupération des statistiques
+    $stats = Statistique::first();
+
+    $statsData = [
+        'nombre_reservation' => $stats ? $stats->nombre_reservation : 0,
+        'note_moyenne_annonce' => $stats && $stats->note_moyenne_annonce !== null ? round($stats->note_moyenne_annonce * 20) : 0,
+        'nombre_utilisateur' => $stats ? $stats->nombre_utilisateur : 0,
+        'nombre_annonce' => $stats ? $stats->nombre_annonce : 0,
+    ];
+
+    // Récupération des 5 villes ayant le plus de logements
+    $cityLogements = DB::table('logements')
+        ->select('ville', DB::raw('COUNT(*) as logement_count'))
+        ->groupBy('ville')
+        ->orderByDesc('logement_count') // Trier par nombre de logements en ordre décroissant
+        ->take(5) // Limiter à 5 villes
+        ->get();
+
+     $avis = Avis::with('locataire')
+        ->select('contenu', 'note', 'locataire_id')
+        ->orderByDesc('note')
+        ->take(3)
+        ->get()
+        ->map(function ($item) {
+            $item->nom_prenom = $item->locataire ? $item->locataire->nom . ' ' . $item->locataire->prenom : 'Utilisateur Anonyme';
+            return $item;
+        });
+
+    // Récupération des 3 derniers logements ajoutés
+        $latestLogements = Logement::select('id', 'type_log', 'prix_log', 'ville', 'photos')
+            ->orderByDesc('created_at') // Or use 'date_creation_log' if preferred
+            ->take(3)
+            ->get()
+            ->map(function ($logement) {
+                // Calculate average rating from avis table
+                $averageNote = Avis::where('annonce_id', $logement->id)
+                    ->avg('note') ?? 0; // Fallback to 0 if no reviews
+                $logement->average_note = round($averageNote); // Round to nearest integer
+                return $logement;
+            });
+
+        // Passer les variables à la vue
+        return view('visitor', compact('statsData', 'cityLogements', 'avis', 'latestLogements'));
     }
 
     public function showLogin()

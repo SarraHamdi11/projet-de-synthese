@@ -1,29 +1,32 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\proprietaire\AccueilProprietaireController;
-use App\Http\Controllers\locataire\AccueilLocataireController;
-use App\Http\Controllers\proprietaire\annonceproprietaireController;
-use App\Http\Controllers\locataire\AnnonceLocataireController;
-use App\Http\Controllers\MessageController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FavoriController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\Locataire\LogementlocaController;
 use App\Http\Controllers\Proprietaire\ProfilPropController;
 use App\Http\Controllers\Proprietaire\LogementpropController;
-use App\Http\Controllers\Locataire\LogementlocaController;
-use App\Http\Controllers\FavoriController;
-use App\Http\Controllers\ConversationController;
-use App\Http\Controllers\FileUploadController;
-use App\Http\Controllers\NotificationsController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\locataire\AccueilLocataireController;
+use App\Http\Controllers\locataire\AnnonceLocataireController;
+use App\Http\Controllers\proprietaire\AccueilProprietaireController;
+use App\Http\Controllers\proprietaire\annonceproprietaireController;
+
+
 // auth
 Route::get('/', [AuthController::class, 'visitor'])->name('visitor');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signup']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
@@ -48,10 +51,25 @@ Route::prefix('locataire')->name('locataire.')->middleware('auth')->group(functi
     Route::delete('/annonceslocataire/{id}', [AnnonceLocataireController::class, 'destroy'])->name('annoncelocataire.destroy');
 });
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware('auth')->name('admin.dashboard');
 
+Route::prefix('admin')->middleware('auth')->group(function () {
+    // Dashboard routes
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/get-recent-users', [AdminController::class, 'getRecentUsers'])->name('admin.getRecentUsers');
+    Route::get('/get-recent-listings', [AdminController::class, 'getRecentListings'])->name('admin.getRecentListings');
+    Route::get('/get-dashboard-stats', [AdminController::class, 'getDashboardStats'])->name('admin.getDashboardStats');
+
+    // Users routes
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+    Route::get('/users/export', [AdminController::class, 'exportUsers'])->name('admin.users.export');
+
+    // Listings routes (updated with new functionality)
+    Route::get('/listings', [AdminController::class, 'listings'])->name('admin.listings');
+    Route::delete('/listings/{id}', [AdminController::class, 'deleteListing'])->name('admin.deleteListing');
+    Route::get('/listings/export', [AdminController::class, 'exportListings'])->name('admin.exportListings');
+    Route::get('/listings/{id}/detail', [AdminController::class, 'showListingDetail'])->name('admin.showListingDetail');
+});
 Route::middleware(['auth'])->group(function () {
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/{receiverId}', [MessageController::class, 'show'])->name('messages.show');

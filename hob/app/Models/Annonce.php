@@ -17,21 +17,37 @@ class Annonce extends Model
         'logement_id',
         'proprietaire_id',
     ];
-
-    public function logement()
+        protected $table = 'annonces';
+    protected $primaryKey = 'id';
+    protected $casts = [
+    'date_publication_anno' => 'datetime',
+    'created_at' => 'datetime',
+    'updated_at' => 'datetime',
+];
+ // Cast date_publication_anno to Carbon instance
+    protected $dates = ['date_publication_anno', 'created_at', 'updated_at'];
+  
+    public function proprietaire()
     {
-        return $this->belongsTo(Logement::class, 'logement_id');
+        return $this->belongsTo(Utilisateur::class, 'proprietaire_id', 'id');
     }
 
-    public function utilisateur()
+  
+     public function logement()
     {
-        return $this->belongsTo(Utilisateur::class, 'proprietaire_id');
+        return $this->belongsTo(Logement::class, 'logement_id', 'id');
+    }
+
+     public function utilisateurs()
+    {
+        return $this->belongsTo(Utilisateur::class, 'proprietaire_id', 'id');
     }
 
     public function avis()
     {
-        return $this->hasMany(Avis::class);
+        return $this->hasMany(Avis::class, 'annonce_id', 'id');
     }
+
 
     public function favori()
     {
