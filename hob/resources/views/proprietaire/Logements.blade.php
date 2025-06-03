@@ -93,7 +93,7 @@
                 <a href="{{ route('proprietaire.logements', array_merge(request()->query(), ['page' => $page - 1])) }}">←</a>
             @endif
             @for($i = 1; $i <= ceil($total / $perPage); $i++)
-                <a href="{{ route('proprietaire.logements', array_merge(request()->query(), ['page' => $i])) }}" class="{{ $i == $page ? 'active' : '' }}">{{ $i }}</a>
+                <a href="{{ route('proprietaire.logements', array_merge(request()->query(), ['page' => $i])) }}"></a>
             @endfor
             @if($page < ceil($total / $perPage))
                 <a href="{{ route('proprietaire.logements', array_merge(request()->query(), ['page' => $page + 1])) }}">→</a>
@@ -270,7 +270,7 @@
         text-decoration: none;
         font-weight: bold;
         text-transform: uppercase;
-        background: #3498db;
+        background: #24507a;
         color: white;
         transition: all 0.3s ease;
     }

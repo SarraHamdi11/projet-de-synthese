@@ -322,8 +322,14 @@
     }
 
     .details-btn {
-        background: #9b59b6;
+        padding: 12px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        text-transform: uppercase;
+        background: #24507a;
         color: white;
+        transition: all 0.3s ease;
     }
 
     .details-btn:hover {
@@ -396,5 +402,45 @@
         font-size: 14px;
         color: #666;
         margin: 5px 0;
+    }
+
+    /* Chat/conversation modal send button styles */
+    #message-form-modal .input-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+    }
+    #message-form-modal input[type="text"] {
+        flex: 1;
+        border-radius: 20px;
+        border: 1px solid #ddd;
+        padding: 8px 16px;
+        font-size: 15px;
+    }
+    #message-form-modal button[type="submit"] {
+        background: #24507a;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        box-shadow: 0 2px 6px rgba(36,80,122,0.12);
+        margin-bottom: 0;
+        margin-top: 0;
+        transition: background 0.2s;
+    }
+    #message-form-modal button[type="submit"]:hover {
+        background: #18375b;
+    }
+    .chat-footer {
+        padding: 10px 0 0 0;
+        background: #fff;
+        border-top: 1px solid #eee;
+        position: static;
     }
 </style>

@@ -26,7 +26,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signup']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
@@ -102,6 +102,13 @@ Route::middleware(['auth'])->group(function () {
         }
         return response()->json(['success' => true]);
     })->name('notifications.markAllRead');
+
+    Route::post('/notifications/{id}/mark-read', function($id) {
+        if (Auth::user()) {
+            Auth::user()->notifications()->where('id', $id)->update(['read_at' => now()]);
+        }
+        return response()->json(['success' => true]);
+    })->name('notifications.markRead');
 
     Route::post('/notifications/delete-all', function() {
         if (Auth::user()) {

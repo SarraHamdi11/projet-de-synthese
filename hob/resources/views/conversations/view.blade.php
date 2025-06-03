@@ -3,81 +3,64 @@
 @section('title', 'Conversation')
 
 @section('content')
-<div class="container py-4">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow-lg rounded-lg">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h3 class="h5 mb-0">
-                        @if($otherUser)
-                            <img src="{{ $otherUser->photodeprofil_uti ?? asset('images/default-avatar.png') }}" 
-                                 alt="{{ $otherUser->prenom }}" 
-                                 class="rounded-circle me-2" 
-                                 style="width: 40px; height: 40px; object-fit: cover;">
-                            {{ $otherUser->prenom }} {{ $otherUser->nom_uti }}
-                        @else
-                            <span>Utilisateur inconnu</span>
-                        @endif
-                    </h3>
-                    <div>
-                        <button class="btn btn-light btn-sm" id="toggleTheme">
-                            <i class="fas fa-moon"></i>
-                        </button>
-                        <a href="{{ route('messages.index') }}" class="btn btn-light btn-sm ms-2">
-                            <i class="fas fa-arrow-left"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card-body p-4">
-                    {{-- Messages container with loading animation --}}
-                    <div id="messages" class="mb-4" data-auth-id="{{ Auth::id() }}" style="height: 400px; overflow-y: auto;">
-                        <div class="text-center py-3" id="loading">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+            <div class="card chat-card">
+                <div class="card-header chat-header d-flex justify-content-between align-items-center" style="background: #24507a; color: #fff;">
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar me-3">
+                            <i class="fas fa-user-circle fa-2x"></i>
                         </div>
+                        <div>
+                            <h5 class="mb-0">{{ $otherUser->prenom }} {{ $otherUser->nom_uti }}</h5>
+                            <small class="text-light">{{ $otherUser->role_uti }}</small>
+                        </div>
+                    </div>
+                    <a href="{{ route('conversations.index') }}" class="btn btn-outline-light">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+                <div class="card-body chat-body">
+                    <div class="chat-messages" id="chat-messages">
+                        @php
+                            $lastSentMessage = $conversation->allMessages()->where('sender_id', Auth::id())->last();
+                        @endphp
                         @foreach($conversation->allMessages() as $message)
-                            <div class="message-wrapper {{ $message->sender_id === Auth::id() ? 'message-sent' : 'message-received' }} mb-3">
-                                <div class="message-content {{ $message->sender_id === Auth::id() ? 'bg-primary text-white' : 'bg-light' }} p-3 rounded position-relative">
-                                    @if($message->message_type === 'text')
-                                        {{ $message->message }}
-                                    @elseif($message->message_type === 'image')
-                                        <img src="{{ $message->attachments[0] }}" class="img-fluid rounded" alt="Image">
-                                    @elseif($message->message_type === 'file')
-                                        <a href="{{ $message->attachments[0] }}" class="text-decoration-none" target="_blank">
-                                            <i class="fas fa-file me-2"></i>Download File
-                                        </a>
-                                    @endif
-                                    <div class="message-time text-end mt-1 {{ $message->sender_id === Auth::id() ? 'text-white-50' : 'text-muted' }}" style="font-size: 0.8em;">
-                                        {{ $message->created_at->format('H:i') }}
-                                        @if($message->sender_id === Auth::id())
-                                            <i class="fas fa-check-double {{ $message->is_read ? 'text-info' : '' }} ms-1"></i>
+                            <div class="message {{ $message->sender_id === Auth::id() ? 'sent' : 'received' }}">
+                                @if($message->sender_id !== Auth::id())
+                                    <div class="message-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                @endif
+                                <div class="message-content">
+                                    <div class="message-header">
+                                        <span class="message-sender">
+                                            {{ $message->sender_id === Auth::id() ? 'Vous' : $otherUser->prenom }}
+                                        </span>
+                                        <span class="message-time">{{ $message->created_at->format('H:i') }}</span>
+                                    </div>
+                                    <div class="message-text">
+                                        @if($message->message_type === 'text')
+                                            {{ $message->message }}
+                                        @elseif($message->message_type === 'image')
+                                            <img src="{{ $message->attachments[0] }}" class="img-fluid rounded" alt="Image">
+                                        @elseif($message->message_type === 'file')
+                                            <a href="{{ $message->attachments[0] }}" class="text-decoration-none" target="_blank">
+                                                <i class="fas fa-file me-2"></i>Download File
+                                            </a>
                                         @endif
                                     </div>
-                                    @if($message->sender_id === Auth::id())
-                                        <button class="btn btn-sm btn-link text-white position-absolute top-0 end-0 delete-message" 
-                                                data-message-id="{{ $message->id }}"
-                                                style="opacity: 0.5;">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    @endif
                                 </div>
                             </div>
                         @endforeach
                     </div>
-
-                    {{-- Message input form with file upload --}}
-                    <form id="message-form" class="mt-4">
+                    <form id="message-form" class="chat-form">
                         @csrf
-                        <input type="hidden" name="receiver_id" value="{{ Auth::id() === $conversation->locataire_id ? $conversation->proprietaire_id : $conversation->locataire_id }}">
+                        <input type="hidden" name="receiver_id" value="{{ Auth::id() === $conversation->expediteur_id ? $conversation->destinataire_id : $conversation->expediteur_id }}">
                         <div class="input-group">
-                            <button type="button" class="btn btn-outline-secondary" id="attachButton">
-                                <i class="fas fa-paperclip"></i>
-                            </button>
-                            <input type="file" id="fileInput" class="d-none" accept="image/*,.pdf,.doc,.docx">
-                            <input type="text" name="message" class="form-control" placeholder="{{ __('Écrivez votre message...') }}" required>
-                            <button type="submit" class="btn btn-primary">
+                            <input type="text" name="message" class="form-control" placeholder="Écrivez votre message..." required>
+                            <button type="submit" class="btn send-btn">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
@@ -89,46 +72,140 @@
 </div>
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
-    .message-wrapper {
-        display: flex;
-        margin-bottom: 1rem;
-    }
-    .message-sent {
-        justify-content: flex-end;
-    }
-    .message-received {
-        justify-content: flex-start;
-    }
-    .message-content {
-        max-width: 70%;
-        position: relative;
-    }
-    .message-content:hover .delete-message {
-        opacity: 1 !important;
-    }
-    [data-theme="dark"] {
-        background-color: #1a1a1a;
-        color: #ffffff;
-    }
-    [data-theme="dark"] .card {
-        background-color: #2d2d2d;
-        border-color: #404040;
-    }
-    [data-theme="dark"] .bg-light {
-        background-color: #404040 !important;
-        color: #ffffff !important;
-    }
-    [data-theme="dark"] .text-muted {
-        color: #a0a0a0 !important;
-    }
+.chat-card {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(36,80,122,0.08);
+}
+.chat-header {
+    background-color: #24507a !important;
+    color: #fff !important;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chat-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background-color: #f8f9fa;
+    padding-bottom: 30px;
+}
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    max-width: 80%;
+}
+.message.sent {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+.message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.message-content {
+    background-color: white;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+.message.sent .message-content {
+    background-color: #24507a;
+    color: white;
+}
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+.message-sender {
+    font-weight: 600;
+}
+.message-time {
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+.message.sent .message-time {
+    color: rgba(255,255,255,0.8);
+}
+.message-text {
+    word-wrap: break-word;
+}
+.chat-form {
+    padding: 1rem;
+    background-color: white;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top: 1px solid #dee2e6;
+}
+.chat-form .input-group {
+    background-color: #f8f9fa;
+    border-radius: 2rem;
+    padding: 0.5rem;
+}
+.chat-form input {
+    border: none;
+    background: transparent;
+    padding: 0.5rem 1rem;
+}
+.chat-form input:focus {
+    box-shadow: none;
+}
+.send-btn {
+    background: #24507a !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 22px;
+    box-shadow: none !important;
+    transition: background 0.2s;
+}
+.send-btn:hover, .send-btn:focus {
+    background: #18375b !important;
+    color: #fff !important;
+}
 </style>
 @endpush
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const messagesContainer = document.getElementById('messages');
+    const messagesContainer = document.getElementById('chat-messages');
     const authUserId = parseInt(messagesContainer.dataset.authId);
     const messageForm = document.getElementById('message-form');
     const fileInput = document.getElementById('fileInput');
@@ -280,6 +357,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageElement.querySelector('.fa-check-double').classList.add('text-info');
             }
         });
+
+    const messageInput = document.querySelector('#message-form [name="message"]');
+    const typingIndicator = document.getElementById('typing-indicator');
+    let typingTimeout;
+    messageInput.addEventListener('input', function() {
+        if (this.value.trim() !== '') {
+            typingIndicator.style.display = 'block';
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                typingIndicator.style.display = 'none';
+            }, 1500);
+        } else {
+            typingIndicator.style.display = 'none';
+        }
+    });
+    document.getElementById('message-form').addEventListener('submit', function() {
+        typingIndicator.style.display = 'none';
+    });
 });
 </script>
 @endpush

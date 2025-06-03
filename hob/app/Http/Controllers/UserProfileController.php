@@ -86,7 +86,7 @@ class UserProfileController extends Controller
             'password.not_in' => 'The new password cannot be the same as the current password.',
         ]);
 
-        $user->password = Hash::make($request->password);
+        $user->mot_de_passe_uti = Hash::make($request->password);
         $user->save();
 
         return redirect()->route('profile.password.form')->with('status', 'password-updated');

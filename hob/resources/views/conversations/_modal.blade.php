@@ -21,7 +21,7 @@
         <input type="hidden" name="receiver_id" value="{{ $otherUser->id ?? '' }}">
         <div class="input-group">
             <input type="text" name="message" class="form-control" placeholder="Écrivez votre message..." required>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn send-btn">
                 <i class="fas fa-paper-plane"></i>
             </button>
         </div>
@@ -35,6 +35,9 @@
         display: flex;
         flex-direction: column;
         gap: 0;
+        margin-bottom: 20px;
+        max-height: 250px;
+        overflow-y: auto;
     }
     .chat-message {
         max-width: 200px;
@@ -58,5 +61,23 @@
         align-self: flex-start;
         border-bottom-left-radius: 4px;
         text-align: left;
+    }
+    #chatBoxContainer {
+        max-height: 400px;
+    }
+    .send-btn {
+        background: #24507a !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 8px 22px;
+        box-shadow: none !important;
+        transition: background 0.2s;
+    }
+    .send-btn:hover, .send-btn:focus {
+        background: #18375b !important;
+        color: #fff !important;
     }
 </style> 

@@ -56,12 +56,28 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        
+        // Créer des conversations basées sur les réservations
+        foreach ($logements as $logement) {
+            $proprietaire = $utilisateurs->random();
+            $locataire = $utilisateurs->random();
+            
+            // Créer une conversation entre le propriétaire et le locataire
+            $conversation = Conversation::factory()->create([
+                'expediteur_id' => $proprietaire->id,
+                'destinataire_id' => $locataire->id,
+                'date_debut_conv' => now()->subDays(rand(1, 30))
+            ]);
 
-        // Créer 20 conversations et 3 messages pour chaque
-        
-
-       
+            // Créer une réservation associée
+            Reservation::factory()->create([
+                'logements_id' => $logement->id,
+                'locataire_id' => $locataire->id,
+                'proprietaire_id' => $proprietaire->id,
+                'date_debut_res' => now()->addDays(rand(1, 30)),
+                'date_fin_res' => now()->addDays(rand(31, 60)),
+                'statut_res' => 'en_attente'
+            ]);
+        }
 
         // Créer un administrateur
         Administrateur::factory(1)->create();

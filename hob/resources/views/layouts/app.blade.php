@@ -335,6 +335,28 @@
             0% { transform: scale(1); }
             100% { transform: scale(1.15) rotate(-8deg); }
         }
+        .mark-read-btn {
+            background: #fff !important;
+            color: #244F76 !important;
+            border: 1.5px solid #244F76 !important;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+        }
+        .mark-read-btn i {
+            color: #244F76 !important;
+        }
+        .mark-read-btn:hover {
+            background: #244F76 !important;
+            color: #fff !important;
+        }
+        .mark-read-btn:hover i {
+            color: #fff !important;
+        }
     </style>
     @stack('styles')
 </head>
@@ -373,8 +395,8 @@
                         <div class="dropdown">
                             <a href="#" id="chatDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative dropdown-toggle">
                                 <i class="fas fa-comments fa-lg"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ auth()->user()->receivedMessages()->where('is_read', false)->count() }}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-primary" style="color: #24507a !important; background: #fff !important; border: 2px solid #24507a !important; min-width: 28px; min-height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem;">
+                                    {{ auth()->user()->receivedMessages()->where('is_read', false)->count() ?: 0 }}
                                 </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-messages p-3" aria-labelledby="chatDropdown">
@@ -387,7 +409,7 @@
                                         <li class="d-flex align-items-center justify-content-between">
                                             <div class="d-flex align-items-center gap-2 flex-grow-1">
                                                 <a class="dropdown-item d-flex align-items-center gap-2 flex-grow-1 open-conversation-link" href="#" data-conversation-id="{{ $conv->id }}">
-                                                    <img src="{{ $otherUser->photodeprofil_uti ?? asset('images/default-avatar.png') }}" alt="{{ $otherUser->prenom }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                                    <img src="{{ $otherUser->photodeprofil_uti ? asset('storage/' . $otherUser->photodeprofil_uti) : asset('images/default-avatar.png') }}" alt="{{ $otherUser->prenom }}" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                                                     <span>{{ $otherUser->prenom }} {{ $otherUser->nom_uti }}</span>
                                                 </a>
                                             </div>
@@ -405,8 +427,8 @@
                         <div class="dropdown">
                             <a href="#" id="notifDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="position-relative dropdown-toggle">
                                 <i class="fas fa-bell fa-lg"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ auth()->user()->notifications()->whereNull('read_at')->count() }}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-primary" style="color: #24507a !important; background: #fff !important; border: 2px solid #24507a !important; min-width: 28px; min-height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1rem;">
+                                    {{ auth()->user()->notifications()->whereNull('read_at')->count() ?: 0 }}
                                 </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-notifications p-3" aria-labelledby="notifDropdown">
@@ -417,24 +439,31 @@
                                 </div>
                                 <div style="max-height: 300px; overflow-y: auto;" id="notifListContainer">
                                     @forelse(auth()->user()->notifications()->whereNull('read_at')->get() as $notification)
-                                        <div class="notif-item">
-                                            <img src="{{ $notification->data['avatar'] ?? asset('images/default-avatar.png') }}" class="notif-avatar" alt="avatar" style="background: #fff;">
-                                            <div class="notif-content">
-                                                <div class="notif-name">
-                                                    {{ $notification->data['name'] ?? 'Utilisateur' }}
-                                                </div>
-                                                <div class="notif-message">
-                                                    @if(isset($notification->data['type']) && $notification->data['type'] === 'reservation')
-                                                        demande de reservation
-                                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'comment')
-                                                        {{ $notification->data['name'] ?? 'Utilisateur' }} a commenté votre poste
-                                                    @elseif(isset($notification->data['type']) && $notification->data['type'] === 'reservation_status')
-                                                        {{ $notification->data['message'] ?? '' }}
-                                                    @else
-                                                        {{ $notification->data['message'] ?? $notification->data['body'] ?? '' }}
-                                                    @endif
+                                        <div class="notif-item d-flex align-items-center justify-content-between" data-notification-id="{{ $notification->id }}">
+                                            <div class="d-flex align-items-center">
+                                                <img src="{{ $notification->data['avatar'] ?? asset('images/default-avatar.png') }}" class="notif-avatar" alt="avatar" style="background: #fff;">
+                                                <div class="notif-content">
+                                                    <div class="notif-name">
+                                                        {{ $notification->data['name'] ?? 'Utilisateur' }}
+                                                    </div>
+                                                    <div class="notif-message">
+                                                        @if(isset($notification->data['type']) && $notification->data['type'] === 'reservation')
+                                                            demande de reservation
+                                                        @elseif(isset($notification->data['type']) && $notification->data['type'] === 'comment')
+                                                            {{ $notification->data['name'] ?? 'Utilisateur' }} a commenté votre poste
+                                                        @elseif(isset($notification->data['type']) && $notification->data['type'] === 'reservation_status')
+                                                            {{ $notification->data['message'] ?? '' }}
+                                                        @else
+                                                            {{ $notification->data['message'] ?? $notification->data['body'] ?? '' }}
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
+                                            @if(!$notification->read_at)
+                                                <button class="btn btn-sm btn-outline-primary mark-read-btn" onclick="markAsRead('{{ $notification->id }}', this)">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            @endif
                                         </div>
                                     @empty
                                         <span class="dropdown-item text-muted">Aucune notification</span>
@@ -619,6 +648,36 @@
             });
         }
     });
+    </script>
+    <script>
+    function markAsRead(notificationId, btn) {
+        fetch(`/notifications/${notificationId}/mark-read`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                btn.remove();
+                // Update the unread count in the navbar
+                const unreadCountElement = document.querySelector('.fa-bell + .badge, #unread-notifications-count');
+                if (unreadCountElement) {
+                    let currentCount = parseInt(unreadCountElement.textContent);
+                    if (currentCount > 0) {
+                        unreadCountElement.textContent = currentCount - 1;
+                        if (currentCount - 1 === 0) {
+                            unreadCountElement.style.display = 'none';
+                        }
+                    }
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
     </script>
 </body>
 </html>
