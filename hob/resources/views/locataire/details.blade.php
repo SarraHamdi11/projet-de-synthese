@@ -59,7 +59,7 @@
                 <div class="card-body">
                     <h3 class="card-title mb-4">Propriétaire</h3>
                     <div class="d-flex align-items-center mb-3">
-                        <img src="{{ $proprietaire->photodeprofil_uti ?? asset('images/default-avatar.png') }}" 
+                        <img src="{{ $proprietaire->photodeprofil_uti ? asset($proprietaire->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
                              alt="{{ $proprietaire->prenom }}" 
                              class="rounded-circle me-3" 
                              style="width: 60px; height: 60px; object-fit: cover;">
@@ -79,6 +79,43 @@
                         <button class="btn btn-outline-primary toggle-favorite" data-listing-id="{{ $logement->id }}">
                             <i class="fas fa-heart me-2"></i>Ajouter aux favoris
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">Commentaires</h3>
+                    
+                    <!-- Comment Form -->
+                    <form action="{{ route('storeComment', $logement->id) }}" method="POST" class="mb-4">
+                        @csrf
+                        <div class="mb-3">
+                            <textarea name="comment" class="form-control" rows="3" placeholder="Écrivez votre commentaire..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Publier</button>
+                    </form>
+
+                    <!-- Comments List -->
+                    <div class="comments-list">
+                        @forelse($logement->comments as $comment)
+                            <div class="comment mb-3 pb-3 border-bottom">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="{{ $comment->user->photodeprofil_uti ? asset($comment->user->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
+                                         alt="{{ $comment->user->prenom }}" 
+                                         class="rounded-circle me-2" 
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="mb-0">{{ $comment->user->prenom }} {{ $comment->user->nom_uti }}</h6>
+                                        <small class="text-muted">{{ $comment->created_at->format('d/m/Y H:i') }}</small>
+                                    </div>
+                                </div>
+                                <p class="mb-0">{{ $comment->content }}</p>
+                            </div>
+                        @empty
+                            <p class="text-muted">Aucun commentaire pour le moment.</p>
+                        @endforelse
                     </div>
                 </div>
             </div>

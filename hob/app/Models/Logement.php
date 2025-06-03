@@ -41,4 +41,14 @@ class Logement extends Model
     {
         return $this->belongsTo(Utilisateur::class, 'proprietaire_id');
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

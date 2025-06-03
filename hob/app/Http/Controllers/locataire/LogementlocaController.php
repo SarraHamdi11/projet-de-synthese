@@ -15,6 +15,7 @@ class LogementlocaController extends Controller
 {
     public function indexLocataire(Request $request)
     {
+        $user = Auth::user();
         $realUserIds = Utilisateur::whereNotNull('email_uti')
             ->where('email_uti', '!=', '')
             ->whereNotNull('tel_uti')
@@ -25,9 +26,71 @@ class LogementlocaController extends Controller
             ->where('nom_uti', '!=', '')
             ->whereNotNull('date_naissance')
             ->pluck('id');
-        $listings = \App\Models\Logement::with('proprietaire')
-            ->whereIn('proprietaire_id', $realUserIds)
-            ->paginate(9);
+
+        $query = \App\Models\Logement::with(['proprietaire', 'favorites' => function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        }])
+        ->whereIn('proprietaire_id', $realUserIds);
+
+        // Search by city
+        if ($request->filled('city')) {
+            // Extract just the city name before any comma
+            $cityName = explode(',', $request->city)[0];
+            $query->where('ville', 'like', '%' . trim($cityName) . '%');
+        }
+
+        // Filter by price range
+        if ($request->filled('min_price')) {
+            $query->where('prix_log', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('prix_log', '<=', $request->max_price);
+        }
+
+        // Filter by search type (logement/colocation)
+        if ($request->filled('search_type')) {
+            $searchTypes = $request->search_type;
+            
+            $query->where(function($q) use ($searchTypes) {
+                foreach ($searchTypes as $type) {
+                    if ($type === 'logement') {
+                        $q->orWhereHas('proprietaire', function($q) {
+                            $q->where('type_uti', 'proprietaire');
+                        });
+                    } elseif ($type === 'colocation') {
+                        $q->orWhereHas('proprietaire', function($q) {
+                            $q->where('type_uti', 'locataire');
+                        });
+                    }
+                }
+            });
+        }
+
+        // Filter by property type
+        if ($request->filled('logement_type')) {
+            $query->whereIn('type_log', $request->logement_type);
+        }
+
+        // Filter by number of roommates
+        if ($request->filled('colocataires')) {
+            $query->where(function($q) use ($request) {
+                foreach ($request->colocataires as $coloc) {
+                    if ($coloc === 'Solo') {
+                        $q->orWhere('nombre_colocataire_log', 1);
+                    } elseif ($coloc === '2') {
+                        $q->orWhere('nombre_colocataire_log', 2);
+                    } elseif ($coloc === '3+') {
+                        $q->orWhere('nombre_colocataire_log', '>=', 3);
+                    }
+                }
+            });
+        }
+
+        $listings = $query->get()->map(function($listing) {
+            $listing->is_favorited = $listing->favorites->isNotEmpty();
+            return $listing;
+        });
+
         return view('locataire.logementsloca', compact('listings'));
     }
 
@@ -130,49 +193,24 @@ class LogementlocaController extends Controller
 
     public function storeComment(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'comment' => 'required|string',
-            'rating' => 'required|integer|min:1|max:5'
+        $request->validate([
+            'comment' => 'required|string|max:1000'
         ]);
 
-        // Vérifier si l'utilisateur a déjà réservé ce logement (simplified logic)
-        $reservations = session('reservations', []);
-        $hasReserved = collect($reservations)->where('listing_id', (int) $id)->count() > 0;
+        $logement = Logement::findOrFail($id);
+        $user = Auth::user();
 
-        if (!$hasReserved) {
-            return redirect()->back()->with('error', 'Vous n\'avez pas réservé ce logement.');
-        }
+        $comment = $logement->comments()->create([
+            'user_id' => $user->id,
+            'content' => $request->comment
+        ]);
 
-        // Récupérer les commentaires existants de la session
-        $comments = session('comments', []);
-
-        // Ajouter le nouveau commentaire
-        $comments[] = [
-            'id' => count($comments) + 1,
-            'listing_id' => (int) $id,
-            'user' => 'Utilisateur',
-            'comment' => $validatedData['comment'],
-            'rating' => (int) $validatedData['rating'],
-            'created_at' => now()->format('Y-m-d')
-        ];
-
-        // Sauvegarder les commentaires mis à jour dans la session
-        session(['comments' => $comments]);
-
-        return redirect()->back()->with('success', 'Votre commentaire a été ajouté avec succès !');
+        return redirect()->back()->with('success', 'Commentaire ajouté avec succès');
     }
 
     public function showDetails($id)
     {
-        // Fetch listing from the database
-        $logement = Logement::find((int) $id);
-
-        if (!$logement) {
-            abort(404, 'Logement non trouvé');
-        }
-
-        $proprietaire = $logement->proprietaire; // Eloquent relation
-
-        return view('locataire.details', compact('logement', 'proprietaire'));
+        $logement = Logement::with(['proprietaire', 'comments.user'])->findOrFail($id);
+        return view('locataire.details', compact('logement'));
     }
 }

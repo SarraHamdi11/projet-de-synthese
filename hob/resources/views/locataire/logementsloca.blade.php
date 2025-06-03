@@ -32,7 +32,7 @@
                             </h5>
                         </div>
                         <div class="card-body p-0">
-                            <form method="GET" action="{{ route('logementsloca') }}" class="needs-validation" novalidate>
+                            <form method="GET" action="{{ route('logementsloca') }}" class="needs-validation" id="filterForm" novalidate>
                                 
                                 <!-- Search Bar -->
                                 <div class="p-3 border-bottom bg-light">
@@ -43,7 +43,7 @@
                                         <input type="text" 
                                                name="city" 
                                                class="form-control border-start-0 ps-0" 
-                                               placeholder="Martil, colocation, non-fumeur" 
+                                               placeholder="Entrez une ville..." 
                                                value="{{ request()->input('city') }}">
                                         <button type="submit" class="btn btn-primary">
                                             <i class="fas fa-search"></i>
@@ -91,14 +91,14 @@
                                         <input class="form-check-input" type="checkbox" name="search_type[]" value="logement" 
                                                id="searchLogement" {{ in_array('logement', request()->input('search_type', [])) ? 'checked' : '' }}>
                                         <label class="form-check-label fw-medium" for="searchLogement">
-                                            <i class="fas fa-home me-2 text-muted"></i>Logement
+                                            <i class="fas fa-home me-2 text-muted"></i>Logement (Propriétaire)
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" name="search_type[]" value="colocation" 
                                                id="searchColocation" {{ in_array('colocation', request()->input('search_type', [])) ? 'checked' : '' }}>
                                         <label class="form-check-label fw-medium" for="searchColocation">
-                                            <i class="fas fa-users me-2 text-muted"></i>Colocation
+                                            <i class="fas fa-users me-2 text-muted"></i>Colocation (Locataire)
                                         </label>
                                     </div>
                                 </div>
@@ -159,22 +159,16 @@
                                     </div>
                                 </div>
 
-                                <!-- Move-in Date -->
+                                <!-- Filter Buttons -->
                                 <div class="p-3">
-                                    <h6 class="fw-bold text-dark mb-3">
-                                        <i class="fas fa-calendar me-2 text-primary"></i>Date d'emménagement
-                                    </h6>
-                                    <input type="month" 
-                                           name="move_in_date" 
-                                           class="form-control" 
-                                           value="{{ request()->input('move_in_date', '2025-04') }}">
-                                </div>
-
-                                <!-- Reset Button -->
-                                <div class="p-3 pt-0">
-                                    <button type="button" class="btn btn-outline-secondary w-100" onclick="this.form.reset();">
-                                        <i class="fas fa-redo me-2"></i>Réinitialiser
-                                    </button>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-filter me-2"></i>Appliquer les filtres
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetFilters()">
+                                            <i class="fas fa-redo me-2"></i>Réinitialiser
+                                        </button>
+                                    </div>
                                 </div>
 
                             </form>
@@ -215,8 +209,10 @@
                                         <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-bottom opacity-0 hover-overlay"></div>
                                         
                                         <!-- Favorite Button -->
-                                        <button class="btn btn-sm position-absolute top-0 end-0 m-2 border-0 bg-white bg-opacity-75 rounded-circle p-2 favorite-btn">
-                                            <i class="fas fa-heart text-danger"></i>
+                                        <button class="btn btn-sm position-absolute top-0 end-0 m-2 border-0 bg-white bg-opacity-75 rounded-circle p-2 favorite-btn" 
+                                                data-listing-id="{{ $listing->id }}"
+                                                data-favorited="{{ $listing->is_favorited ? 'true' : 'false' }}">
+                                            <i class="fas fa-heart {{ $listing->is_favorited ? 'text-danger' : 'text-muted' }}"></i>
                                         </button>
                                         
                                         <!-- Property Type Badge -->
@@ -447,24 +443,68 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Enhanced form interactions
-            const filterInputs = document.querySelectorAll('input[type="checkbox"], input[type="month"]');
+            // Add filter-input class to all filter inputs
+            const allFilterInputs = document.querySelectorAll('input[type="checkbox"], input[type="number"], input[type="month"]');
+            allFilterInputs.forEach(input => {
+                input.classList.add('filter-input');
+            });
+
+            // Handle filter changes
+            const filterForm = document.getElementById('filterForm');
+            const filterInputs = document.querySelectorAll('.filter-input');
+            
+            // Debounce function to prevent too many requests
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            // Auto-submit form when filters change
+            const debouncedSubmit = debounce(() => {
+                filterForm.submit();
+            }, 500);
+
             filterInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    // Optional: Auto-submit form when filters change
-                    // this.form.submit();
-                });
+                input.addEventListener('change', debouncedSubmit);
             });
 
             // Favorite button functionality
             const favoriteButtons = document.querySelectorAll('.favorite-btn');
-            favoriteButtons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    this.classList.toggle('favorited');
+            favoriteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const listingId = this.dataset.listingId;
                     const icon = this.querySelector('i');
-                    icon.classList.toggle('fas');
-                    icon.classList.toggle('far');
+                    
+                    fetch(`/locataire/favorite/${listingId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            if (data.is_favorited) {
+                                icon.classList.remove('text-muted');
+                                icon.classList.add('text-danger');
+                                this.dataset.favorited = 'true';
+                            } else {
+                                icon.classList.remove('text-danger');
+                                icon.classList.add('text-muted');
+                                this.dataset.favorited = 'false';
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
                 });
             });
 
@@ -480,5 +520,12 @@
                 });
             });
         });
+
+        // Reset filters function
+        function resetFilters() {
+            const form = document.getElementById('filterForm');
+            form.reset();
+            form.submit();
+        }
     </script>
 @endsection
