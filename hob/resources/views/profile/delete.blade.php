@@ -14,23 +14,23 @@
                             Êtes-vous sûr(e) de vouloir supprimer définitivement votre compte ?<br>
                             <span style="font-size:0.95rem; color:#888;">Cette action est irréversible.</span>
                         </div>
-                        <div class="mb-3 d-flex justify-content-center gap-4">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="confirm_delete" id="oui" value="oui" required>
-                                <label class="form-check-label" for="oui">OUI</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="confirm_delete" id="non" value="non" required>
-                                <label class="form-check-label" for="non">NON</label>
-                            </div>
-                        </div>
+                        
                         <div class="mb-4">
-                            <label for="reason" class="form-label" style="color:#244F76;">Raison de la suppression de compte</label>
+                            <label for="password" class="form-label" style="color:#244F76;">Entrez votre mot de passe pour confirmer</label>
+                            <input type="password" name="password" id="password" class="form-control rounded-3" style="border:1.5px solid #7C9FC0; background:#f8fafc;" required>
+                            @error('password')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="reason" class="form-label" style="color:#244F76;">Raison de la suppression de compte (optionnel)</label>
                             <textarea id="reason" name="reason" rows="2" class="form-control rounded-3" style="border:1.5px solid #7C9FC0; background:#f8fafc;"></textarea>
                         </div>
+
                         <div class="d-flex justify-content-center gap-3">
-                            <a href="/" class="btn px-4 py-2" style="background:#7C9FC0; color:#fff; font-weight:600; border-radius: 8px;">Annuler</a>
-                            <button type="submit" class="btn px-4 py-2" style="background:#7C9FC0; color:#fff; font-weight:600; border-radius: 8px;">Valider les modifications</button>
+                            <a href="{{ route('profile.edit') }}" class="btn px-4 py-2" style="background:#7C9FC0; color:#fff; font-weight:600; border-radius: 8px;">Annuler</a>
+                            <button type="submit" class="btn px-4 py-2" style="background:#dc3545; color:#fff; font-weight:600; border-radius: 8px;">Supprimer mon compte</button>
                         </div>
                     </form>
                 </div>

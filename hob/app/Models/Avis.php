@@ -14,9 +14,9 @@ class Avis extends Model
 
     ];
     public function annonce (){
-        $this->belongsTo(Annonce::class);
+        return $this->belongsTo(Annonce::class, 'annonce_id');
     }
-    public function Utilisateur (){
-        $this->belongsTo(Utilisateur::class);
+    public function utilisateur (){
+        return $this->belongsTo(Utilisateur::class, 'locataire_id');
     }
 }

@@ -2,159 +2,462 @@
 
 @section('content')
 
+<link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
 <style>
-    .faq-question {
-        color: #244F76;
-        font-size: 18px;
-        font-weight: 600;
-        padding: 8px 0;
-        transition: all 0.3s ease;
-    }
-    .faq-question.active {
-        font-weight: 700;
-        border-left: 4px solid #244F76;
-        padding-left: 12px;
-    }
-    .faq-answer {
-        display: none;
-        color: #4A4A4A;
-        padding: 12px;
-        border-radius: 5px;
-        font-size: 16px;
-        line-height: 1.5;
-        margin: 0 0 16px 16px;
-        transition: all 0.3s ease;
-    }
+:root {
+  --creme: #EBDFD5;
+  --creme-50: rgba(235, 223, 213, 0.5);
+  --dark-blue: #244F76;
+  --medium-blue: #447892;
+  --light-blue: #7C9FC0;
+  --white: #fff;
+}
+body { font-family: 'Poppins', sans-serif; background: #fff !important; }
+.section-title {
+  font-family: 'Inknut Antiqua', serif;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: var(--dark-blue);
+  background: linear-gradient(90deg, var(--dark-blue), var(--medium-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+  position: relative;
+  animation: fadeInDown 1s cubic-bezier(.4,2,.3,1);
+}
+@keyframes fadeInDown { from { opacity:0; transform:translateY(-40px);} to {opacity:1;transform:translateY(0);} }
+.fade-in-up { opacity:0; transform:translateY(40px); transition:all 0.8s cubic-bezier(.4,2,.3,1); }
+.fade-in-up.visible { opacity:1; transform:translateY(0); }
+.fade-in-left { opacity:0; transform:translateX(-40px); transition:all 0.8s cubic-bezier(.4,2,.3,1); }
+.fade-in-left.visible { opacity:1; transform:translateX(0); }
+.fade-in-right { opacity:0; transform:translateX(40px); transition:all 0.8s cubic-bezier(.4,2,.3,1); }
+.fade-in-right.visible { opacity:1; transform:translateX(0); }
+.stats-glass {
+  background: var(--creme);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 16px #44789222;
+  min-height: 180px;
+  max-height: 220px;
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  color: var(--medium-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.4s, transform 0.4s, background 0.4s;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUpStats 1s cubic-bezier(.4,2,.3,1);
+}
+@keyframes fadeInUpStats { from { opacity:0; transform:translateY(40px) scale(0.97);} to {opacity:1;transform:translateY(0) scale(1);} }
+.stats-glass:hover {
+  box-shadow: 0 12px 32px #44789233, 0 2px 8px #244F7633;
+  background: linear-gradient(120deg, var(--creme) 80%, #fff 100%);
+  transform: scale(1.035) rotate(-1deg);
+}
+.stats-glass .stats-icon {
+  font-size: 2.7rem;
+  color: var(--dark-blue);
+  margin-bottom: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popIcon 2.5s infinite cubic-bezier(.4,2,.3,1);
+}
+@keyframes popIcon { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+.stats-title {
+  font-family: 'Inknut Antiqua', serif;
+  color: var(--dark-blue);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+}
+.stats-value {
+  font-family: 'Poppins', sans-serif;
+  color: var(--medium-blue);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+@media (max-width: 991px) {
+  .stats-glass { min-height: 140px; max-height: 180px; padding: 1rem 0.5rem; }
+  .stats-glass .stats-icon { font-size: 2rem; }
+  .stats-title { font-size: 1rem; }
+  .stats-value { font-size: 0.98rem; }
+}
+.card-3d {
+  background: var(--white);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px #44789222, 0 1.5px 6px #7C9FC0;
+  border: none;
+  transition: transform 0.5s cubic-bezier(.4,2,.3,1), box-shadow 0.5s;
+  perspective: 800px;
+  will-change: transform;
+  overflow: hidden;
+  min-height: 320px;
+}
+.card-3d:hover {
+  transform: rotateY(8deg) scale(1.04) translateY(-8px);
+  box-shadow: 0 16px 48px #44789233, 0 8px 24px #244F7633;
+}
+.card-3d .card-img-top { height: 180px; object-fit: cover; transition: transform 0.4s; }
+.card-3d:hover .card-img-top { transform: scale(1.08) rotate(-2deg); }
+.card-3d .card-title { font-family: 'Inknut Antiqua', serif; color: var(--dark-blue); font-size: 1.1rem; }
+.card-3d .price { color: #28a745; font-weight: 700; font-size: 1.1rem; }
+.card-3d .location { color: #666; font-size: 0.95rem; }
+.card-3d .stars { color: #ffc107; font-size: 1.1rem; }
+.testimonial-card {
+  background: var(--white);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px #44789222, 0 1.5px 6px #7C9FC0;
+  border: none;
+  padding: 2rem 1.2rem 1.2rem 1.2rem;
+  min-height: 270px;
+  display: flex; flex-direction: column; align-items: flex-start;
+  transition: box-shadow 0.4s, transform 0.4s;
+  animation: rotateIn 1.2s cubic-bezier(.4,2,.3,1);
+}
+@keyframes rotateIn { from { opacity:0; transform:rotateY(-30deg) scale(0.9);} to {opacity:1;transform:rotateY(0) scale(1);} }
+.testimonial-card:hover { box-shadow: 0 16px 48px #44789233, 0 8px 24px #244F7633; transform: rotateY(4deg) scale(1.03); }
+.testimonial-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--light-blue); margin-right: 0.8rem; }
+.testimonial-name { font-family: 'Inknut Antiqua', serif; color: var(--dark-blue); font-weight: bold; font-size: 1.08em; }
+.testimonial-role { color: var(--light-blue); font-size: 0.97em; }
+.testimonial-quote { font-size: 2.2rem; color: var(--medium-blue); margin-left: auto; opacity: 0.7; }
+.testimonial-content { font-family: 'Poppins', sans-serif; color: #333; font-size: 1.05em; margin-top: 0.5rem; }
+.faq-section .faq-question { font-family: 'Inknut Antiqua', serif; color: var(--dark-blue); font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: color 0.3s; }
+.faq-section .faq-question:hover { color: var(--medium-blue); }
+.faq-section .faq-answer { font-family: 'Poppins', sans-serif; color: #555; display: none; transition: all 0.4s; }
+.faq-section .faq-answer.show { display: block; animation: fadeInUp 0.7s; }
+@keyframes fadeInUp { from { opacity:0; transform:translateY(30px);} to {opacity:1;transform:translateY(0);} }
+@media (max-width: 991px) {
+  .section-title { font-size: 2rem; }
+  .testimonial-card { min-height: 220px; }
+  .stats-glass { min-height: 180px; max-height: 220px; padding: 1.2rem 0.7rem; }
+  .stats-glass .fa { font-size: 2rem; }
+  .stats-number { font-size: 1.3rem; }
+}
+
+/* Uniformisation des cards par section (hauteur adaptée à chaque section) */
+.stats-glass {
+  min-height: 220px;
+  max-height: 260px;
+  padding: 2rem 1.5rem;
+  border-radius: 2rem;
+  text-align: center;
+  color: #447892;
+}
+.stats-glass .fa {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.stats-number {
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+}
+.stats-label {
+  font-size: 1.05rem;
+}
+.card-3d {
+  min-height: 320px;
+}
+.faq-item {
+  min-height: 180px;
+}
+.testimonial-card {
+  min-height: 270px;
+}
+
+/* Témoignages - carrousel horizontal */
+.testimonials-carousel-wrapper {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+.testimonials-carousel {
+  display: flex;
+  transition: transform 1s cubic-bezier(.4,2,.3,1);
+  will-change: transform;
+}
+.testimonial-card {
+  min-width: 320px;
+  max-width: 320px;
+  margin-right: 24px;
+  flex: 0 0 320px;
+  height: 100%;
+  background: var(--white);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 24px #44789222, 0 1.5px 6px #7C9FC0;
+  border: none;
+  padding: 2rem 1.2rem 1.2rem 1.2rem;
+  display: flex; flex-direction: column; align-items: flex-start;
+  transition: box-shadow 0.4s, transform 0.4s;
+  animation: rotateIn 1.2s cubic-bezier(.4,2,.3,1);
+}
+@media (max-width: 1200px) {
+  .testimonial-card, .testimonials-carousel .testimonial-card { min-width: 260px; max-width: 260px; flex: 0 0 260px; }
+}
+@media (max-width: 768px) {
+  .testimonial-card, .testimonials-carousel .testimonial-card { min-width: 90vw; max-width: 90vw; flex: 0 0 90vw; }
+}
+.testimonials-carousel-controls {
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.testimonials-carousel-controls button {
+  background: rgba(68,120,146,0.12);
+  border: none;
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  font-size: 1.5rem;
+  color: var(--medium-blue);
+  box-shadow: 0 2px 8px #44789222;
+  pointer-events: all;
+  transition: background 0.2s;
+}
+.testimonials-carousel-controls button:hover { background: var(--medium-blue); color: #fff; }
 </style>
 
-<!-- Activité de vos réservations -->
-<section class="container mx-auto mb-16">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <p class="text-gray-500 mb-2">Nombre de mes réservations</p>
-            <p class="text-xl font-bold">25 demandes</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-            <p class="text-gray-500 mb-2">Réservations confirmées</p>
-            <p class="text-xl font-bold">12 Appartements</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-            <p class="text-gray-500 mb-2">Réservations refusées</p>
-            <p class="text-xl font-bold">8 Appartements</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-            <p class="text-gray-500 mb-2">Réservations terminées</p>
-            <p class="text-xl font-bold">128 messages</p>
-        </div>
+<div class="container py-5">
+  <!-- Statistiques -->
+  <h2 class="section-title fade-in-down">Activité de vos réservations</h2>
+  <div class="row g-4 mb-5 stats-row fade-in-up">
+    <div class="col-12 col-md-3">
+      <div class="stats-glass">
+        <span class="stats-icon"><i class="fa-solid fa-house-chimney"></i></span>
+        <div class="stats-title">Nombre de mes réservations</div>
+        <div class="stats-value">25 demandes</div>
+      </div>
     </div>
-</section>
-
-<!-- Les dernières logements ajoutés -->
-<section class="container mx-auto mb-16">
-    <h2 class="text-2xl font-semibold mb-6">Les dernières logements ajoutés</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-            <img src="{{ asset('images/house1.jpg') }}" alt="Maison" class="w-full h-48 object-cover">
-            <div class="p-4">
-                <h3 class="font-semibold text-lg mb-2">Maison indépendante</h3>
-                <p class="text-green-600 font-bold">1100 DH / MOIS</p>
-                <p class="text-sm text-gray-500">Bni Bouayach</p>
-                <div class="mt-2 flex items-center">
-                    <span class="text-yellow-400">★★★★★</span>
-                </div>
+    <div class="col-12 col-md-3">
+      <div class="stats-glass">
+        <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
+        <div class="stats-title">Réservations confirmées</div>
+        <div class="stats-value">12 Appartements</div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="stats-glass">
+        <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
+        <div class="stats-title">Réservations refusées</div>
+        <div class="stats-value">8 Appartement</div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="stats-glass">
+        <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
+        <div class="stats-title">Réservations terminées</div>
+        <div class="stats-value">128 messages</div>
+      </div>
+    </div>
+  </div>
+  <!-- Logements -->
+  <h2 class="section-title fade-in-left">Les derniers logements ajoutés</h2>
+  <div class="row g-4 mb-5 fade-in-up">
+    @forelse($latestAnnonces as $annonce)
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="card card-3d h-100">
+          @if($annonce->logement && $annonce->logement->photos)
+            @php
+              $photos = is_array($annonce->logement->photos) ? $annonce->logement->photos : json_decode($annonce->logement->photos, true);
+              $firstPhoto = $photos[0] ?? null;
+              if ($firstPhoto && strpos($firstPhoto, 'logements/') !== 0) {
+                  $firstPhoto = 'logements/' . $firstPhoto;
+              }
+              $fullPath = 'storage/' . $firstPhoto;
+            @endphp
+            @if($firstPhoto && file_exists(public_path($fullPath)))
+              <img src="{{ asset($fullPath) }}" class="card-img-top" alt="Logement">
+            @else
+              <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Logement">
+            @endif
+          @else
+            <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Logement">
+          @endif
+          <div class="card-body">
+            <h3 class="card-title">{{ $annonce->titre_anno ?? 'Logement' }}</h3>
+            <div class="price">{{ number_format($annonce->logement->prix_log ?? 0, 0, ',', ' ') }} DH / MOIS</div>
+            <div class="location">{{ $annonce->logement->localisation_log ?? 'Non spécifié' }}</div>
+            <div class="stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    @empty
+      <div class="col-12">
+        <p class="text-center text-muted">Aucun logement disponible pour le moment.</p>
+      </div>
+    @endforelse
+  </div>
+  <!-- Témoignages - Carrousel horizontal -->
+  <h2 class="section-title fade-in-right">Ce que nos clients nous disent</h2>
+  <div class="testimonials-carousel-wrapper">
+    <div class="testimonials-carousel" id="testimonialsCarousel">
+      <!-- 10 cartes statiques -->
+      @foreach($avisClients as $avis)
+        <div class="testimonial-card">
+          <div class="d-flex align-items-center mb-2">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="avatar" class="testimonial-avatar">
+            <div>
+              <div class="testimonial-name">{{ $avis->prenom }} {{ $avis->nom_uti }}</div>
+              <div class="testimonial-role">Étudiant</div>
             </div>
+            <div class="testimonial-quote">&ldquo;</div>
+          </div>
+          <div class="testimonial-content">
+            <p class="testimonial-text">{{ $avis->contenu }}</p>
+            <div class="testimonial-author">
+              <div class="author-info">
+                <div class="rating">
+                  @for($i = 1; $i <= 5; $i++)
+                    <i class="fas fa-star {{ $i <= $avis->note ? 'text-warning' : 'text-muted' }}"></i>
+                  @endfor
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      @endforeach
     </div>
-</section>
-
-<!-- FAQ -->
-<section class="container mx-auto mb-16">
-    <h2 class="text-2xl font-semibold mb-6 text-center">FAQ</h2>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-        <div class="bg-white p-6 rounded-lg shadow">
-            <p class="italic">"Service exceptionnel et rapide !"</p>
-            <p class="mt-4 font-bold">Cassie Williamson</p>
+  </div>
+  <!-- FAQ -->
+  <div class="faq-section fade-in-up mb-5">
+    <h2 class="section-title text-center">FAQ</h2>
+    <div class="row g-4 text-center">
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="faq-item text-center ">
+          <div class="faq-question" onclick="toggleAnswer(this)">Qu'est-ce que FindStay ?</div>
+          <div class="faq-answer">FindStay est une plateforme qui vous aide à trouver facilement des hébergements de qualité...</div>
         </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="faq-item text-center">
+          <div class="faq-question" onclick="toggleAnswer(this)">Comment créer un compte sur FindStay ?</div>
+          <div class="faq-answer">Pour créer un compte, cliquez sur 'S'inscrire' et remplissez le formulaire...</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="faq-item text-center">
+          <div class="faq-question" onclick="toggleAnswer(this)">Comment modifier ou annuler une réservation ?</div>
+          <div class="faq-answer">Vous pouvez modifier ou annuler une réservation depuis votre profil...</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <div class="faq-item text-center">
+          <div class="faq-question" onclick="toggleAnswer(this)">FindStay propose-t-il une application mobile ?</div>
+          <div class="faq-answer">Oui, FindStay propose une application mobile disponible sur iOS et Android...</div>
+        </div>
+      </div>
     </div>
-    <div class="text-center space-y-4">
-        <div class="faq-item">
-            <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600" onclick="toggleAnswer(this)">Qu'est-ce que FindStay ?</p>
-            <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl">FindStay est une plateforme qui vous aide à trouver facilement des hébergements de qualité...</p>
-        </div>
-        <div class="faq-item">
-            <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600" onclick="toggleAnswer(this)">Comment créer un compte sur FindStay ?</p>
-            <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl">Pour créer un compte, cliquez sur 'S'inscrire' et remplissez le formulaire...</p>
-        </div>
-        <div class="faq-item">
-            <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600" onclick="toggleAnswer(this)">Comment modifier ou annuler une réservation ?</p>
-            <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl">Vous pouvez modifier ou annuler une réservation depuis votre profil...</p>
-        </div>
-        <div class="faq-item">
-            <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600" onclick="toggleAnswer(this)">FindStay propose-t-il une application mobile ?</p>
-            <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl">Oui, FindStay propose une application mobile disponible sur iOS et Android...</p>
-        </div>
-    </div>
-</section>
-
+  </div>
 <!-- En quelques chiffres -->
-<section class="w-full bg-[#c5d6e1]">
-    <div class="flex flex-col md:flex-row items-center">
-        <!-- Colonne de la carte -->
-        <div class="w-full md:w-1/2">
-            <div class="relative flex items-center justify-center min-h-[25vh]">
-                <img src="{{ asset('images/map.png') }}" alt="Carte du Maroc" class="w-full h-full object-cover rounded-lg">
-                <div class="absolute top-1/4 left-1/6 text-center">
-                    <p class="text-5xl md:text-6xl font-bold text-black mb-2">93</p>
-                    <p class="text-sm md:text-base text-black px-2 py-1 rounded">Logements Gérés au Maroc</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Colonne des chiffres -->
-        <div class="w-full md:w-1/2 p-4 md:p-6">
-            <h2 class="text-2xl md:text-3xl font-semibold text-blue-900 mb-4 md:mb-6">En Quelques chiffres</h2>
-            <div class="grid grid-cols-2 gap-4 md:gap-6 text-center">
-                <div>
-                    <p class="text-3xl md:text-4xl font-bold text-blue-700">2000</p>
-                    <p class="text-sm md:text-base text-blue-700">JEUNES LOGÉS</p>
-                </div>
-                <div>
-                    <p class="text-3xl md:text-4xl font-bold text-blue-700">88%</p>
-                    <p class="text-sm md:text-base text-blue-700">Résidences satisfaisantes</p>
-                </div>
-                <div>
-                    <p class="text-3xl md:text-4xl font-bold text-blue-700">800+</p>
-                    <p class="text-sm md:text-base text-blue-700">UTILISATEURS ACTIFS</p>
-                </div>
-                <div>
-                    <p class="text-3xl md:text-4xl font-bold text-blue-700">90+</p>
-                    <p class="text-sm md:text-base text-blue-700">LOGEMENTS DISPONIBLES</p>
-                </div>
-            </div>
-        </div>
+  <div class="row g-0 align-items-center fade-in-up" style="background: linear-gradient(90deg, #c5d6e1 60%, #fff 100%); border-radius:2rem; overflow:hidden;">
+    <div class="col-12 col-md-6 p-4 d-flex flex-column align-items-center justify-content-center position-relative" style="min-height:220px;">
+      <img src="{{ asset('images/map.png') }}" alt="Carte du Maroc" class="w-100 h-100 object-cover rounded-3 shadow" style="max-width:340px; filter:brightness(0.95) blur(0.5px);">
+      <div class="position-absolute top-50 start-50 translate-middle text-center" style="z-index:2;">
+        <div class="display-3 fw-bold text-dark" style="text-shadow:0 2px 8px #fff,0 1px 2px #44789255;">93</div>
+        <div class="lead text-dark">Logements Gérés au Maroc</div>
+      </div>
+      <div class="position-absolute top-0 start-0 w-100 h-100" style="background:linear-gradient(120deg,rgba(124,159,192,0.12) 0%,rgba(68,120,146,0.10) 100%);z-index:1;"></div>
     </div>
-</section>
+    <div class="col-12 col-md-6 p-4">
+      <h2 class="section-title mb-4" style="font-size:1.7rem;">En Quelques chiffres</h2>
+      <div class="row g-4 text-center">
+        <div class="col-6 col-md-6">
+          <div class="stats-number" data-count="2000">0</div>
+          <div class="stats-label">JEUNES LOGÉS</div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="stats-number" data-count="88">0</div>
+          <div class="stats-label">Résidences satisfaisantes</div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="stats-number" data-count="800">0</div>
+          <div class="stats-label">UTILISATEURS ACTIFS</div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="stats-number" data-count="90">0</div>
+          <div class="stats-label">LOGEMENTS DISPONIBLES</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
+// Animation au scroll
+function revealOnScroll() {
+  document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if(rect.top < window.innerHeight - 60) el.classList.add('visible');
+  });
+}
+document.addEventListener('scroll', revealOnScroll);
+document.addEventListener('DOMContentLoaded', revealOnScroll);
+// Animation des compteurs
+function animateCounters() {
+  document.querySelectorAll('.stats-number[data-count]').forEach(el => {
+    const target = +el.getAttribute('data-count');
+    let count = 0;
+    const duration = 1200;
+    const step = Math.max(1, Math.floor(target / (duration/16)));
+    function update() {
+      count += step;
+      if(count >= target) { el.textContent = target; return; }
+      el.textContent = count;
+      requestAnimationFrame(update);
+    }
+    update();
+  });
+}
+document.addEventListener('DOMContentLoaded', animateCounters);
+// FAQ toggle
     function toggleAnswer(element) {
         const answer = element.nextElementSibling;
         const allAnswers = document.querySelectorAll('.faq-answer');
         const allQuestions = document.querySelectorAll('.faq-question');
-        allAnswers.forEach(ans => {
-            if (ans !== answer) {
-                ans.style.display = 'none';
-            }
-        });
-        allQuestions.forEach(q => {
-            q.classList.remove('text-blue-600');
-        });
-        if (answer.style.display === 'block') {
-            answer.style.display = 'none';
+  allAnswers.forEach(ans => { if(ans !== answer) ans.classList.remove('show'); });
+  allQuestions.forEach(q => { q.classList.remove('text-blue-600'); });
+  if(answer.classList.contains('show')) {
+    answer.classList.remove('show');
             element.classList.remove('text-blue-600');
         } else {
-            answer.style.display = 'block';
+    answer.classList.add('show');
             element.classList.add('text-blue-600');
         }
     }
+
+// Carrousel horizontal automatique pour les témoignages
+const carousel = document.getElementById('testimonialsCarousel');
+let testimonialIndex = 0;
+const testimonialCards = carousel.querySelectorAll('.testimonial-card');
+const visibleCards = () => {
+  if(window.innerWidth < 600) return 1;
+  if(window.innerWidth < 900) return 2;
+  if(window.innerWidth < 1200) return 3;
+  return 4;
+};
+function scrollTestimonials() {
+  testimonialIndex = (testimonialIndex + 1) % (testimonialCards.length - visibleCards() + 1);
+  carousel.style.transform = `translateX(-${testimonialIndex * (testimonialCards[0].offsetWidth + 24)}px)`;
+}
+let testimonialInterval = setInterval(scrollTestimonials, 5000);
+window.addEventListener('resize', () => {
+  carousel.style.transition = 'none';
+  carousel.style.transform = `translateX(-${testimonialIndex * (testimonialCards[0].offsetWidth + 24)}px)`;
+  setTimeout(()=>carousel.style.transition = '', 100);
+});
+// Pause défilement au survol
+carousel.addEventListener('mouseenter', ()=>clearInterval(testimonialInterval));
+carousel.addEventListener('mouseleave', ()=>testimonialInterval = setInterval(scrollTestimonials, 5000));
 </script>
 @endsection

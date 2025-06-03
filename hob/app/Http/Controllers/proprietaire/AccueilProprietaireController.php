@@ -16,20 +16,20 @@ class AccueilProprietaireController extends Controller
         $user = Auth::user(); // Get the currently authenticated user
 
         // Total number of reservation requests (without proprietaire_id)
-        $totalRequests = Reservation::whereNull('proprietaire_id')->count();
+        $totalRequests = Reservation::where('proprietaire_id', $user->id)->count();
 
         // Count of confirmed bookings
-        $confirmedBookings = Reservation::whereNull('proprietaire_id')
+        $confirmedBookings = Reservation::where('proprietaire_id', $user->id)
             ->where('statut_res', 'confirmé')
             ->count();
 
         // Count of rejected bookings
-        $rejectedBookings = Reservation::whereNull('proprietaire_id')
+        $rejectedBookings = Reservation::where('proprietaire_id', $user->id)
             ->where('statut_res', 'refusé')
             ->count();
 
         // Latest available logements (annonces)
-        $latestLogements = Annonce::whereNull('proprietaire_id')
+        $latestLogements = Annonce::with('logement')
             ->where('statut_anno', 'disponible')
             ->orderByDesc('date_publication_anno')
             ->take(8)

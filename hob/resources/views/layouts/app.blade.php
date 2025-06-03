@@ -444,7 +444,11 @@
                         </div>
                         <!-- Settings Icon Dropdown -->
                         <div class="dropdown ms-2">
-                            <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0 dropdown-toggle" style="box-shadow:none;">
+                            <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0 dropdown-toggle d-flex align-items-center" style="box-shadow:none;">
+                                <img src="{{ auth()->user()->photodeprofil_uti ? asset('storage/' . auth()->user()->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
+                                     alt="{{ auth()->user()->prenom }}" 
+                                     class="rounded-circle me-2" 
+                                     style="width: 32px; height: 32px; object-fit: cover;">
                                 <i class="fas fa-cog fa-lg"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
@@ -467,6 +471,13 @@
         <div class="header-welcome">
             @yield('header')
         </div>
+                <div class="text-center mb-8 text-3xl font-bold" style="font-family: 'Inknut Antiqua', serif; color: #244F76">
+                    @php
+                        $hour = now()->hour;
+                        $greeting = $hour < 12 ? 'Bonjour' : ($hour < 18 ? 'Bon après-midi' : 'Bonsoir');
+                    @endphp
+                    {{ $greeting }}, {{ Auth::user()->prenom }} {{ Auth::user()->nom_uti }} 
+                </div>
     </div>
     <main class="main-content container">
         @yield('content')
