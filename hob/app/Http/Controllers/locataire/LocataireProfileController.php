@@ -22,6 +22,7 @@ class LocataireProfileController extends Controller
     {
         $locataire = Auth::user();
         $avis = \App\Models\Avis::where('locataire_id', $locataire->id)->get();
-        return view('locataire.myprofile', compact('locataire', 'avis'));
+        $reservations = $locataire->reservations_loca()->with(['logments.annonce'])->get();
+        return view('locataire.myprofile', compact('locataire', 'avis', 'reservations'));
     }
 }

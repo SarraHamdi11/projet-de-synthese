@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: #eaf1f7 !important;
+            background:#fff !important;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -479,7 +479,8 @@
                         </div>
                         <!-- Settings Icon Dropdown -->
                         <div class="dropdown ms-2">
-                            <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0 dropdown-toggle" style="box-shadow:none;">
+                            <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0 dropdown-toggle d-flex align-items-center" style="box-shadow:none;">
+                                
                                 <i class="fas fa-cog fa-lg"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
@@ -501,6 +502,14 @@
         </nav>
         <div class="header-welcome">
             @yield('header')
+        </div>
+        <div class="text-center mb-10 text-4xl font-bold" style="font-family: 'Inknut Antiqua', serif; color: #244F76; text-shadow: 1px 1px 6px rgba(36, 79, 118, 0.3); padding: 15px 0;">
+            @php
+                $hour = now()->hour;
+                $greeting = $hour < 12 ? 'Bonjour' : ($hour < 18 ? 'Bon après-midi' : 'Bonsoir');
+            @endphp
+            <span>{{ $greeting }},</span> 
+            <span>{{ Auth::user()->prenom }} {{ Auth::user()->nom_uti }}</span> 
         </div>
     </div>
     <main class="main-content container">

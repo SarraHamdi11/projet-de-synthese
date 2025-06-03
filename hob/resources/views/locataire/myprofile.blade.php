@@ -36,15 +36,19 @@
         <h2>Mes réservations</h2>
         @foreach($reservations as $reservation)
         <div class="reservation">
-            <img src="{{ $reservation->annonce->image ? asset('storage/' . $reservation->annonce->image) : asset('images/default-avatar.png') }}" alt="Photo">
+            @if($reservation->logments && $reservation->logments->annonce && $reservation->logments->annonce->image)
+                <img src="{{ asset('storage/' . $reservation->logments->annonce->image) }}" alt="Photo">
+            @else
+                <img src="{{ asset('images/default-avatar.png') }}" alt="Photo">
+            @endif
             <div class="reservation-content">
                 <div>
-                    <h3>{{ $reservation->annonce->titre }}</h3>
-                    <p>{{ $reservation->annonce->description }}</p>
+                    <h3>{{ $reservation->logments && $reservation->logments->annonce ? $reservation->logments->annonce->titre : 'Titre non disponible' }}</h3>
+                    <p>{{ $reservation->logments && $reservation->logments->annonce ? $reservation->logments->annonce->description : 'Description non disponible' }}</p>
                 </div>
                 <div class="reservation-footer">
-                    <span class="status">{{ $reservation->status }}</span>
-                    <span class="date">{{ $reservation->created_at->format('d/m/Y') }}</span>
+                    <span class="status">{{ $reservation->status ?? 'N/A' }}</span>
+                    <span class="date">{{ $reservation->created_at ? $reservation->created_at->format('d/m/Y') : '' }}</span>
                 </div>
             </div>
         </div>

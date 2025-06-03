@@ -25,6 +25,7 @@ class Logement extends Model
         return $this->hasMany(Reservation::class, 'logement_id', 'id');
     }
 
+
     // Relationship with Annonce
     public function annonce()
     {

@@ -13,6 +13,7 @@ class Avis extends Model
         'contenu', 'note', 'annonce_id', 'locataire_id'
 
     ];
+
     
     
     protected $table = 'avis';
