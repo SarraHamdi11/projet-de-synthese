@@ -471,6 +471,12 @@
                                 </div>
                             </ul>
                         </div>
+                        <!-- Profile Picture Icon -->
+                        <div class="ms-2">
+                            <a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.myprofile') : route('locataire.myprofile') }}">
+                                <img src="{{ auth()->user()->photodeprofil_uti ? asset('storage/' . auth()->user()->photodeprofil_uti) : asset('images/default-avatar.png') }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #24507a;">
+                            </a>
+                        </div>
                         <!-- Settings Icon Dropdown -->
                         <div class="dropdown ms-2">
                             <a href="#" id="settingsDropdown" data-bs-toggle="dropdown" aria-expanded="false" class="btn btn-link p-0 dropdown-toggle" style="box-shadow:none;">

@@ -18,6 +18,10 @@ use App\Http\Controllers\locataire\AccueilLocataireController;
 use App\Http\Controllers\locataire\AnnonceLocataireController;
 use App\Http\Controllers\proprietaire\AccueilProprietaireController;
 use App\Http\Controllers\proprietaire\annonceproprietaireController;
+use App\Http\Controllers\LocataireController;
+use App\Http\Controllers\ProprietaireController;
+use App\Http\Controllers\locataire\LocataireProfileController;
+use App\Http\Controllers\proprietaire\ProprietaireProfileController;
 
 
 // auth
@@ -146,3 +150,6 @@ Route::post('/locataire/reservation', [LogementlocaController::class, 'storeRese
 Route::post('/locataire/favorite/{id}', [LogementlocaController::class, 'toggleFavorite'])->name('favorite.toggle');
 Route::get('/locataire/favorites', [LogementlocaController::class, 'showFavorites'])->name('locataire.favorites');
 Route::post('/toggle-favorite/{logement}', [FavoriController::class, 'toggle'])->name('toggle.favorite');
+
+Route::get('/locataire/myprofile', [LocataireProfileController::class, 'myProfile'])->name('locataire.myprofile');
+Route::get('/proprietaire/myprofile', [ProprietaireProfileController::class, 'myProfile'])->name('proprietaire.myprofile');

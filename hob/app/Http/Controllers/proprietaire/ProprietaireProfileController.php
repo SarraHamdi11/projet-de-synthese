@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Proprietaire;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class ProfilPropController extends Controller
+class ProprietaireProfileController extends Controller
 {
     /**
      * Display the landlord profile page
@@ -83,5 +84,14 @@ class ProfilPropController extends Controller
         ];
         
         return view('proprietaire.profile', compact('proprietaire', 'annoncesCount', 'commentairesCount', 'annonces'));
+    }
+
+    public function myProfile()
+    {
+        $proprietaire = Auth::user();
+        $annonces = \App\Models\Annonce::where('proprietaire_id', $proprietaire->id)->get();
+        $annoncesCount = $annonces->count();
+        $commentairesCount = \App\Models\Avis::whereIn('annonce_id', $annonces->pluck('id'))->count();
+        return view('proprietaire.myprofile', compact('proprietaire', 'annoncesCount', 'commentairesCount', 'annonces'));
     }
 }
