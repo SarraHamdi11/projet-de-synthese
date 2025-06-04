@@ -184,19 +184,22 @@
                             <span class="ms-2">Aucun</span>
                         @endif
                     </div>
-                    @if($listing->photos)
+                    @if(isset($listing->photos) && $listing->photos)
                         <div class="listing-detail">
                             <i class="fas fa-camera"></i>
                             <span><strong>Photos :</strong></span>
                             <div class="photos-gallery">
-                                @foreach(json_decode($listing->photos, true) as $photo)
-                                    @php $photoPath = 'images/' . $photo; @endphp
-                                    @if(file_exists(public_path($photoPath)))
-                                        <img src="{{ asset($photoPath) }}" alt="Photo du logement">
-                                    @else
-                                        <img src="{{ asset('images/default.jpg') }}" alt="Image par défaut">
-                                    @endif
-                                @endforeach
+                                @php
+                                    $photos = json_decode($listing->photos, true);
+                                @endphp
+                                @if(!empty($photos))
+                                    @foreach($photos as $photo)
+                                        {{-- Assuming $photo is already a path relative to the public directory --}}
+                                        <img src="{{ asset($photo) }}" alt="Photo du logement">
+                                    @endforeach
+                                @else
+                                    <p>Aucune photo disponible.</p>
+                                @endif
                             </div>
                         </div>
                     @endif

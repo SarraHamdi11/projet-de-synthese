@@ -187,9 +187,14 @@
                                 <div class="text-danger mt-2"><small>{{ $message }}</small></div>
                             @enderror
                             @if($annonce->logement->photos)
-                                <div class="mt-2 d-flex flex-wrap gap-2">
+                                <div id="existing-photos" class="mt-2 d-flex flex-wrap gap-2">
                                     @foreach(json_decode($annonce->logement->photos, true) as $photo)
-                                        <img src="{{ asset($photo) }}" width="100" height="100" class="img-thumbnail" style="object-fit: cover;">
+                                        <div class="position-relative">
+                                            <img src="{{ asset($photo) }}" width="100" height="100" class="img-thumbnail" style="object-fit: cover;" data-photo-url="{{ $photo }}">
+                                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 translate-middle rounded-circle delete-photo" style="width: 24px; height: 24px; padding: 0; display: flex; justify-content: center; align-items: center;">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
                                     @endforeach
                                 </div>
                             @endif
@@ -316,5 +321,39 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const existingPhotosContainer = document.getElementById('existing-photos');
+
+        if (existingPhotosContainer) {
+            existingPhotosContainer.addEventListener('click', function (e) {
+                if (e.target.closest('.delete-photo')) {
+                    const button = e.target.closest('.delete-photo');
+                    const photoDiv = button.closest('.position-relative');
+                    const photoUrl = photoDiv.querySelector('img').dataset.photoUrl;
+
+                    if (confirm('Are you sure you want to delete this photo?')) {
+                        // For now, just visually remove the photo and prepare for controller handling
+                        photoDiv.remove();
+
+                        // We will need to handle the actual deletion in the controller
+                        // when the form is submitted, or via a separate AJAX call.
+                        // For submission with the form, we could add a hidden input.
+                        // Let's add a hidden input to the form for deleted photos.
+                        const form = document.getElementById('form-annonce-proprietaire');
+                        const deletedPhotoInput = document.createElement('input');
+                        deletedPhotoInput.type = 'hidden';
+                        deletedPhotoInput.name = 'deleted_photos[]';
+                        deletedPhotoInput.value = photoUrl;
+                        form.appendChild(deletedPhotoInput);
+                    }
+                }
+            });
+        }
+    });
+</script>
+@endpush
 
 @endsection

@@ -240,7 +240,6 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <div style="background: rgba(124, 159, 192, 0.1); color: var(--bleu-fonce); padding: 8px; text-align: center; font-weight: 600; border-radius: 8px;">DEBUG: MESSAGES SHOW VIEW</div>
                     <div id="messages" class="mb-4" data-auth-id="{{ Auth::id() }}" style="height: 400px; overflow-y: auto; padding-right: 10px;">
                         <div class="text-center py-3" id="loading">
                             <div class="spinner-border" style="color: var(--bleu-moyen);" role="status">
