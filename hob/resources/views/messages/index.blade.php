@@ -19,7 +19,16 @@
                                             <h6 class="mb-1">{{ $message->logement->title ?? 'Logement' }}</h6>
                                             <small>{{ $message->created_at->diffForHumans() }}</small>
                                         </div>
-                                        <p class="mb-1">Conversation with {{ $message->sender_id === Auth::id() ? $message->receiver->prenom : $message->sender->prenom }} {{ $message->sender_id === Auth::id() ? $message->receiver->nom_uti : $message->sender->nom_uti }}</p>
+                                        @php
+                                            $otherUser = ($message->sender_id === Auth::id()) ? $message->receiver : $message->sender;
+                                        @endphp
+                                        <div class="d-flex align-items-center mt-2">
+                                            <img src="{{ $otherUser->photodeprofil_uti ? asset('storage/' . $otherUser->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
+                                                 alt="{{ $otherUser->prenom }}" 
+                                                 class="rounded-circle me-2" 
+                                                 style="width: 40px; height: 40px; object-fit: cover;">
+                                            <p class="mb-0">Conversation with {{ $otherUser->prenom }} {{ $otherUser->nom_uti }}</p>
+                                        </div>
                                     </a>
                                 </li>
                             @endforeach

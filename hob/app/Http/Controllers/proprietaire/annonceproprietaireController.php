@@ -180,23 +180,41 @@ class AnnonceProprietaireController extends Controller
             $logement->equipements = json_encode($request->equipements ?? []);
             $logement->proprietaire_id = Auth::id();
 
-            // Gérer les photos
-            if ($request->hasFile('photos')) {
-                if ($logement->photos) {
-                    foreach (json_decode($logement->photos, true) as $oldPhoto) {
-                        if (file_exists(public_path($oldPhoto))) {
-                            unlink(public_path($oldPhoto));
+            // Gérer les photos existantes et les nouvelles
+            $existingPhotos = json_decode($logement->photos ?? '[]', true);
+            $updatedPhotos = $existingPhotos;
+
+            // Gérer les photos à supprimer
+            if ($request->has('deleted_photos') && is_array($request->input('deleted_photos'))) {
+                $deletedPhotos = $request->input('deleted_photos');
+                foreach ($deletedPhotos as $deletedPhotoPath) {
+                    $key = array_search($deletedPhotoPath, $updatedPhotos);
+                    if ($key !== false) {
+                        // Remove from array
+                        unset($updatedPhotos[$key]);
+                        // Delete physical file
+                        if (file_exists(public_path($deletedPhotoPath))) {
+                            unlink(public_path($deletedPhotoPath));
                         }
                     }
                 }
-                $photoPaths = [];
+                // Re-index array after unsetting
+                $updatedPhotos = array_values($updatedPhotos);
+            }
+
+            // Gérer les nouvelles photos
+            if ($request->hasFile('photos')) {
                 foreach ($request->file('photos') as $photo) {
                     $imageName = time() . '_' . uniqid() . '.' . $photo->extension();
+                    // Store in public/images directory
                     $photo->move(public_path('images'), $imageName);
-                    $photoPaths[] = 'images/' . $imageName;
+                    $newPhotoPath = 'images/' . $imageName; // Store path relative to public
+                    $updatedPhotos[] = $newPhotoPath;
                 }
-                $logement->photos = json_encode($photoPaths);
             }
+
+            // Mettre à jour la colonne photos du logement
+            $logement->photos = json_encode($updatedPhotos);
 
             $logement->save();
             Log::info('Logement mis à jour avec succès, ID: ' . $logement->id);
@@ -217,7 +235,7 @@ class AnnonceProprietaireController extends Controller
                     'annonce' => $annonce->load('logement'),
                 ], 200);
             }
-            return redirect()->back()->with('success', 'Annonce mise à jour avec succès.');
+            return redirect()->route('proprietaire.annoncesproprietaire.index')->with('success', 'Annonce mise à jour avec succès.');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             Log::error('Annonce non trouvée ID: ' . $id);
             return response()->json(['success' => false, 'message' => 'Annonce non trouvée'], 404);

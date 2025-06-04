@@ -233,6 +233,43 @@ class AnnonceLocataireController extends Controller
             $logement->type_log = $request->type_log;
             $logement->nombre_colocataire_log = $request->nombre_colocataire_log;
             $logement->ville = $request->ville;
+
+            // Gérer les photos existantes et les nouvelles
+            $existingPhotos = json_decode($logement->photos ?? '[]', true);
+            $updatedPhotos = $existingPhotos;
+
+            // Gérer les photos à supprimer
+            if ($request->has('deleted_photos') && is_array($request->input('deleted_photos'))) {
+                $deletedPhotos = $request->input('deleted_photos');
+                foreach ($deletedPhotos as $deletedPhotoPath) {
+                    $key = array_search($deletedPhotoPath, $updatedPhotos);
+                    if ($key !== false) {
+                        // Remove from array
+                        unset($updatedPhotos[$key]);
+                        // Delete physical file from public directory
+                        if (file_exists(public_path($deletedPhotoPath))) {
+                            unlink(public_path($deletedPhotoPath));
+                        }
+                    }
+                }
+                // Re-index array after unsetting
+                $updatedPhotos = array_values($updatedPhotos);
+            }
+
+            // Gérer les nouvelles photos
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $imageName = time() . '_' . uniqid() . '.' . $photo->extension();
+                    // Store in public/images directory
+                    $photo->move(public_path('images'), $imageName);
+                    $newPhotoPath = 'images/' . $imageName; // Store path relative to public
+                    $updatedPhotos[] = $newPhotoPath;
+                }
+            }
+
+            // Mettre à jour la colonne photos du logement
+            $logement->photos = json_encode($updatedPhotos);
+
             $logement->save();
 
             $annonce->titre_anno = $request->titre_anno;
@@ -242,6 +279,27 @@ class AnnonceLocataireController extends Controller
             return redirect()->route('locataire.annonceslocataire.index')->with('success', 'Annonce mise à jour avec succès.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Erreur lors de la mise à jour: ' . $e->getMessage());
+        }
+    }
+
+    // ✅ تعريف إعلان
+    public function details($id)
+    {
+        try {
+            if (Auth::user()->role_uti !== 'locataire') {
+                return redirect()->back()->with('error', 'Accès réservé aux locataires.');
+            }
+
+            $annonce = Annonce::with('logement')->findOrFail($id);
+            $userId = Auth::user()->id;
+
+            if ($annonce->proprietaire_id !== $userId) {
+                return redirect()->back()->with('error', 'Accès non autorisé à cette annonce.');
+            }
+
+            return view('locataire.details', compact('annonce'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erreur lors de la récupération de l\'annonce: ' . $e->getMessage());
         }
     }
 }

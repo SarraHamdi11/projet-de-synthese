@@ -233,10 +233,10 @@
                                 <strong>Ville:</strong> {{ $favorite->logement->ville }}
                             </p>
                             <div class="mt-3 d-flex gap-2">
-                                <a href="{{ route('showReservation', $favorite->logement->id) }}" class="btn btn-primary-custom btn-sm">Réserver</a>
-                                <a href="{{ route('showDetails', $favorite->logement->id) }}" class="btn btn-secondary-custom btn-sm">Détails</a>
+                                <a href="{{ route('showReservation', $favorite->logement->id) }}" class="btn btn-primary btn-sm">Réserver</a>
+                                <a href="{{ route('showDetails', $favorite->logement->id) }}" class="btn btn-outline-primary btn-sm">Détails</a>
                                 @if($favorite->logement->proprietaire_id)
-                                    <a href="{{ route('conversations.show', $favorite->logement->proprietaire_id) }}" class="btn btn-contact-custom btn-sm">Contacter</a>
+                                    <a href="{{ route('conversations.show', $favorite->logement->proprietaire_id) }}" class="btn btn-primary btn-sm">Contacter</a>
                                 @endif
                             </div>
                         </div>
