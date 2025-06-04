@@ -433,25 +433,32 @@ body { font-family: 'Poppins', sans-serif; background: #fff !important; }
   <!-- Bilan du Mois (3 cards for owner) -->
   <h2 class="section-title fade-in-down">Bilan du Mois</h2>
   <div class="row g-4 mb-5 stats-row fade-in-up">
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <div class="stats-glass">
         <span class="stats-icon"><i class="fa-solid fa-house-chimney"></i></span>
         <div class="stats-title">Réservations reçues</div>
         <div class="stats-value">{{ $totalRequests }} demandes</div>
       </div>
     </div>
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <div class="stats-glass">
         <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
         <div class="stats-title">Appartements loués</div>
         <div class="stats-value">{{ $confirmedBookings }} Appartements</div>
       </div>
     </div>
-    <div class="col-12 col-md-4">
+    <div class="col-12 col-md-3">
       <div class="stats-glass">
         <span class="stats-icon"><i class="fa-solid fa-envelope"></i></span>
         <div class="stats-title">Messages échangés</div>
         <div class="stats-value">{{ $unreadMessages }} messages non lus</div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="stats-glass">
+        <span class="stats-icon"><i class="fa-solid fa-coins"></i></span>
+        <div class="stats-title">Revenus du mois</div>
+        <div class="stats-value">{{ $monthlyEarnings }} DH</div>
       </div>
     </div>
   </div>

@@ -3,86 +3,130 @@
 @section('title', 'Profil Propriétaire')
 
 @section('content')
+<link href="https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f9fafb;
-        margin: 0;
-        padding: 0;
+    :root {
+        --bleu-fonce: #244F76;
+        --bleu-moyen: #447892;
+        --bleu-clair: #7C9FC0;
+        --creme: #EBDFD5;
+        --blanc: #fff;
     }
 
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        min-height: 100vh;
+    }
 
-    
+    .title-font {
+        font-family: 'Inknut Antiqua', serif;
+    }
 
-    .stats {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin: 20px 0;
+    .professional-card {
+        background: var(--blanc);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(36, 79, 118, 0.08);
+        border: 1px solid rgba(36, 79, 118, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .professional-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 60px rgba(36, 79, 118, 0.15);
+    }
+
+    .section-title {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(135deg, var(--bleu-moyen) 0%, var(--bleu-fonce) 100%);
+        border-radius: 2px;
+    }
+
+    .avatar-circle {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid var(--bleu-fonce);
+        transition: transform 0.3s ease;
+    }
+
+    .avatar-circle:hover {
+        transform: scale(1.05);
     }
 
     .stat-card {
-        background-color: white;
-        padding: 20px;
+        background-color: var(--creme);
+        padding: 15px;
         border-radius: 12px;
         text-align: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        width: 140px;
+        box-shadow: 0 2px 4px var(--bleu-clair);
+        width: 100%;
+        margin-bottom: 15px;
     }
 
     .stat-card h4 {
         margin-bottom: 5px;
         font-size: 14px;
-        color: #4a5568;
+        color: var(--bleu-moyen);
     }
 
     .stat-card p {
-        font-size: 24px;
-        font-weight: bold;
-        color: #2d3748;
-    }
-
-    .profile-info {
-        background-color: #f3f4f6;
-        padding: 20px;
-        border-radius: 12px;
-        margin: 0 auto 30px;
-        width: 320px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        font-size: 14px;
-        color: #4a5568;
-    }
-
-    .profile-info p {
-        margin: 4px 0;
-    }
-
-    .publications {
-        max-width: 700px;
-        margin: 0 auto;
-        padding-bottom: 50px;
-    }
-
-    .publications h2 {
-        text-align: center;
         font-size: 20px;
-        color: #2c3e50;
-        margin-bottom: 20px;
+        font-weight: 600;
+        color: var(--bleu-fonce);
     }
 
-    .publication {
+    .profile-detail {
         display: flex;
-        background-color:rgb(246, 231, 209);
-        margin-bottom: 20px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+        color: var(--bleu-fonce);
     }
 
-    .publication img {
-        width: 200px;
-        height: 150px;
+    .profile-detail i {
+        color: var(--bleu-moyen);
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .publication-card {
+        display: flex;
+        background: var(--blanc);
+        border-radius: 16px;
+        border: 1.5px solid var(--creme);
+        margin-bottom: 20px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .publication-card:hover {
+        border-color: var(--bleu-clair);
+        box-shadow: 0 10px 30px rgba(36, 79, 118, 0.1);
+        transform: translateY(-3px);
+    }
+
+    .publication-card img {
+        width: 140px;
+        height: 110px;
         object-fit: cover;
+        background: var(--creme);
     }
 
     .publication-content {
@@ -94,84 +138,153 @@
     }
 
     .publication-content h3 {
-        margin: 0 0 10px;
-        color: #2a4365;
-        font-size: 16px;
+        margin: 0 0 8px;
+        color: var(--bleu-fonce);
+        font-size: 1.2rem;
+        font-weight: 600;
     }
 
     .publication-content p {
-        margin: 0 0 10px;
-        color: #4a5568;
-        font-size: 14px;
+        margin: 0 0 12px;
+        color: var(--bleu-moyen);
+        font-size: 0.95rem;
     }
 
     .publication-footer {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        font-size: 13px;
-        color: #718096;
+        gap: 10px;
     }
 
-    .publication-footer i {
-        margin-right: 4px;
+    .publication-footer .date {
+        font-size: 0.9rem;
+        color: var(--bleu-clair);
+    }
+
+    .no-content {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+    .no-content i {
+        font-size: 3rem;
+        color: var(--bleu-clair);
+        opacity: 0.5;
+    }
+
+    .no-content p {
+        color: var(--bleu-fonce);
+        font-size: 1.1rem;
+        margin-top: 15px;
+    }
+
+    .sidebar-profile {
+        position: sticky;
+        top: 20px;
+    }
+
+    .profile-header {
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .profile-header h1 {
+        color: var(--bleu-fonce);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-top: 20px;
     }
 </style>
 
-<div class="profile-header">
-    <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg" alt="Photo de profil">
-    <h1>Bonjour {{ $proprietaire->nom }}</h1>
-</div>
+<div class="container mx-auto px-4 py-5">
+    <div class="row">
+        <!-- Sidebar Profile -->
+        <div class="col-md-4 mb-4">
+            <div class="professional-card sidebar-profile">
+                <div class="profile-header">
+                    <h2 class="title-font section-title" style="color: var(--bleu-fonce); font-size: 2rem; font-weight: 700;">
+                        Profil de {{ $proprietaire->nom ?? '' }}
+                    </h2>
+                    <a href="{{ route('proprietaire.myprofile') }}">
+                        <img src="{{ $proprietaire->photodeprofil_uti ? asset('storage/' . $proprietaire->photodeprofil_uti) : 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg' }}" alt="Photo de profil" class="avatar-circle">
+                    </a>
+                    <h1 class="title-font">Bonjour {{ $proprietaire->nom ?? '' }}</h1>
+                </div>
 
-<div class="stats">
-    <div class="stat-card">
-        <h4>Les annonces</h4>
-        <p>{{ $annoncesCount }}</p>
-    </div>
-    <div class="stat-card">
-        <h4>Commentaires</h4>
-        <p>{{ $commentairesCount }}</p>
-    </div>
-</div>
+                <div class="p-4">
+                    <div class="stats">
+                        <div class="stat-card">
+                            <h4>Les annonces</h4>
+                            <p>{{ $annoncesCount ?? 0 }}</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Commentaires</h4>
+                            <p>{{ $commentairesCount ?? 0 }}</p>
+                        </div>
+                    </div>
 
-<div class="profile-info">
-    <p><strong>{{ $proprietaire->nom }}</strong></p>
-    <p>Tél: {{ $proprietaire->telephone }}</p>
-    <p>{{ $proprietaire->email }}</p>
-    <p>Role: {{ $proprietaire->role }}</p>
-    <p>Ville: {{ $proprietaire->ville }}</p>
-    <p>Date de naissance: {{ $proprietaire->date_naissance }}</p>
-</div>
-
-<div class="publications">
-    <h2>Les publications</h2>
-    @foreach($annonces as $annonce)
-    <div class="publication">
-        <img src="{{ $annonce['image'] }}" alt="Photo">
-        <div class="publication-content">
-            <div>
-                <h3>{{ $annonce['titre'] }}</h3>
-                <p>{{ $annonce['description'] }}</p>
+                    <div class="mt-4">
+                        <div class="profile-detail">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>Tél : {{ $proprietaire->telephone ?? '' }}</span>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email : {{ $proprietaire->email ?? '' }}</span>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-user-tag"></i>
+                            <span>Rôle : {{ $proprietaire->role ?? '' }}</span>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Ville : {{ $proprietaire->ville ?? '' }}</span>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-birthday-cake"></i>
+                            <span>Date de naissance : {{ \Carbon\Carbon::parse($proprietaire->date_naissance ?? now())->isoFormat('D MMM YYYY') }}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-           
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <div class="publications">
+                <h2 class="title-font section-title" style="color: var(--bleu-fonce); font-size: 2rem; font-weight: 700;">
+                    Mes publications
+                </h2>
+                <div class="professional-card p-4 p-md-5">
+                    @if(!empty($annonces) && is_array($annonces))
+                        @foreach($annonces as $annonce)
+                            <div class="publication-card">
+                                <img src="{{ $annonce['image'] ?? asset('images/default-avatar.png') }}" alt="Photo">
+                                <div class="publication-content">
+                                    <div>
+                                        <h3>{{ $annonce['titre'] ?? 'Sans titre' }}</h3>
+                                        <p>{{ $annonce['description'] ?? 'Aucune description' }}</p>
+                                    </div>
+                                    <div class="publication-footer">
+                                        <span class="date">{{ now()->isoFormat('D MMM YYYY') }}</span> <!-- Date simulée, à remplacer par une date réelle si disponible -->
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="no-content">
+                            <i class="fas fa-newspaper"></i>
+                            <p>Aucune publication trouvée.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
-    @endforeach
 </div>
+
 @endsection
 
-
 @section('scripts')
-<script>
-    $(document).ready(function() {
-        $('.property-card').hover(
-            function() {
-                $(this).find('.actions-btn').css('opacity', '1');
-            },
-            function() {
-                $(this).find('.actions-btn').css('opacity', '0.7');
-            }
-        );
-    });
-</script>
+<!-- Script supprimé car pas d'actions-btn dans la page locataire -->
 @endsection

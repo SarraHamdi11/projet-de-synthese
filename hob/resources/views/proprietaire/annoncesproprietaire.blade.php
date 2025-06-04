@@ -120,15 +120,81 @@
         border-radius: 2px;
     }
     
-    /* Styles pour la liste des annonces (non modifiés, conservés tels quels) */
-    .card {
-        border-radius: 10px;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    .card-annonce {
+        background: white;
+        border-radius: 20px;
+        border: 2px solid rgba(36, 79, 118, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        height: 100%;
     }
     
-    .card:hover {
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    .card-annonce:hover {
+        border-color: #7C9FC0;
+        transform: translateY(-8px);
+        box-shadow: 0 15px 50px rgba(36, 79, 118, 0.15);
+    }
+    
+    .price-badge {
+        background: linear-gradient(135deg, #21825C 0%, #1a6b4a 100%);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+    
+    .location-badge {
+        background: rgba(124, 159, 192, 0.1);
+        color: #244F76;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+    
+    .carousel-inner {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .btn-modifier-custom {
+        background: #EBDFD5;
+        color: #244F76;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        padding: 10px 28px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.2s, color 0.2s;
+    }
+    
+    .btn-modifier-custom:hover {
+        background: #d6c3b2;
+        color: #244F76;
+    }
+    
+    .btn-supprimer-custom {
+        background: #EBDFD5;
+        color: #244F76;
+        border: none;
+        border-radius: 20px;
+        font-weight: 600;
+        padding: 10px 28px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: background 0.2s, color 0.2s;
+    }
+    
+    .btn-supprimer-custom:hover {
+        background: #d6c3b2;
+        color: #244F76;
     }
     
     .pagination .page-link {
@@ -320,7 +386,7 @@
         </div>
     </div>
 
-    {{-- Liste des annonces --}}
+    {{-- Liste des annonces avec design amélioré --}}
     <div class="text-center mb-5">
         <h2 class="title-font section-title" style="color: #244F76; font-size: 2.2rem; font-weight: 700;">
             Mes Annonces
@@ -328,74 +394,106 @@
         <p class="text-muted mt-3">Gérez vos annonces de colocation</p>
     </div>
 
-    <div class="row" id="annonces-container">
+    <div class="row g-4" id="annonces-container">
         @isset($annonces)
-        @forelse ($annonces as $annonce)
-        <div class="col-md-4 mb-4 d-flex align-items-stretch">
-            <div class="card h-100 shadow-sm border-0" style="border-radius: 10px;">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold fs-4 mb-3 text-lowercase">{{ $annonce->titre_anno }}</h5>
-                    @if($annonce->logement && $annonce->logement->photos)
-                        <div class="slider mb-3">
-                            @php
-                                $photos = json_decode($annonce->logement->photos, true);
-                            @endphp
-                            @foreach($photos as $photo)
-                                <div>
-                                    <img src="{{ asset($photo) }}" alt="Photo de l'annonce" class="rounded w-100" style="height: 150px; object-fit: cover;">
+        @if($annonces->count() > 0)
+            @foreach ($annonces as $annonce)
+                <div class="col-lg-4 col-md-6">
+                    <div class="card-annonce">
+                        {{-- Slider photos avec design moderne --}}
+                        @php
+                            $photos = $annonce->logement && $annonce->logement->photos ? json_decode($annonce->logement->photos, true) : [];
+                            $carouselId = 'carouselAnnonce' . $annonce->id;
+                        @endphp
+                        
+                        <div class="position-relative">
+                            @if($photos && count($photos) > 0)
+                                <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner" style="height:220px;">
+                                        @foreach($photos as $idx => $photo)
+                                            <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
+                                                <img src="{{ asset($photo) }}" class="d-block w-100 h-100" 
+                                                     alt="Photo logement" style="object-fit:cover;">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    @if(count($photos) > 1)
+                                        <_IDE_CODE_BLOCK_1>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#{{ $carouselId }}" extra-attr="something" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    @endif
                                 </div>
-                            @endforeach
+                            @else
+                                <img src="{{ asset('images/default.jpg') }}" class="d-block w-100" alt="Photo logement" 
+                                     style="object-fit:cover;height:220px;">
+                            @endif
+                            
+                            {{-- Badge prix --}}
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <span class="price-badge">{{ $annonce->logement->prix_log ?? 'N/A' }} MAD/mois</span>
+                            </div>
                         </div>
-                    @else
-                        <p class="text-muted mb-3">Aucune photo disponible</p>
-                    @endif
-                    <div class="mb-3">
-                        <p class="mb-1"><span class="me-2">💰</span><strong>Prix:</strong> {{ $annonce->logement->prix_log }} DH/mois</p>
-                        <p class="mb-1"><span class="me-2">📍</span><strong>Localisation:</strong> {{ $annonce->logement->localisation_log }}</p>
-                        <p class="mb-1"><span class="me-2">🟢</span><strong>Statut:</strong> {{ ucfirst($annonce->statut_anno) }}</p>
-                        @if($annonce->date_publication_anno)
-                        <p class="mb-1"><span class="me-2">🗓</span><strong>Publiée le:</strong> {{ \Carbon\Carbon::parse($annonce->date_publication_anno)->format('d F Y') }}</p>
-                        @endif
-                        @if($annonce->logement->equipements)
-                        <p class="mb-1"><span class="me-2">🛠</span><strong>Équipements:</strong> {{ implode(', ', json_decode($annonce->logement->equipements, true)) }}</p>
-                        @endif
-                    </div>
-                    <div class="d-flex justify-content-between mt-auto">
-                        <a href="{{ route('proprietaire.modifierannonceproprietaire', $annonce->id) }}" class="btn text-dark fw-bold px-3 flex-fill mx-1" style="background-color: #EBDFD5;">
-                            Modifier
-                        </a>
-                        <form action="{{ route('proprietaire.annoncesproprietaire.destroy', $annonce->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression?');" class="flex-fill mx-1">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn text-dark fw-bold px-3 w-100" style="background-color: #EBDFD5;">
-                                Supprimer
-                            </button>
-                        </form>
-                        <a href="#" class="btn text-dark fw-bold px-3 flex-fill mx-1" style="background-color: #EBDFD5;">
-                            Gérer demandes
-                        </a>
+
+                        <div class="p-4">
+                            <h5 class="title-font mb-3" style="font-weight:600; font-size:1.3rem; color:#244F76;">
+                                {{ $annonce->titre_anno }}
+                            </h5>
+                            
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-map-marker-alt me-2" style="color:#447892;"></i>
+                                    <span class="location-badge">{{ $annonce->logement->localisation_log ?? 'N/A' }}</span>
+                                </div>
+                                
+                                <div class="d-flex align-items-center text-muted" style="font-size:0.9rem;">
+                                    <i class="fas fa-calendar-alt me-2"></i>
+                                    <span>{{ \Carbon\Carbon::parse($annonce->date_publication_anno)->isoFormat('D MMM YYYY') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <a href="{{ route('proprietaire.modifierannonceproprietaire', $annonce->id) }}" 
+                                   class="btn btn-modifier-custom flex-fill">
+                                    <i class="fas fa-edit me-1"></i>Modifier
+                                </a>
+                                <form action="{{ route('proprietaire.annoncesproprietaire.destroy', $annonce->id) }}" 
+                                      method="POST" onsubmit="return confirm('Confirmer la suppression?');" 
+                                      class="flex-fill">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-supprimer-custom w-100">
+                                        <i class="fas fa-trash me-1"></i>Supprimer
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        @empty
-        <div class="col-12">
-            <div class="text-center py-5">
-                <div class="mb-4">
-                    <i class="fas fa-home" style="font-size: 4rem; color: #7C9FC0; opacity: 0.5;"></i>
+            @endforeach
+        @else
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="fas fa-home" style="font-size: 4rem; color: #7C9FC0; opacity: 0.5;"></i>
+                    </div>
+                    <h4 class="title-font text-muted mb-3">A режиме объявлений</h4>
+                    <p class="text-muted">Créez votre première annonce pour commencer!</p>
                 </div>
-                <h4 class="title-font text-muted mb-3">Aucune annonce disponible</h4>
-                <p class="text-muted">Créez votre première annonce pour commencer!</p>
             </div>
-        </div>
-        @endforelse
+        @endif
         @endisset
     </div>
 
-    {{-- Pagination --}}
-    @if($annonces->hasPages())
+    {{-- Pagination avec style moderne --}}
+    @if($annonces && $annonces->hasPages())
     <div class="mt-5 d-flex justify-content-center">
-        <nav aria-label="Pagination">
+        <nav aria-label="Navigation des pages">
             <ul class="pagination pagination-lg">
                 <li class="page-item {{ $annonces->onFirstPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $annonces->previousPageUrl() }}">
@@ -407,7 +505,7 @@
                     <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                 </li>
                 @endforeach
-                <li class="page-item {{ $annonces->hasMorePages() ? '' : 'disabled' }}">
+                <li class="page-item {{ $annonces->hasMorePages() ? '' : 'disabled' }}>
                     <a class="page-link" href="{{ $annonces->nextPageUrl() }}">
                         Suivant<i class="fas fa-chevron-right ms-1"></i>
                     </a>
@@ -422,17 +520,6 @@
 
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    $(document).ready(function(){
-        $('.slider').slick({
-            dots: true,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 1,
-            slidesToScroll: 1
-        });
-    });
-</script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.getElementById('form-annonce-proprietaire');
@@ -459,40 +546,78 @@
                 const json = response.data;
 
                 if (json.success) {
-                    const equipementsList = json.annonce.logement.equipements ? JSON.parse(json.annonce.logement.equipements).join(', ') : '';
-                    const photosList = json.annonce.logement.photos ? JSON.parse(json.annonce.logement.photos) : [];
-                    const firstPhoto = photosList[0] || null;
-                    const photosHtml = firstPhoto
-                        ? `<div class="mb-3"><img src="/${firstPhoto}" alt="Photo de l'annonce" class="rounded w-100" style="height: 150px; object-fit: cover;"></div>`
-                        : `<p class="text-muted mb-3">Aucune photo disponible</p>`;
-
+                    const annonce = json.annonce;
+                    const logement = annonce.logement || {};
+                    let photos = logement.photos;
+                    if (typeof photos === 'string') {
+                        try { photos = JSON.parse(photos); } catch { photos = []; }
+                    }
+                    if (!Array.isArray(photos)) photos = [];
+                    const carouselId = 'carouselAnnonce' + annonce.id;
+                    const prix = logement.prix_log ?? 'N/A';
+                    const localisation = logement.localisation_log ?? 'N/A';
+                    const titre = annonce.titre_anno;
+                    const date = new Date(annonce.date_publication_anno).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+                    const editUrl = `/proprietaire/modifierannonceproprietaire/${annonce.id}`;
+                    const deleteUrl = `/proprietaire/annoncesproprietaire/${annonce.id}`;
+                    let photoHtml = '';
+                    if (photos.length > 0) {
+                        photoHtml = `
+                            <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner" style="height:220px; border-radius: 15px; overflow: hidden;">
+                                    ${photos.map((photo, idx) => `
+                                        <div class="carousel-item${idx === 0 ? ' active' ←_IDE_CODE_BLOCK_2> : ''}">
+                                            <img src="/${photo}" class="d-block wcom/file/photo/664fb2c2-0c1d-4c1b-96a8-5b9f84c2d5d2.jpeg alt="Photo logement" style="object-fit:cover; height:220px;">
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${photos.length > 1 ? `
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        `;
+                    } else {
+                        photoHtml = `<img src="/images/default.jpg" class="d-block w-100" alt="Photo logement" style="object-fit:cover; height:220px;">`;
+                    }
                     const newCard = `
-                        <div class="col-md-4 mb-4 d-flex align-items-stretch">
-                            <div class="card h-100 shadow-sm border-0" style="border-radius: 10px;">
-                                <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title fw-bold fs-4 mb-3 text-lowercase">${json.annonce.titre_anno}</h5>
-                                    ${photosHtml}
-                                    <div class="mb-3">
-                                        <p class="mb-1"><span class="me-2">💰</span><strong>Prix:</strong> ${json.annonce.logement.prix_log} DH/mois</p>
-                                        <p class="mb-1"><span class="me-2">📍</span><strong>Localisation:</strong> ${json.annonce.logement.localisation_log}</p>
-                                        <p class="mb-1"><span class="me-2">🟢</span><strong>Statut:</strong> ${json.annonce.statut_anno.charAt(0).toUpperCase() + json.annonce.statut_anno.slice(1)}</p>
-                                        ${json.annonce.date_publication_anno ? `<p class="mb-1"><span class="me-2">🗓</span><strong>Publiée le:</strong> ${new Date(json.annonce.date_publication_anno).toLocaleDateString('fr-FR')}</p>` : ''}
-                                        ${equipementsList ? `<p class="mb-1"><span class="me-2">🛠</span><strong>Équipements:</strong> ${equipementsList}</p>` : ''}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card-annonce">
+                                <div class="position-relative">
+                                    ${photoHtml}
+                                    <div class="position-absolute top-0 end-0 m-3">
+                                        <span class="price-badge">${prix} MAD/mois</span>
                                     </div>
-                                    <div class="d-flex justify-content-between mt-auto">
-                                        <a href="{{ route('proprietaire.modifierannonceproprietaire', ':id') }}".replace(':id', json.annonce.id)" class="btn text-dark fw-bold px-3 flex-fill mx-1" style="background-color: #EBDFD5;">
-                                            Modifier
+                                </div>
+                                <div class="p-4">
+                                    <h5 class="title-font mb-3" style="font-weight:600; font-size:1.3rem; color:#244F76;">${titre}</h5>
+                                    <div class="mb-3">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-map-marker-alt me-2" style="color:#447892;"></i>
+                                            <span class="location-badge">${localisation}</span>
+                                        </div>
+                                        <div class="d-flex align-items-center text-muted" style="font-size:0.9rem;">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            <span>${date}</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2 mt-4">
+                                        <a href="${editUrl}" class="btn btn-modifier-custom flex-fill">
+                                            <i class="fas fa-edit me-1"></i>Modifier
                                         </a>
-                                        <form action="{{ route('proprietaire.annoncesproprietaire.destroy', ':id') }}".replace(':id', json.annonce.id)" method="POST" onsubmit="return confirm('Confirmer la suppression?');" class="flex-fill mx-1">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn text-dark fw-bold px-3 w-100" style="background-color: #EBDFD5;">
-                                                Supprimer
+                                        <form action="${deleteUrl}" method="POST" onsubmit="return confirm('Confirmer la suppression?');" class="flex-fill">
+                                            <input type="hidden" name="_token" value="${document.querySelector('input[name=_token]').value}">
+                                            <input type="hidden" name="_method" value="DELETE">
+                                            <button type="submit" class="btn btn-supprimer-custom w-100">
+                                                <i class="fas fa-trash me-1"></i>Supprimer
                                             </button>
                                         </form>
-                                        <a href="#" class="btn text-dark fw-bold px-3 flex-fill mx-1" style="background-color: #EBDFD5;">
-                                            Gérer demandes
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -502,21 +627,12 @@
                     const annoncesContainer = document.querySelector('#annonces-container');
                     if (annoncesContainer) {
                         annoncesContainer.insertAdjacentHTML('afterbegin', newCard);
-                        // Réinitialiser le slider Slick pour la nouvelle carte
-                        $('.slider').slick('unslick');
-                        $('.slider').slick({
-                            dots: true,
-                            infinite: true,
-                            speed: 500,
-                            slidesToShow: 1,
-                            slidesToScroll: 1
-                        });
                     } else {
                         console.error('Conteneur #annonces-container introuvable');
                     }
 
                     // Supprimer le message "Aucune annonce" si présent
-                    const noAnnonces = document.querySelector('#annonces-container .text-center');
+                    const noAnnonces = document.querySelector('#annonces-container .col-12');
                     if (noAnnonces) noAnnonces.remove();
 
                     form.reset();
@@ -525,7 +641,7 @@
                     successDiv.style.marginBottom = '24px';
                     successDiv.innerHTML = `
                         <svg class="me-3" width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9Entities.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                         </svg>
                         <div><strong>Succès!</strong> Annonce créée avec succès !</div>
                         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
