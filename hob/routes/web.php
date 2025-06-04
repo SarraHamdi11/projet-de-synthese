@@ -6,22 +6,24 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FavoriController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\ProprietaireController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Locataire\LogementlocaController;
 use App\Http\Controllers\Proprietaire\ProfilPropController;
 use App\Http\Controllers\Proprietaire\LogementpropController;
 use App\Http\Controllers\locataire\AccueilLocataireController;
 use App\Http\Controllers\locataire\AnnonceLocataireController;
+use App\Http\Controllers\locataire\LocataireProfileController;
+use App\Http\Controllers\Locataire\ReservationLocataireController;
 use App\Http\Controllers\proprietaire\AccueilProprietaireController;
 use App\Http\Controllers\proprietaire\annonceproprietaireController;
-use App\Http\Controllers\LocataireController;
-use App\Http\Controllers\ProprietaireController;
-use App\Http\Controllers\locataire\LocataireProfileController;
 use App\Http\Controllers\proprietaire\ProprietaireProfileController;
+use App\Http\Controllers\Proprietaire\ReservationProprietaireController;
 
 
 // auth
@@ -30,7 +32,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signup']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
@@ -44,6 +46,14 @@ Route::prefix('proprietaire')->name('proprietaire.')->middleware('auth')->group(
     Route::get('/annonces/{id}/edit', [annonceproprietaireController::class, 'edit'])->name('modifierannonceproprietaire');
     Route::put('/annonces/{id}', [annonceproprietaireController::class, 'update'])->name('annoncesproprietaire.update');
     Route::delete('/annonces/{id}', [annonceproprietaireController::class, 'destroy'])->name('annoncesproprietaire.destroy');
+ Route::get('/reservations', [ReservationProprietaireController::class, 'index'])->name('reservations.index');
+    Route::post('/reservations/{id}/accepter', [ReservationProprietaireController::class, 'accepter'])->name('reservations.accepter');
+    Route::post('/reservations/{id}/refuser', [ReservationProprietaireController::class, 'refuser'])->name('reservations.refuser');
+    Route::get('/reservations/historique', [ReservationProprietaireController::class, 'historique'])->name('reservations.historique');
+    
+  
+
+
 });
 
 Route::prefix('locataire')->name('locataire.')->middleware('auth')->group(function () {
@@ -53,6 +63,14 @@ Route::prefix('locataire')->name('locataire.')->middleware('auth')->group(functi
     Route::get('/annonceslocataire/{id}/edit', [AnnonceLocataireController::class, 'edit'])->name('modifierannoncelocataire.edit');
     Route::put('/annonceslocataire/{id}', [AnnonceLocataireController::class, 'update'])->name('annoncelocataire.update');
     Route::delete('/annonceslocataire/{id}', [AnnonceLocataireController::class, 'destroy'])->name('annoncelocataire.destroy');
+ Route::get('/reservations', [ReservationLocataireController::class, 'index'])->name('reservations.index');
+    Route::get('/reservations/{id}', [ReservationLocataireController::class, 'show'])->name('reservations.show');
+    Route::post('/reservations/{id}/annuler', [ReservationLocataireController::class, 'annuler'])->name('reservations.annuler');
+    Route::get('/reservations/historique', [ReservationLocataireController::class, 'historique'])->name('reservations.historique');
+    Route::get('/reservations/{id}/edit', [ReservationLocataireController::class, 'edit'])->name('reservations.edit');
+    Route::patch('/reservations/{id}', [ReservationLocataireController::class, 'update'])->name('reservations.update');
+    
+
 });
 
 
