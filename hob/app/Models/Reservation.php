@@ -13,6 +13,10 @@ class Reservation extends Model
         'date_debut_res', 'date_fin_res', 'statut_res',
         'locataire_id', 'proprietaire_id', 'logements_id'
     ];
+     protected $casts = [
+        'date_debut_res' => 'datetime',
+        'date_fin_res' => 'datetime',
+    ];
 
     public function locataire()
         {
@@ -28,6 +32,10 @@ class Reservation extends Model
         {
             return $this->belongsTo(Logement::class);
         }
+         public function logements()
+    {
+        return $this->belongsTo(Logement::class, 'logements_id');
+    }
 
 
 }

@@ -27,10 +27,10 @@ class Logement extends Model
 
 
     // Relationship with Annonce
-    public function annonce()
-    {
-        return $this->hasOne(Annonce::class, 'logement_id', 'id');
-    }
+   public function annonces()
+{
+    return $this->hasMany(Annonce::class);
+}
     
     public function user()
     {
