@@ -9,6 +9,7 @@ use App\Models\Reservation;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\Avis;
+use Carbon\Carbon;
 
 class AccueilProprietaireController extends Controller
 {
@@ -24,6 +25,18 @@ class AccueilProprietaireController extends Controller
         $unreadMessages = Message::where('receiver_id', $user->id)
             ->where('is_read', false)
             ->count();
+
+        // Monthly earnings calculation
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+        $monthlyEarnings = Reservation::where('proprietaire_id', $user->id)
+            ->where('statut_res', 'confirmé')
+            ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->with('logement')
+            ->get()
+            ->sum(function($reservation) {
+                return $reservation->logement ? $reservation->logement->prix_log : 0;
+            });
 
         // Logements populaires (12 derniers logements disponibles)
         $latestLogements = Annonce::with('logement')
@@ -45,7 +58,8 @@ class AccueilProprietaireController extends Controller
             'confirmedBookings',
             'unreadMessages',
             'latestLogements',
-            'avisClients'
+            'avisClients',
+            'monthlyEarnings'
         ));
     }
 }

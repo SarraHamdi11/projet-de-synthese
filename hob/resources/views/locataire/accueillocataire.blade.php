@@ -436,28 +436,28 @@ body { font-family: 'Poppins', sans-serif; background: #fff !important; }
       <div class="stats-glass">
         <span class="stats-icon"><i class="fa-solid fa-house-chimney"></i></span>
         <div class="stats-title">Nombre de mes réservations</div>
-        <div class="stats-value">25 demandes</div>
+        <div class="stats-value">{{ $totalReservations }} demandes</div>
       </div>
     </div>
     <div class="col-12 col-md-3">
       <div class="stats-glass">
-        <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
-        <div class="stats-title">Réservations confirmées</div>
-        <div class="stats-value">12 Appartements</div>
+        <span class="stats-icon"><i class="fa-solid fa-heart"></i></span>
+        <div class="stats-title">Favoris</div>
+        <div class="stats-value">{{ $totalFavorites }} favoris</div>
       </div>
     </div>
     <div class="col-12 col-md-3">
       <div class="stats-glass">
-        <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
-        <div class="stats-title">Réservations refusées</div>
-        <div class="stats-value">8 Appartement</div>
+        <span class="stats-icon"><i class="fa-solid fa-envelope"></i></span>
+        <div class="stats-title">Messages échangés</div>
+        <div class="stats-value">{{ $totalMessages }} messages</div>
       </div>
     </div>
     <div class="col-12 col-md-3">
       <div class="stats-glass">
-        <span class="stats-icon"><i class="fa-solid fa-handshake"></i></span>
-        <div class="stats-title">Réservations terminées</div>
-        <div class="stats-value">128 messages</div>
+        <span class="stats-icon"><i class="fa-solid fa-envelope-open-text"></i></span>
+        <div class="stats-title">Messages non lus</div>
+        <div class="stats-value">{{ $unreadCount }} non lus</div>
       </div>
     </div>
   </div>

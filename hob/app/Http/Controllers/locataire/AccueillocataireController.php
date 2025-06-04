@@ -13,9 +13,16 @@ class AccueilLocataireController extends Controller
 {
     public function index()
     {
-        $unreadCount = Message::where('receiver_id', Auth::id())
+        $user = Auth::user();
+
+        $unreadCount = Message::where('receiver_id', $user->id)
             ->where('is_read', false)
             ->count();
+
+        // Real statistics for the tenant
+        $totalReservations = \App\Models\Reservation::where('locataire_id', $user->id)->count();
+        $totalMessages = Message::where('sender_id', $user->id)->orWhere('receiver_id', $user->id)->count();
+        $totalFavorites = \App\Models\Favorite::where('user_id', $user->id)->count();
 
         // Récupérer les 10 derniers avis
         $avisClients = Avis::select('avis.*', 'utilisateurs.nom_uti', 'utilisateurs.prenom')
@@ -38,6 +45,14 @@ class AccueilLocataireController extends Controller
             ->take(8)
             ->get();
 
-        return view('locataire.accueillocataire', compact('unreadCount', 'avisClients', 'latestLogements', 'latestAnnonces'));
+        return view('locataire.accueillocataire', compact(
+            'unreadCount',
+            'totalReservations',
+            'totalMessages',
+            'totalFavorites',
+            'avisClients',
+            'latestLogements',
+            'latestAnnonces'
+        ));
     }
 }

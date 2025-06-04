@@ -200,10 +200,16 @@ class LogementlocaController extends Controller
         $logement = Logement::findOrFail($id);
         $user = Auth::user();
 
-        $comment = $logement->comments()->create([
-            'user_id' => $user->id,
-            'content' => $request->comment
-        ]);
+        // Find the annonce for this logement
+        $annonce = $logement->annonce;
+        if ($annonce) {
+            \App\Models\Avis::create([
+                'contenu' => $request->comment,
+                'note' => 5, // or get from form
+                'annonce_id' => $annonce->id,
+                'locataire_id' => $user->id,
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Commentaire ajouté avec succès');
     }
@@ -211,6 +217,14 @@ class LogementlocaController extends Controller
     public function showDetails($id)
     {
         $logement = Logement::with(['proprietaire', 'comments.user'])->findOrFail($id);
-        return view('locataire.details', compact('logement'));
+        $proprietaire = $logement->proprietaire;
+
+        // Retrieve photos from the database
+        $photos = [];
+        if ($logement->photos) {
+            $photos = is_array($logement->photos) ? $logement->photos : json_decode($logement->photos, true);
+        }
+
+        return view('locataire.details', compact('logement', 'proprietaire', 'photos'));
     }
 }

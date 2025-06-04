@@ -49,6 +49,32 @@
             <p>Aucun logement trouvé. <a href="{{ route('proprietaire.logements') }}">Retour à la liste</a></p>
         @endif
     </div>
+
+    <!-- Avis Section -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h3 class="card-title mb-4">Avis</h3>
+            <div class="avis-list">
+                @forelse($listing->annonce->avis as $avis)
+                    <div class="avis mb-3 pb-3 border-bottom">
+                        <div class="d-flex align-items-center mb-2">
+                            <img src="{{ $avis->locataire->photodeprofil_uti ? asset($avis->locataire->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
+                                 alt="{{ $avis->locataire->prenom }}" 
+                                 class="rounded-circle me-2" 
+                                 style="width: 40px; height: 40px; object-fit: cover;">
+                            <div>
+                                <h6 class="mb-0">{{ $avis->locataire->prenom }} {{ $avis->locataire->nom_uti }}</h6>
+                                <small class="text-muted">{{ $avis->created_at->format('d/m/Y H:i') }}</small>
+                            </div>
+                        </div>
+                        <p class="mb-0">{{ $avis->contenu }}</p>
+                    </div>
+                @empty
+                    <p class="text-muted">Aucun avis pour le moment.</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
 @endsection
 
 <style>
