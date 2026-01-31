@@ -1,17 +1,22 @@
 {
   "version": 2,
+  "name": "findstay",
   "builds": [
     {
-      "src": "index.php",
+      "src": "hob/public/index.php",
       "use": "@vercel/php"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/index.php"
+      "dest": "/hob/public/index.php"
     }
   ],
+  "buildCommand": "cd hob && composer install --no-dev --optimize-autoloader && cd hob && php artisan config:cache && cd hob && php artisan route:cache",
+  "outputDirectory": "hob/public",
+  "installCommand": "cd hob && composer install --no-dev",
+  "framework": null,
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
@@ -20,6 +25,6 @@
     "CACHE_DRIVER": "file",
     "SESSION_DRIVER": "file",
     "FILESYSTEM_DISK": "public",
-    "APP_URL": "https://projet-de-synthese.vercel.app"
+    "APP_URL": "https://findstay.vercel.app"
   }
 }
