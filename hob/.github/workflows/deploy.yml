@@ -1,0 +1,90 @@
+name: Deploy to InfinityFree via FTP
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, bcmath, curl, dom, tokenizer, zip, pdo, sqlite, pdo_sqlite, pdo_mysql
+        coverage: none
+
+    - name: Get Composer cache directory
+      id: composer-cache
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache Composer dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Install Composer dependencies (production)
+      run: composer install --no-dev --optimize-autoloader --no-interaction
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Get npm cache directory
+      id: npm-cache
+      run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.npm-cache.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install npm dependencies and build assets
+      run: npm ci && npm run build
+
+    - name: Prepare Laravel for production
+      run: |
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+        php artisan optimize --no-interaction
+
+    - name: Create deployment artifact (exclude dev files)
+      run: |
+        # Create a clean deploy directory
+        mkdir deploy
+        rsync -av --exclude-from=.deployexclude . deploy/
+        # Ensure .htaccess is at the root
+        cp .htaccess deploy/
+        # Ensure storage folders exist but are empty (shared hosting will fill them)
+        mkdir -p deploy/storage/app/public
+        mkdir -p deploy/storage/framework/cache
+        mkdir -p deploy/storage/framework/sessions
+        mkdir -p deploy/storage/framework/views
+        touch deploy/storage/framework/cache/.gitkeep
+        touch deploy/storage/framework/sessions/.gitkeep
+        touch deploy/storage/framework/views/.gitkeep
+
+    - name: Deploy via FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: ./deploy/
+        server-dir: ./
+        exclude: .git*
+        log-level: minimal
