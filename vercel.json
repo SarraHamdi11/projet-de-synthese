@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.php",
+      "use": "@vercel/php"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.php"
+    }
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "APP_KEY": "base64:7ndKZHNfwrc2gNOLPhJEJOFKpo2Og35j2f8ZuweeghA=",
+    "DB_CONNECTION": "sqlite",
+    "CACHE_DRIVER": "file",
+    "SESSION_DRIVER": "file",
+    "FILESYSTEM_DISK": "public",
+    "APP_URL": "https://projet-de-synthese.vercel.app"
+  }
+}
