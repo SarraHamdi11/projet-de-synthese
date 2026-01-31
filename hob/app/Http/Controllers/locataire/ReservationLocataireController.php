@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Locataire;
+namespace App\Http\Controllers\locataire;
 
 use App\Http\Controllers\Controller;
 use App\Models\Notification;

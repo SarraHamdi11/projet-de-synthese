@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Proprietaire;
+namespace App\Http\Controllers\proprietaire;
 
 use Carbon\Carbon;
 use App\Models\Logement;
