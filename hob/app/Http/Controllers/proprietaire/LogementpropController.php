@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Proprietaire;
+namespace App\Http\Controllers\proprietaire;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -31,12 +31,12 @@ class LogementpropController extends Controller
         $filteredListings = $query->paginate($perPage, ['*'], 'page', $page);
         $total = $filteredListings->total();
 
-        return view('proprietaire.logements', compact('filteredListings', 'total', 'perPage', 'page'));
+        return view('proprietaire.Logements', compact('filteredListings', 'total', 'perPage', 'page'));
     }
 
     public function details($id)
     {
-        $listing = Logement::find($id);
+        $listing = Logement::with(['annonce', 'annonce.avis', 'annonce.avis.locataire'])->find($id);
 
         if (!$listing) {
             return redirect()->route('proprietaire.logements')->with('error', 'Logement non trouvé.');

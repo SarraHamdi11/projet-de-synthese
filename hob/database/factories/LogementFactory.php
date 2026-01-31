@@ -17,7 +17,7 @@ class LogementFactory extends Factory
             'date_creation_log' => $this->faker->date(),
             'type_log' => $this->faker->randomElement(['studio', 'appartement', 'maison']),
             'equipements' => $this->faker->randomElement([json_encode(['Wi-Fi', 'Climatisation']), json_encode(['TV', 'Four'])]),
-            'photos' => $this->faker->randomElement([json_encode(['photo1.jpg', 'photo2.jpg']), json_encode(['photo3.jpg'])]),
+            'photos' => $this->faker->randomElement([json_encode(['aaa.jpg', 'apa.jpeg']), json_encode(['findStay-removebg-preview.png', 'your-image-file.jpg'])]),
             'etage' => $this->faker->numberBetween(1, 10),
             'nombre_colocataire_log' => $this->faker->numberBetween(1, 5),
             'ville' => $this->faker->city,

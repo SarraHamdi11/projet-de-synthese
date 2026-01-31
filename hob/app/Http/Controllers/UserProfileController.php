@@ -12,6 +12,15 @@ use Illuminate\Validation\ValidationException;
 class UserProfileController extends Controller
 {
     /**
+     * Display a user's public profile.
+     */
+    public function show($user)
+    {
+        $user = \App\Models\Utilisateur::findOrFail($user);
+        return view('profile.show', compact('user'));
+    }
+
+    /**
      * Display the user's profile edit form.
      */
     public function edit()

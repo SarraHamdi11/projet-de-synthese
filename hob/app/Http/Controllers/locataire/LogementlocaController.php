@@ -216,7 +216,7 @@ class LogementlocaController extends Controller
 
     public function showDetails($id)
     {
-        $logement = Logement::with(['proprietaire', 'comments.user'])->findOrFail($id);
+        $logement = Logement::with(['proprietaire', 'annonce', 'annonce.avis', 'annonce.avis.locataire'])->findOrFail($id);
         $proprietaire = $logement->proprietaire;
 
         // Retrieve photos from the database

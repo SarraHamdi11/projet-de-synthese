@@ -31,6 +31,12 @@ class Logement extends Model
 {
     return $this->hasMany(Annonce::class);
 }
+
+// Get the latest annonce (singular relationship)
+public function annonce()
+{
+    return $this->hasOne(Annonce::class)->latest();
+}
     
     public function user()
     {

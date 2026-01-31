@@ -261,25 +261,32 @@
                     Avis
                 </h3>
                 <div class="avis-list">
-                    @forelse($logement->annonce->avis as $avis)
-                        <div class="avis mb-3 pb-3 border-bottom">
-                            <div class="d-flex align-items-center mb-2">
-                                <img src="{{ $avis->locataire->photodeprofil_uti ? asset($avis->locataire->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
-                                     alt="{{ $avis->locataire->prenom }}" 
-                                     class="rounded-circle me-2 avatar-circle-small">
-                                <div>
-                                    <h6 class="mb-0" style="color:#244F76;">{{ $avis->locataire->prenom }} {{ $avis->locataire->nom_uti }}</h6>
-                                    <small class="text-muted">{{ \Carbon\Carbon::parse($avis->created_at)->isoFormat('D MMM YYYY') }}</small>
+                    @if($logement->annonce && $logement->annonce->avis)
+                        @forelse($logement->annonce->avis as $avis)
+                            <div class="avis mb-3 pb-3 border-bottom">
+                                <div class="d-flex align-items-center mb-2">
+                                    <img src="{{ $avis->locataire->photodeprofil_uti ? asset($avis->locataire->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
+                                         alt="{{ $avis->locataire->prenom }}" 
+                                         class="rounded-circle me-2 avatar-circle-small">
+                                    <div>
+                                        <h6 class="mb-0" style="color:#244F76;">{{ $avis->locataire->prenom }} {{ $avis->locataire->nom_uti }}</h6>
+                                        <small class="text-muted">{{ \Carbon\Carbon::parse($avis->created_at)->isoFormat('D MMM YYYY') }}</small>
+                                    </div>
                                 </div>
+                                <p class="mb-0 text-muted">{{ $avis->contenu }}</p>
                             </div>
-                            <p class="mb-0 text-muted">{{ $avis->contenu }}</p>
-                        </div>
-                    @empty
+                        @empty
+                            <div class="text-center">
+                                <i class="fas fa-comment-slash" style="font-size: 3rem; color: #7C9FC0; opacity: 0.5;"></i>
+                                <p class="text-muted mt-3">Aucun avis pour le moment.</p>
+                            </div>
+                        @endforelse
+                    @else
                         <div class="text-center">
                             <i class="fas fa-comment-slash" style="font-size: 3rem; color: #7C9FC0; opacity: 0.5;"></i>
                             <p class="text-muted mt-3">Aucun avis pour le moment.</p>
                         </div>
-                    @endforelse
+                    @endif
                 </div>
             </div>
         </div>

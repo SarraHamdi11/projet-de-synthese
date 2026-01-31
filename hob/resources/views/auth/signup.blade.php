@@ -82,8 +82,25 @@
                                 </p>
                             </div>
 
-                            <form method="POST" action="{{ route('signup') }}" enctype="multipart/form-data" class="space-y-6">
+                            <form method="POST" action="{{ route('signup') }}" enctype="multipart/form-data" class="space-y-6" id="signupForm">
                                 @csrf
+
+                                @if ($errors->any())
+                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                                        <div class="font-bold">Erreur:</div>
+                                        <ul class="list-disc list-inside">
+                                            @foreach ($errors->all() as $error)
+                                                <li>{{ $error }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                @endif
+
+                                @if (session('status'))
+                                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                                        {{ session('status') }}
+                                    </div>
+                                @endif
 
                                 <!-- Row 1: Nom & Prénom -->
                                   <!-- Row 1: Nom & Prénom -->
@@ -192,6 +209,7 @@
                                         <select name="role_uti" class="form-select" required>
                                             <option value="" disabled selected>Choisir votre rôle</option>
                                             <option value="locataire" {{ old('role_uti') == 'locataire' ? 'selected' : '' }}>Locataire</option>
+                                            <option value="colocataire" {{ old('role_uti') == 'colocataire' ? 'selected' : '' }}>Colocataire</option>
                                             <option value="proprietaire" {{ old('role_uti') == 'proprietaire' ? 'selected' : '' }}>Propriétaire</option>
                                         </select>
                                         @error('role_uti')
@@ -248,10 +266,8 @@
 
                                 <!-- Submit Button -->
                                  <button type="submit"  class="btn-primary w-full text-white px-4 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                                     <a href="{{ route('login') }}" class="btn-secondary">
-                                        <span>Se connecter</span>
+                                        <span>Créer un compte</span>
                                         <i class="fas fa-arrow-right ml-2"></i>
-                                    </a>
                                 </button>
 
                                 <!-- Login Link -->
@@ -383,6 +399,38 @@
                     group.style.transform = 'translateY(0)';
                 }, index * 25);
             });
+
+            // Debug form submission
+            const signupForm = document.getElementById('signupForm');
+            if (signupForm) {
+                console.log('Signup form found:', signupForm);
+                
+                signupForm.addEventListener('submit', function(e) {
+                    console.log('Signup form submitted!');
+                    console.log('Event:', e);
+                    console.log('Form action:', this.action);
+                    console.log('Form method:', this.method);
+                    
+                    const formData = new FormData(this);
+                    console.log('Form data:');
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0] + ': ' + pair[1]);
+                    }
+                    
+                    // Don't prevent default, let it submit normally
+                });
+                
+                // Also check button click
+                const submitBtn = signupForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    console.log('Signup submit button found:', submitBtn);
+                    submitBtn.addEventListener('click', function(e) {
+                        console.log('Signup submit button clicked!');
+                    });
+                }
+            } else {
+                console.error('Signup form not found!');
+            }
         });
     </script>
 </body>

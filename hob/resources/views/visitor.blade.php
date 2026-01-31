@@ -275,7 +275,7 @@
                 @forelse ($latestLogements as $logement)
                     <div
                         class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 transform hover:rotate-1">
-                        <img src="{{ !empty($logement->photos) ? asset('storage/' . $logement->photos[0]) : asset('images/placeholder.jpg') }}"
+                        <img src="{{ !empty($logement->photos) ? asset('images/' . (is_array($logement->photos) ? $logement->photos[0] : json_decode($logement->photos, true)[0])) : asset('images/placeholder.jpg') }}"
                             alt="{{ $logement->type_log }} à {{ $logement->ville }}"
                             class="w-full h-48 object-cover transition-opacity duration-300 hover:opacity-90">
                         <div class="p-4">

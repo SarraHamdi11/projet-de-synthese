@@ -41,7 +41,7 @@
                                 </p>
                             </div>
 
-                            <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                            <form method="POST" action="{{ route('login') }}" class="space-y-6" id="loginForm">
                                 @csrf
 
                                 @if ($errors->has('login'))
@@ -98,10 +98,8 @@
 
                                 <!-- Submit Button -->
                                 <button type="submit"  class="btn-primary w-full text-white px-4 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                                     <a href="{{ route('login') }}" class="btn-secondary">
                                         <span>Se connecter</span>
                                         <i class="fas fa-arrow-right ml-2"></i>
-                                    </a>
                                 </button>
 
                                 <!-- Signup Link -->
@@ -202,6 +200,38 @@
                     group.style.transform = 'translateY(0)';
                 }, index * 100);
             });
+
+            // Debug form submission
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                console.log('Login form found:', loginForm);
+                
+                loginForm.addEventListener('submit', function(e) {
+                    console.log('Login form submitted!');
+                    console.log('Event:', e);
+                    console.log('Form action:', this.action);
+                    console.log('Form method:', this.method);
+                    
+                    const formData = new FormData(this);
+                    console.log('Form data:');
+                    for (let pair of formData.entries()) {
+                        console.log(pair[0] + ': ' + pair[1]);
+                    }
+                    
+                    // Don't prevent default, let it submit normally
+                });
+                
+                // Also check button click
+                const submitBtn = loginForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    console.log('Submit button found:', submitBtn);
+                    submitBtn.addEventListener('click', function(e) {
+                        console.log('Submit button clicked!');
+                    });
+                }
+            } else {
+                console.error('Login form not found!');
+            }
         });
     </script>
 </body>

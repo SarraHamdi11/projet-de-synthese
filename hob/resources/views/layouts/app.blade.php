@@ -512,7 +512,7 @@
         <div class="header-welcome">
             @yield('header')
         </div>
-        <div class="text-center mb-10 text-4xl font-bold" style="font-family: 'Inknut Antiqua', serif; color: #244F76; text-shadow: 1px 1px 6px rgba(36, 79, 118, 0.3); padding: 15px 0;">
+        <div class="text-center mb-10 text-6xl font-extrabold" style="font-family: 'Inknut Antiqua', serif; color: white; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5); padding: 20px 0; letter-spacing: 1px;">
             @php
                 $hour = now()->hour;
                 $greeting = $hour < 12 ? 'Bonjour' : ($hour < 18 ? 'Bon après-midi' : 'Bonsoir');

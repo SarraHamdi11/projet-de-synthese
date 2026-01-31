@@ -3,27 +3,21 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\FavoriController;
 use App\Http\Controllers\MessageController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\LocataireController;
 use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ConversationController;
-use App\Http\Controllers\ProprietaireController;
-use App\Http\Controllers\NotificationsController;
-use App\Http\Controllers\Locataire\LogementlocaController;
-use App\Http\Controllers\Proprietaire\ProfilPropController;
-use App\Http\Controllers\Proprietaire\LogementpropController;
+use App\Http\Controllers\locataire\LogementlocaController;
+use App\Http\Controllers\proprietaire\ProprietaireProfileController;
+use App\Http\Controllers\proprietaire\LogementpropController;
 use App\Http\Controllers\locataire\AccueilLocataireController;
 use App\Http\Controllers\locataire\AnnonceLocataireController;
 use App\Http\Controllers\locataire\LocataireProfileController;
-use App\Http\Controllers\Locataire\ReservationLocataireController;
+use App\Http\Controllers\locataire\ReservationLocataireController;
 use App\Http\Controllers\proprietaire\AccueilProprietaireController;
-use App\Http\Controllers\proprietaire\annonceproprietaireController;
-use App\Http\Controllers\proprietaire\ProprietaireProfileController;
-use App\Http\Controllers\Proprietaire\ReservationProprietaireController;
+use App\Http\Controllers\proprietaire\AnnonceProprietaireController;
+use App\Http\Controllers\proprietaire\ReservationProprietaireController;
 
 
 // auth
@@ -32,7 +26,7 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/signup', [AuthController::class, 'showSignup'])->name('signup');
 Route::post('/signup', [AuthController::class, 'signup']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('forgot-password');
 Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
@@ -41,11 +35,11 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 
 Route::prefix('proprietaire')->name('proprietaire.')->middleware('auth')->group(function () {
     Route::get('/accueilproprietaire', [AccueilProprietaireController::class, 'index'])->name('accueilproprietaire');
-    Route::get('/annonces', [annonceproprietaireController::class, 'index'])->name('annoncesproprietaire.index');
-    Route::post('/annonces', [annonceproprietaireController::class, 'store'])->name('annoncesproprietaire.store');
-    Route::get('/annonces/{id}/edit', [annonceproprietaireController::class, 'edit'])->name('modifierannonceproprietaire');
-    Route::put('/annonces/{id}', [annonceproprietaireController::class, 'update'])->name('annoncesproprietaire.update');
-    Route::delete('/annonces/{id}', [annonceproprietaireController::class, 'destroy'])->name('annoncesproprietaire.destroy');
+    Route::get('/annonces', [AnnonceProprietaireController::class, 'index'])->name('annoncesproprietaire.index');
+    Route::post('/annonces', [AnnonceProprietaireController::class, 'store'])->name('annoncesproprietaire.store');
+    Route::get('/annonces/{id}/edit', [AnnonceProprietaireController::class, 'edit'])->name('modifierannonceproprietaire');
+    Route::put('/annonces/{id}', [AnnonceProprietaireController::class, 'update'])->name('annoncesproprietaire.update');
+    Route::delete('/annonces/{id}', [AnnonceProprietaireController::class, 'destroy'])->name('annoncesproprietaire.destroy');
  Route::get('/reservations', [ReservationProprietaireController::class, 'index'])->name('reservations.index');
     Route::post('/reservations/{id}/accepter', [ReservationProprietaireController::class, 'accepter'])->name('reservations.accepter');
     Route::post('/reservations/{id}/refuser', [ReservationProprietaireController::class, 'refuser'])->name('reservations.refuser');
@@ -152,8 +146,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('settings');
 });
 
-Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
-Route::get('/proprietaire/profile/{user}', [ProfilPropController::class, 'index'])->name('proprietaire.profile');
+Route::get('/profile/{user}', [UserProfileController::class, 'show'])->name('profile.show');
+Route::get('/proprietaire/profile/{user}', [ProprietaireProfileController::class, 'index'])->name('proprietaire.profile');
 
 Route::get('/proprietaire/logements', [LogementpropController::class, 'index'])->name('proprietaire.logements');
 Route::get('/details/{id}', [LogementpropController::class, 'details'])->name('proprietaire.details');
@@ -167,7 +161,6 @@ Route::post('/locataire/reservation', [LogementlocaController::class, 'storeRese
 
 Route::post('/locataire/favorite/{id}', [LogementlocaController::class, 'toggleFavorite'])->name('favorite.toggle');
 Route::get('/locataire/favorites', [LogementlocaController::class, 'showFavorites'])->name('locataire.favorites');
-Route::post('/toggle-favorite/{logement}', [FavoriController::class, 'toggle'])->name('toggle.favorite');
 
 Route::get('/locataire/myprofile', [LocataireProfileController::class, 'myProfile'])->name('locataire.myprofile');
 Route::get('/proprietaire/myprofile', [ProprietaireProfileController::class, 'myProfile'])->name('proprietaire.myprofile');

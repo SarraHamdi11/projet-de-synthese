@@ -276,22 +276,29 @@
         <div class="professional-card p-4 p-md-5">
             <h3 class="title-font section-title" style="color: var(--bleu-fonce); font-size: 2rem; font-weight: 700;">Avis</h3>
             <div class="avis-grid">
-                @forelse($listing->annonce->avis as $avis)
-                    <div class="avis-card">
-                        <img src="{{ $avis->locataire->photodeprofil_uti ? asset('storage/' . $avis->locataire->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
-                             alt="{{ $avis->locataire->prenom ?? 'Utilisateur' }}">
-                        <div class="avis-card-content">
-                            <h6>{{ $avis->locataire->prenom ?? '' }} {{ $avis->locataire->nom_uti ?? '' }}</h6>
-                            <small class="date">{{ $avis->created_at->format('D MMM YYYY, H:mm') }}</small>
-                            <p>{{ $avis->contenu ?? '' }}</p>
+                @if($listing->annonce && $listing->annonce->avis)
+                    @forelse($listing->annonce->avis as $avis)
+                        <div class="avis-card">
+                            <img src="{{ $avis->locataire->photodeprofil_uti ? asset('storage/' . $avis->locataire->photodeprofil_uti) : asset('images/default-avatar.png') }}" 
+                                 alt="{{ $avis->locataire->prenom ?? 'Utilisateur' }}">
+                            <div class="avis-card-content">
+                                <h6>{{ $avis->locataire->prenom ?? '' }} {{ $avis->locataire->nom_uti ?? '' }}</h6>
+                                <small class="date">{{ $avis->created_at->format('D MMM YYYY, H:mm') }}</small>
+                                <p>{{ $avis->contenu ?? '' }}</p>
+                            </div>
                         </div>
-                    </div>
-                @empty
+                    @empty
+                        <div class="no-content">
+                            <i class="fas fa-comment-slash"></i>
+                            <p>Aucun avis pour le moment.</p>
+                        </div>
+                    @endforelse
+                @else
                     <div class="no-content">
                         <i class="fas fa-comment-slash"></i>
                         <p>Aucun avis pour le moment.</p>
                     </div>
-                @endforelse
+                @endif
             </div>
         </div>
     @else

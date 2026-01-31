@@ -74,6 +74,8 @@ public function visitor()
 
     public function login(Request $request)
     {
+        Log::info('Login attempt', ['login' => $request->login]);
+        
         $credentials = $request->validate([
             'login' => 'required',
             'password' => 'required',
@@ -110,7 +112,7 @@ public function visitor()
         }
 
         Log::info('Login failed for: ' . $request->login);
-        return back()->withErrors(['login' => 'information invalide']);
+        return back()->withErrors(['login' => 'Email ou numéro de téléphone incorrect, ou mot de passe invalide']);
     }
 
     public function showSignup()
@@ -120,6 +122,8 @@ public function visitor()
 
     public function signup(Request $request)
     {
+        Log::info('Signup attempt', ['email' => $request->email_uti, 'tel' => $request->tel_uti, 'all_data' => $request->all()]);
+        
         $validated = $request->validate([
             'tel_uti' => 'required|string|max:15',
             'email_uti' => 'required|email|unique:utilisateurs,email_uti',
@@ -148,6 +152,8 @@ public function visitor()
             'mot_de_passe_uti.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
         ]);
 
+        Log::info('Signup validation passed');
+
         $photoPath = null;
         if ($request->hasFile('photodeprofil_uti')) {
             $photoPath = $request->file('photodeprofil_uti')->store('profiles', 'public');
@@ -166,8 +172,39 @@ public function visitor()
             'photodeprofil_uti' => $photoPath,
         ]);
 
-        Auth::login($user);
-        return redirect()->route('login');
+        Log::info('User created successfully', ['user_id' => $user->id, 'email' => $user->email_uti]);
+
+        try {
+            Auth::login($user);
+            Log::info('User logged in after signup', ['user_id' => $user->id]);
+            $request->session()->regenerate();
+            Log::info('Session regenerated');
+        } catch (\Exception $e) {
+            Log::error('Auth login failed', ['error' => $e->getMessage()]);
+            return back()->withErrors(['signup' => 'Login failed after signup: ' . $e->getMessage()]);
+        }
+        
+        try {
+            // Redirect based on user role (same logic as login method)
+            switch ($user->role_uti) {
+                case 'admin':
+                    Log::info('Redirecting to admin dashboard');
+                    return redirect()->route('admin.dashboard');
+                case 'proprietaire':
+                    Log::info('Redirecting to proprietaire dashboard');
+                    return redirect()->route('proprietaire.accueilproprietaire');
+                case 'locataire':
+                case 'colocataire':
+                    Log::info('Redirecting to locataire dashboard');
+                    return redirect()->route('locataire.accueillocataire');
+                default:
+                    Log::info('Redirecting to visitor page');
+                    return redirect()->route('visitor');
+            }
+        } catch (\Exception $e) {
+            Log::error('Redirect failed', ['error' => $e->getMessage()]);
+            return back()->withErrors(['signup' => 'Redirect failed: ' . $e->getMessage()]);
+        }
     }
 
     public function logout(Request $request)
