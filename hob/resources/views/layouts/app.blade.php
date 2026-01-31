@@ -3,7 +3,7 @@
 @php use App\Models\Conversation; @endphp
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>FindStay</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -363,6 +363,231 @@
         }
         .mark-read-btn:hover i {
             color: #fff !important;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+           ======================================== */
+        
+        /* Mobile First Approach */
+        
+        /* Extra Small Devices (Phones) */
+        @media (max-width: 575.98px) {
+            .main-header-bg {
+                min-height: 150px;
+            }
+            
+            .navbar-brand img {
+                height: 80px !important;
+            }
+            
+            .text-6xl {
+                font-size: 2.5rem !important;
+                line-height: 1.2;
+            }
+            
+            .professional-card {
+                padding: 1rem !important;
+                margin: 0.5rem 0;
+            }
+            
+            .card-3d {
+                transform: none !important;
+                transition: none !important;
+            }
+            
+            .logement-carousel {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .logement-card {
+                width: 100% !important;
+                margin-right: 0 !important;
+            }
+            
+            .carousel-arrow {
+                display: none;
+            }
+            
+            /* Mobile Navigation */
+            .navbar-custom .navbar-nav {
+                text-align: center;
+            }
+            
+            .navbar-custom .nav-link {
+                padding: 0.5rem 1rem;
+                margin: 0.25rem 0;
+            }
+            
+            .dropdown-menu {
+                position: static !important;
+                transform: none !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: rgba(255,255,255,0.1) !important;
+            }
+            
+            /* Mobile Forms */
+            .form-control {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Mobile Tables */
+            .table-responsive {
+                font-size: 0.875rem;
+            }
+            
+            .table th,
+            .table td {
+                padding: 0.5rem;
+                vertical-align: middle;
+            }
+            
+            /* Mobile Grids */
+            .grid-cols-3 {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .grid-cols-5 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            /* Mobile Images */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            /* Mobile Spacing */
+            .mb-10 {
+                margin-bottom: 2rem !important;
+            }
+            
+            .p-4 {
+                padding: 1rem !important;
+            }
+            
+            .p-md-5 {
+                padding: 1rem !important;
+            }
+        }
+        
+        /* Small Devices (Landscape Phones) */
+        @media (min-width: 576px) and (max-width: 767.98px) {
+            .main-header-bg {
+                min-height: 180px;
+            }
+            
+            .navbar-brand img {
+                height: 100px !important;
+            }
+            
+            .text-6xl {
+                font-size: 3rem !important;
+            }
+            
+            .grid-cols-4 {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+            
+            .grid-cols-5 {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
+        }
+        
+        /* Medium Devices (Tablets) */
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .main-header-bg {
+                min-height: 200px;
+            }
+            
+            .navbar-brand img {
+                height: 120px !important;
+            }
+            
+            .text-6xl {
+                font-size: 4rem !important;
+            }
+            
+            .logement-carousel {
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+            }
+            
+            .logement-card {
+                scroll-snap-align: start;
+                min-width: 300px;
+            }
+        }
+        
+        /* Large Devices (Desktops) */
+        @media (min-width: 992px) and (max-width: 1199.98px) {
+            .text-6xl {
+                font-size: 5rem !important;
+            }
+        }
+        
+        /* Extra Large Devices (Large Desktops) */
+        @media (min-width: 1200px) {
+            /* Keep original styles for large screens */
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .card-3d:hover {
+                transform: none !important;
+            }
+            
+            .btn:hover {
+                transform: none !important;
+            }
+            
+            .navbar-brand img:hover {
+                transform: none !important;
+            }
+        }
+        
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .navbar-brand img {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .navbar,
+            .carousel-arrow,
+            .btn,
+            .dropdown-menu {
+                display: none !important;
+            }
+            
+            .professional-card {
+                break-inside: avoid;
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+        }
+        
+        /* Accessibility Improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Dark Mode Support (Optional) */
+        @media (prefers-color-scheme: dark) {
+            /* Add dark mode styles here if needed */
         }
     </style>
     @stack('styles')
