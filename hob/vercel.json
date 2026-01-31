@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "findstay",
   "builds": [
     {
       "src": "public/index.php",
@@ -12,13 +13,18 @@
       "dest": "/public/index.php"
     }
   ],
+  "buildCommand": "composer install --no-dev --optimize-autoloader && php artisan config:cache && php artisan route:cache",
+  "outputDirectory": "public",
+  "installCommand": "composer install --no-dev",
+  "framework": null,
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
-    "APP_KEY": "@app_key",
+    "APP_KEY": "base64:7ndKZHNfwrc2gNOLPhJEJOFKpo2Og35j2f8ZuweeghA=",
     "DB_CONNECTION": "sqlite",
     "CACHE_DRIVER": "file",
     "SESSION_DRIVER": "file",
-    "FILESYSTEM_DISK": "public"
+    "FILESYSTEM_DISK": "public",
+    "APP_URL": "https://findstay.vercel.app"
   }
 }
