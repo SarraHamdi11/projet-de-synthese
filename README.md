@@ -209,3 +209,4 @@ Pour toute question ou problème, veuillez créer une issue sur le repository Gi
 ---
 
 **FindStay** - Votre plateforme de confiance pour la colocation moderne 🏠✨
+# Deploy trigger
