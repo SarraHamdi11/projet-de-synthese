@@ -3,8 +3,8 @@
   "name": "findstay",
   "builds": [
     {
-      "src": "hob/public/index.php",
-      "use": "@vercel/php"
+      "src": "hob/public/**/*",
+      "use": "@vercel/static"
     }
   ],
   "routes": [

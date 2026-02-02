@@ -90,3 +90,5 @@ jobs:
         server-dir: ./
         exclude: .git*
         log-level: minimal
+        timeout: 300000
+        max-retries: 3
