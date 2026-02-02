@@ -22,18 +22,18 @@ jobs:
 
     - name: Get Composer cache directory
       id: composer-cache
-      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      run: cd hob && echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
     - name: Cache Composer dependencies
       uses: actions/cache@v4
       with:
         path: ${{ steps.composer-cache.outputs.dir }}
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('hob/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-composer-
 
     - name: Install Composer dependencies (production)
-      run: composer install --no-dev --optimize-autoloader --no-interaction
+      run: cd hob && composer install --no-dev --optimize-autoloader --no-interaction
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -42,21 +42,21 @@ jobs:
 
     - name: Get npm cache directory
       id: npm-cache
-      run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+      run: cd hob && echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
 
     - name: Cache npm dependencies
       uses: actions/cache@v4
       with:
         path: ${{ steps.npm-cache.outputs.dir }}
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('hob/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
 
     - name: Install npm dependencies and build assets
-      run: npm ci && npm run build
+      run: cd hob && npm ci && npm run build
 
     - name: Prepare Laravel for production
-      run: |
+      run: cd hob && |
         php artisan config:cache
         php artisan route:cache
         php artisan view:cache
@@ -64,6 +64,7 @@ jobs:
 
     - name: Create deployment artifact (exclude dev files)
       run: |
+        cd hob
         # Create a clean deploy directory
         mkdir deploy
         rsync -av --exclude-from=.deployexclude . deploy/
@@ -84,7 +85,7 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./deploy/
+        local-dir: ./hob/deploy/
         server-dir: ./
         exclude: .git*
         log-level: minimal
