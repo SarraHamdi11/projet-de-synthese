@@ -60,7 +60,6 @@ jobs:
         cd hob
         php artisan config:cache
         php artisan route:cache
-        php artisan optimize --no-interaction
 
     - name: Create deployment artifact (exclude dev files)
       run: |
