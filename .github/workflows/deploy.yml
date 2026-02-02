@@ -64,6 +64,8 @@ jobs:
     - name: Create deployment artifact (exclude dev files)
       run: |
         cd hob
+        # Remove any existing deploy directory
+        rm -rf deploy
         # Create a clean deploy directory
         mkdir deploy
         rsync -av --exclude-from=.deployexclude . deploy/
