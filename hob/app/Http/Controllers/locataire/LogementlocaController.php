@@ -277,26 +277,32 @@ class LogementlocaController extends Controller
             'photo_anno' => 'nullable|image|max:2048',
         ]);
 
-        $user = Auth::user();
-        
-        // Create the annonce
-        $annonce = new \App\Models\Annonce();
-        $annonce->titre_anno = $request->titre_anno;
-        $annonce->description_anno = $request->description_anno;
-        $annonce->prix_anno = $request->prix_anno;
-        $annonce->disponibilite_annonce = $request->disponibilite_annonce;
-        $annonce->locataire_id = $user->id;
-        
-        // Handle photo upload
-        if ($request->hasFile('photo_anno')) {
-            $path = $request->file('photo_anno')->store('annonces', 'public');
-            $annonce->photo_anno = $path;
+        try {
+            $user = Auth::user();
+            
+            // Create the annonce
+            $annonce = new \App\Models\Annonce();
+            $annonce->titre_anno = $request->titre_anno;
+            $annonce->description_anno = $request->description_anno;
+            $annonce->prix_anno = $request->prix_anno;
+            $annonce->disponibilite_annonce = $request->disponibilite_annonce;
+            $annonce->locataire_id = $user->id;
+            $annonce->statut_anno = 'active';
+            $annonce->date_publication_anno = now();
+            
+            // Handle photo upload
+            if ($request->hasFile('photo_anno')) {
+                $path = $request->file('photo_anno')->store('annonces', 'public');
+                $annonce->photo_anno = $path;
+            }
+            
+            $annonce->save();
+            
+            return redirect()->route('locataire.annonces.index')
+                ->with('success', 'Annonce créée avec succès!');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Erreur lors de la création de l\'annonce: ' . $e->getMessage());
         }
-        
-        $annonce->save();
-        
-        return redirect()->route('locataire.annonces.index')
-            ->with('success', 'Annonce créée avec succès!');
     }
 
     public function profile()

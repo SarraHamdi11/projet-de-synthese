@@ -17,6 +17,9 @@ class Annonce extends Model
         'logement_id',
         'proprietaire_id',
         'disponibilite_annonce',
+        'locataire_id',
+        'prix_anno',
+        'photo_anno',
     ];
         protected $table = 'annonces';
     protected $primaryKey = 'id';
