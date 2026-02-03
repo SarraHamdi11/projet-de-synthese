@@ -309,7 +309,13 @@ class LogementlocaController extends Controller
             ->latest()
             ->get();
         
-        return view('locataire.myprofile', ['locataire' => $user, 'user' => $user, 'avis' => $avis]);
+        // Get user's reservations
+        $reservations = \App\Models\Reservation::where('locataire_id', $user->id)
+            ->with(['logement', 'logement.annonces'])
+            ->latest()
+            ->get();
+        
+        return view('locataire.myprofile', ['locataire' => $user, 'user' => $user, 'avis' => $avis, 'reservations' => $reservations]);
     }
 
     public function messages()

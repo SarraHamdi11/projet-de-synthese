@@ -43,12 +43,22 @@ class ReservationlocaController extends Controller
             ->where('statut_reservation', 'en_attente')
             ->count();
         
+        // Get cancelled reservations count
+        $annulees = \App\Models\Reservation::where('locataire_id', $user->id)
+            ->where('statut_reservation', 'annulee')
+            ->count();
+        
+        // Get completed reservations count
+        $terminees = \App\Models\Reservation::where('locataire_id', $user->id)
+            ->where('statut_reservation', 'terminee')
+            ->count();
+        
         $reservations = Reservation::where('locataire_id', Auth::id())
             ->with('logement', 'proprietaire')
             ->latest()
             ->paginate(10);
         
-        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages', 'acceptees', 'enAttente'));
+        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages', 'acceptees', 'enAttente', 'annulees', 'terminees'));
     }
 
     public function create($annonce_id)
