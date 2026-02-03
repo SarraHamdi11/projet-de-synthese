@@ -5,210 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FindStay - Votre Propriété, Notre Excellence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        :root { --primary: #0f766e; --primary-light: #14b8a6; --primary-dark: #0d5a54; --accent: #ea580c; }
+        body { font-family: 'Poppins', sans-serif; background: #f9fafb; margin: 0; }
         .font-display { font-family: 'Playfair Display', serif; }
         
         .hero-section {
             position: relative;
             min-height: 100vh;
-            background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.8) 100%), url('{{ asset('images/header_images.jpg') }}');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary-dark) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
+        
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-circle:nth-child(1) { width: 120px; height: 120px; top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-circle:nth-child(2) { width: 80px; height: 80px; top: 20%; right: 15%; animation-delay: 2s; }
+        .floating-circle:nth-child(3) { width: 150px; height: 150px; bottom: 20%; left: 20%; animation-delay: 4s; }
+        .floating-circle:nth-child(4) { width: 60px; height: 60px; top: 60%; right: 25%; animation-delay: 6s; }
+        .floating-circle:nth-child(5) { width: 100px; height: 100px; bottom: 10%; right: 10%; animation-delay: 1s; }
         
         .hero-content {
             text-align: center;
             color: white;
-            animation: fadeInUp 1s ease-out;
+            z-index: 10;
+            position: relative;
+            max-width: 1200px;
+            padding: 0 2rem;
         }
         
         .hero-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: 4.5rem;
             font-weight: 900;
             margin-bottom: 1.5rem;
             font-family: 'Playfair Display', serif;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
         }
         
         .hero-subtitle {
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-size: 1.3rem;
             font-weight: 300;
             margin-bottom: 3rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease-out 0.1s;
+            animation-fill-mode: both;
         }
         
-        .btn-hero {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            text-decoration: none;
+        .search-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.2s;
+            animation-fill-mode: both;
+        }
+        
+        .search-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .search-input {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
             transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+        
+        .search-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            margin: 0 0.5rem;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
         }
         
-        .btn-primary-hero {
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #dc2626;
+        }
+        
+        .btn-white {
             background: white;
-            color: #1e3a8a;
+            color: #1a1a1a;
         }
         
-        .btn-primary-hero:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        .btn-white:hover {
+            background: #f9fafb;
         }
         
-        .btn-secondary-hero {
+        .btn-outline {
             background: transparent;
             color: white;
             border: 2px solid white;
         }
         
-        .btn-secondary-hero:hover {
+        .btn-outline:hover {
             background: white;
-            color: #1e3a8a;
-            transform: translateY(-3px);
+            color: var(--primary);
         }
         
-        .enhanced-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            text-align: center;
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.3s;
+            animation-fill-mode: both;
         }
         
-        .enhanced-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
         }
         
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #1e3a8a;
-            margin-bottom: 0.5rem;
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .stat-label {
-            color: #6b7280;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-        }
-        
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .property-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .property-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .property-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        
-        .property-card:hover .property-image {
-            transform: scale(1.05);
-        }
-        
-        .property-content {
-            padding: 1.5rem;
-        }
-        
-        .property-type {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
-            font-family: 'Playfair Display', serif;
-        }
-        
-        .property-price {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: #f59e0b;
-            margin-bottom: 0.5rem;
-        }
-        
-        .star {
-            color: #fbbf24;
-            font-size: 1.1rem;
-        }
-        
-        .section-title {
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 1rem;
-            font-family: 'Playfair Display', serif;
-            text-align: center;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            color: #6b7280;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .cta-section {
-            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
-            padding: 5rem 0;
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-        
-        .btn-cta {
-            background: white;
-            color: #1e3a8a;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0 0.5rem;
-        }
-        
-        .btn-cta:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        .scroll-indicator i {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.8);
         }
         
         @keyframes fadeInUp {
@@ -216,28 +183,80 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(40px); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
         @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .search-grid { grid-template-columns: 1fr; gap: 1rem; }
             .hero-buttons { flex-direction: column; align-items: center; }
+            .floating-circle { display: none; }
         }
     </style>
 </head>
 
 <body>
-    <!-- Hero Section -->
-    <header class="hero-section">
+    <!-- Enhanced Hero Section -->
+    <section class="hero-section">
+        <!-- Floating Circles -->
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        
         <div class="hero-content">
-            <h1 class="hero-title">Trouvez Votre Propriété Idéale</h1>
+            <h1 class="hero-title">Trouvez Votre Logement Idéal</h1>
             <p class="hero-subtitle">Découvrez des logements exceptionnels à travers le Maroc avec FindStay</p>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-grid">
+                    <div>
+                        <label class="search-label">Destination</label>
+                        <input type="text" placeholder="Où allez-vous ?" class="search-input">
+                    </div>
+                    <div>
+                        <label class="search-label">Date d'arrivée</label>
+                        <input type="date" class="search-input">
+                    </div>
+                    <div>
+                        <label class="search-label">Date de départ</label>
+                        <input type="date" class="search-input">
+                    </div>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        Rechercher
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Hero Buttons -->
             <div class="hero-buttons">
-                <a href="{{ route('login') }}" class="btn-hero btn-primary-hero">
-                    <i class="fas fa-sign-in-alt"></i> Se Connecter
+                <a href="#properties" class="btn btn-white">
+                    <i class="fas fa-compass"></i>
+                    Découvrir Maintenant
                 </a>
-                <a href="{{ route('signup') }}" class="btn-hero btn-secondary-hero">
-                    <i class="fas fa-user-plus"></i> S'inscrire
+                <a href="#about" class="btn btn-outline">
+                    <i class="fas fa-info-circle"></i>
+                    En Savoir Plus
                 </a>
             </div>
         </div>
-    </header>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator" onclick="document.getElementById('cities').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
 
     <!-- Stats Section -->
     <section class="py-16">
