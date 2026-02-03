@@ -25,6 +25,9 @@ class ReservationlocaController extends Controller
     {
         $user = Auth::user();
         
+        // Get current filter status from request
+        $statut = request('statut', 'all');
+        
         // Get statistics for the dashboard
         $totalReservations = \App\Models\Reservation::where('locataire_id', $user->id)->count();
         $totalFavorites = \App\Models\Favorite::where('user_id', $user->id)->count();
@@ -53,12 +56,18 @@ class ReservationlocaController extends Controller
             ->where('statut_reservation', 'terminee')
             ->count();
         
-        $reservations = Reservation::where('locataire_id', Auth::id())
-            ->with('logement', 'proprietaire')
-            ->latest()
-            ->paginate(10);
+        // Build reservations query with filter
+        $reservationsQuery = Reservation::where('locataire_id', Auth::id())
+            ->with('logement', 'proprietaire');
+            
+        // Apply status filter if not 'all'
+        if ($statut !== 'all') {
+            $reservationsQuery->where('statut_reservation', $statut);
+        }
         
-        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages', 'acceptees', 'enAttente', 'annulees', 'terminees'));
+        $reservations = $reservationsQuery->latest()->paginate(10);
+        
+        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages', 'acceptees', 'enAttente', 'annulees', 'terminees', 'statut'));
     }
 
     public function create($annonce_id)

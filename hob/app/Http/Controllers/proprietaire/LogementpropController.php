@@ -33,14 +33,17 @@ class LogementpropController extends Controller
 
         // Get statistics for dashboard
         $totalProperties = Logement::where('proprietaire_id', Auth::id())->count();
-        $totalReservations = \App\Models\Reservation::whereHas('logement', function($query) {
+        $totalRequests = \App\Models\Reservation::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
         })->count();
+        $confirmedBookings = \App\Models\Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('statut_res', 'acceptee')->count();
         $activeAnnonces = \App\Models\Annonce::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
         })->where('disponibilite_annonce', true)->count();
 
-        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalReservations', 'activeAnnonces'));
+        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalRequests', 'confirmedBookings', 'activeAnnonces'));
     }
 
     public function details($id)
