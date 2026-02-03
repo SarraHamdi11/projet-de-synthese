@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Mes Annonces</h4>
-                    <a href="{{ route('proprietaire.annoncesproprietaire.create') }}" class="btn btn-primary">
+                    <a href="{{ route('proprietaire.annonces.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus"></i> Nouvelle Annonce
                     </a>
                 </div>
