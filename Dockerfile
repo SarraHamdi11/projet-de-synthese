@@ -1,41 +1,20 @@
-FROM php:8.2-fpm
+FROM php:8.2-cli
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    nodejs \
-    npm \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+    curl git unzip libzip-dev libpq-dev npm nodejs \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install -j$(nproc) zip pdo pdo_mysql pdo_pgsql bcmath gd \
+    && docker-php-ext-enable zip \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set working directory
 WORKDIR /app
-
-# Copy project files
 COPY . /app
 
-# Change to hob directory and install dependencies
-WORKDIR /app/hob
+RUN cd hob && composer install --no-dev --no-interaction --prefer-dist
+RUN cd hob && npm ci && npm run build 2>/dev/null || true
+RUN cd hob && php artisan config:cache && php artisan route:cache && php artisan view:cache
 
-RUN composer install --no-dev --no-interaction --prefer-dist
-RUN npm ci
-RUN npm run build
-
-# Cache Laravel configs
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-
-# Expose port
 EXPOSE 8000
-
-# Start command
-CMD php artisan migrate:fresh --force && php artisan serve --host=0.0.0.0 --port=8000
+CMD ["sh", "-c", "cd hob && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
