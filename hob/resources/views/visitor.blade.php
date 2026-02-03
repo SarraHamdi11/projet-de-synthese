@@ -1,359 +1,408 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visitor Page</title>
+    <title>FindStay - Votre Propriété, Notre Excellence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        html {
-            scroll-behavior: smooth;
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); }
+        .font-display { font-family: 'Playfair Display', serif; }
+        
+        .hero-section {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(59, 130, 246, 0.8) 100%), url('{{ asset('images/header_images.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        .login-container {
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-primary {
-            background-color: #335c81;
-            transition: background-color 0.3s;
-        }
-
-        .footer_color {
-            background-color: #84b2d1;
-        }
-
-        .btn-primary:hover {
-            background-color: #274a67;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+        
+        .hero-content {
             text-align: center;
-            transition: transform 0.2s;
+            color: white;
+            animation: fadeInUp 1s ease-out;
         }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
-
-        .stat-card h1 {
-            font-size: 1.5rem;
+        
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn-hero {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 0.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0.5rem;
         }
-
-        .stat-card p {
-            font-size: 1rem;
-            color: #6b7280;
-            margin-bottom: 1rem;
-        }
-
-        .quote-icon {
-            font-size: 2rem;
-            color: #1D2D44;
-            line-height: 1;
-        }
-
-        .city-card {
+        
+        .btn-primary-hero {
             background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1rem;
+            color: #1e3a8a;
+        }
+        
+        .btn-primary-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary-hero {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary-hero:hover {
+            background: white;
+            color: #1e3a8a;
+            transform: translateY(-3px);
+        }
+        
+        .enhanced-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
             text-align: center;
-            transition: transform 0.2s;
         }
-
-        .city-card:hover {
-            transform: translateY(-5px);
+        
+        .enhanced-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
-
-        /* Animations and Transitions */
-        .animate-fade-in {
-            animation: fadeIn 1s ease-in-out;
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e3a8a;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
         }
-
-        .animate-slide-down {
-            animation: slideDown 1s ease-out;
+        
+        .stat-label {
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
         }
-
-        .animate-slide-up {
-            animation: slideUp 1s ease-out;
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-
-        .animate-pulse-once {
-            animation: pulseOnce 1.5s ease-out;
-        }
-
-        .animate-bounce {
-            animation: bounce 1s infinite;
-        }
-
-        .animate-bounce-slow {
-            animation: bounce 2s infinite;
-        }
-
-        .animate-pulse {
-            animation: pulse 2s infinite;
-        }
-
-        .transition-height {
-            transition: max-height 0.3s ease-in-out;
-        }
-
-        .faq-answer[data-expanded="true"] {
-            max-height: 200px;
-            /* Adjust based on content height */
-        }
-
-        .city-card,
-        .bg-white {
+        
+        .property-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
-
-        .hover\:translate-y-2 {
+        
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
             transition: transform 0.3s ease;
         }
-
-        .hover\:translate-y-3 {
-            transition: transform 0.5s ease;
+        
+        .property-card:hover .property-image {
+            transform: scale(1.05);
         }
-
-        .hover\:rotate-1 {
-            transition: transform 0.5s ease;
+        
+        .property-content {
+            padding: 1.5rem;
         }
-
-        .hover\:bg-blue-50 {
-            transition: background-color 0.3s ease;
+        
+        .property-type {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
         }
-
-        .hover\:bg-gray-50 {
-            transition: background-color 0.3s ease;
+        
+        .property-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #f59e0b;
+            margin-bottom: 0.5rem;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+        
+        .star {
+            color: #fbbf24;
+            font-size: 1.1rem;
         }
-
-        @keyframes slideDown {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        
+        .section-title {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
         }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-
-        @keyframes pulseOnce {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            padding: 5rem 0;
+            text-align: center;
+            color: white;
+            position: relative;
         }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+        
+        .btn-cta {
+            background: white;
+            color: #1e3a8a;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0.5rem;
         }
-
-        @keyframes bounce {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
+        
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-buttons { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
 
-<body class="bg-gray-100 font-sans">
-    <!-- Header -->
-    <header class="relative h-80 bg-blue-100 px-10 py-0" style="background-image: url({{ asset('images/header_images.jpg') }}); background-size: cover; background-position: center;">
-        <div class="absolute inset-0 bg-white bg-opacity-50 z-0"></div>
-        <div class="relative z-10 h-full px-5 py-2 flex flex-col justify-start">
-            <div class="flex justify-between items-center mb-8">
-                <div class="flex items-center space-x-40">
-                    <img src="{{ asset('images/findStay-removebg-preview.png') }}" alt="FindStay Logo"
-                        style="height: 150px; width: auto;">
-                </div>
-                <div class="flex space-x-4">
-                    <a href="{{ route('login') }}"
-                        class="bg-blue-900 hover:bg-blue-700 text-white px-5 py-2 text-lg rounded-full font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition">
-                        Connexion
-                    </a>
-                    <a href="{{ route('signup') }}"
-                        class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 text-lg rounded-full font-semibold focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition">
-                        Inscription
-                    </a>
-                </div>
-            </div>
-            <div class="text-blue-900 font-bold text-4xl pt-5 mb-4 font-sans">
-                Votre Propriété, Notre Propriété
+<body>
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Trouvez Votre Propriété Idéale</h1>
+            <p class="hero-subtitle">Découvrez des logements exceptionnels à travers le Maroc avec FindStay</p>
+            <div class="hero-buttons">
+                <a href="{{ route('login') }}" class="btn-hero btn-primary-hero">
+                    <i class="fas fa-sign-in-alt"></i> Se Connecter
+                </a>
+                <a href="{{ route('signup') }}" class="btn-hero btn-secondary-hero">
+                    <i class="fas fa-user-plus"></i> S'inscrire
+                </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="mx-auto">
-        <!-- New Section: Cities with Available Logements -->
-        <section class="container mx-auto py-6">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-900 mb-4 text-center animate-fade-in">Trouver des
-                logements dans ces villes</h2>
-            @if (isset($cityLogements) && $cityLogements->isNotEmpty())
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                    @foreach ($cityLogements as $item)
-                        <div
-                            class="city-card bg-white rounded-lg p-4 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 transform hover:bg-blue-50">
-                            <h3 class="font-semibold text-lg text-blue-900 text-center">{{ $item->ville }}</h3>
-                            <p class="text-gray-600 text-center">{{ $item->logement_count }}
-                                logement{{ $item->logement_count > 1 ? 's' : '' }}</p>
-                        </div>
-                    @endforeach
+    <!-- Stats Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Des Chiffres Qui Parlent</h2>
+            <p class="section-subtitle">L'excellence de notre service à travers des statistiques impressionnantes</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-home"></i></div>
+                    <div class="stat-number">{{ $statsData['nombre_annonce'] }}+</div>
+                    <div class="stat-label">Logements Disponibles</div>
                 </div>
-                <div class="text-center mt-4">
-                    <a href="{{ route('login') }}"
-                        class="text-blue-900 hover:text-blue-700 font-semibold inline-block animate-bounce">Voir plus
-                        →</a>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-number">{{ $statsData['nombre_utilisateur'] }}+</div>
+                    <div class="stat-label">Utilisateurs Actifs</div>
                 </div>
-            @else
-                <p class="text-center text-gray-600 animate-pulse">Aucune ville avec des logements disponibles pour le
-                    moment.</p>
-            @endif
-        </section>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-number">{{ $statsData['note_moyenne_annonce'] }}%</div>
+                    <div class="stat-label">Satisfaction Client</div>
+                </div>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-number">{{ $statsData['nombre_reservation'] }}</div>
+                    <div class="stat-label">Réservations Mensuelles</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <!-- Les dernières logements ajoutés -->
-        <section class="mx-auto mb-16 p-6">
-            <h2 class="text-xl md:text-2xl font-semibold text-blue-900 mb-4 text-center animate-fade-in">Les dernières
-                logements ajoutés</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Cities Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Villes Populaires</h2>
+            <p class="section-subtitle">Explorez nos logements dans les villes les plus recherchées</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-city"></i></div>
+                    <div class="font-bold text-lg">Casablanca</div>
+                    <div class="text-gray-600">250+ logements</div>
+                </div>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-mosque"></i></div>
+                    <div class="font-bold text-lg">Marrakech</div>
+                    <div class="text-gray-600">180+ logements</div>
+                </div>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-umbrella-beach"></i></div>
+                    <div class="font-bold text-lg">Agadir</div>
+                    <div class="text-gray-600">120+ logements</div>
+                </div>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-mountain"></i></div>
+                    <div class="font-bold text-lg">Fès</div>
+                    <div class="text-gray-600">95+ logements</div>
+                </div>
+                <div class="enhanced-card">
+                    <div class="stat-icon"><i class="fas fa-anchor"></i></div>
+                    <div class="font-bold text-lg">Tanger</div>
+                    <div class="text-gray-600">85+ logements</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Properties Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title">Dernières Propriétés</h2>
+            <p class="section-subtitle">Découvrez nos logements les plus récents</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @forelse ($latestLogements as $logement)
-                    <div
-                        class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-3 transition-all duration-500 transform hover:rotate-1">
-                        <img src="{{ !empty($logement->photos) ? asset('images/' . (is_array($logement->photos) ? $logement->photos[0] : json_decode($logement->photos, true)[0])) : asset('images/placeholder.jpg') }}"
-                            alt="{{ $logement->type_log }} à {{ $logement->ville }}"
-                            class="w-full h-48 object-cover transition-opacity duration-300 hover:opacity-90">
-                        <div class="p-4">
-                            <h3 class="font-semibold text-lg mb-2 animate-pulse-once">
-                                {{ ucfirst($logement->type_log) }}</h3>
-                            <p class="text-green-600 font-bold animate-fade-in">
-                                {{ number_format($logement->prix_log, 0) }} DH / MOIS</p>
-                            <p class="text-sm text-gray-500">{{ $logement->ville }}</p>
-                            <div class="mt-2 flex items-center">
+                    <div class="property-card">
+                        <img src="{{ !empty($logement->photos) ? asset('images/' . (is_array($logement->photos) ? $logement->photos[0] : json_decode($logement->photos, true)[0])) : asset('images/placeholder.jpg') }}" 
+                             alt="{{ $logement->type_log }} à {{ $logement->ville }}" 
+                             class="property-image">
+                        <div class="property-content">
+                            <h3 class="property-type">{{ ucfirst($logement->type_log) }}</h3>
+                            <div class="property-price">{{ number_format($logement->prix_log, 0) }} DH/mois</div>
+                            <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> {{ $logement->ville }}</div>
+                            <div class="flex justify-center gap-1">
                                 @for ($i = 1; $i <= 5; $i++)
                                     @if ($i <= $logement->average_note)
-                                        <span
-                                            class="text-yellow-400 hover:text-yellow-500 transition-colors duration-200">★</span>
+                                        <span class="star">★</span>
                                     @else
-                                        <span
-                                            class="text-gray-300 hover:text-gray-400 transition-colors duration-200">☆</span>
+                                        <span class="star">☆</span>
                                     @endif
                                 @endfor
                             </div>
                         </div>
                     </div>
                 @empty
-                    <p class="text-center text-gray-600 animate-bounce">Aucun logement récent disponible pour le moment.
-                    </p>
+                    <div class="text-center col-span-full">
+                        <p class="text-gray-600">Aucun logement récent disponible pour le moment.</p>
+                    </div>
                 @endforelse
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- FAQ Section (Dynamic Reviews) -->
-        <section id="faq-section" class="mx-auto mb-16 p-6">
-            <div class="mb-12">
-                <h2 class="text-3xl font-bold text-blue-900 mb-4 text-center animate-slide-up">FAQ ?</h2>
-                <p class="faq-question font-semibold text-lg text-gray-600 mb-6 text-center animate-fade-in "
-                    onclick="toggleAnswer(this)">Ce que nos clients nous disent ?</p>
-                <div class="faq-answer grid grid-cols-1 md:grid-cols-3 gap-6" data-expanded="false">
-                    @forelse ($avis as $item)
-                        <div
-                            class="bg-white rounded-lg p-6 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-400 transform hover:bg-gray-50">
-                            <div class="flex items-center mb-4">
-                                <p class="font-bold text-lg text-blue-900 animate-pulse-once">{{ $item->nom_prenom }}
-                                </p>
-                                <span class="quote-icon ml-2 animate-bounce-slow">"</span>
-                            </div>
-                            <p class="text-gray-600 transition-opacity duration-300 hover:opacity-90">
-                                {{ $item->contenu }}</p>
-                            <div class="flex items-center mt-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $item->note)
-                                        <span
-                                            class="text-yellow-400 hover:text-yellow-500 transition-colors duration-200">★</span>
-                                    @else
-                                        <span
-                                            class="text-gray-300 hover:text-gray-400 transition-colors duration-200">☆</span>
-                                    @endif
-                                @endfor
-                            </div>
-                        </div>
-                    @empty
-                        <p class="text-center text-gray-600 animate-pulse">Aucun avis disponible pour le moment.</p>
-                    @endforelse
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-white">Prêt à Trouver Votre Chez-Vous ?</h2>
+            <p class="section-subtitle text-white opacity-90">Rejoignez des milliers de clients satisfaits</p>
+            <div class="flex justify-center flex-wrap">
+                <a href="{{ route('signup') }}" class="btn-cta">
+                    <i class="fas fa-rocket"></i> Commencer Maintenant
+                </a>
+                <a href="{{ route('login') }}" class="btn-cta">
+                    <i class="fas fa-sign-in-alt"></i> Se Connecter
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">FindStay</h3>
+                    <p class="mb-4">Trouvez votre chez-vous avec FindStay. Facile, rapide, fiable.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-2xl hover:text-pink-400 transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Pages</h3>
+                    <div class="space-y-2">
+                        <a href="{{ route('login') }}" class="block hover:text-blue-400 transition">Connexion</a>
+                        <a href="{{ route('signup') }}" class="block hover:text-blue-400 transition">Inscription</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Contact</h3>
+                    <p><i class="fas fa-envelope"></i> findstay@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +212 5XX XXX XXX</p>
                 </div>
             </div>
+            <div class="border-t border-gray-700 pt-4 text-center">
+                <p>&copy; 2025 FindStay. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
 
-
-            <div class="text-center space-y-4">
-                <div class="faq-item">
-                    <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600 animate-fade-in"
-                        onclick="toggleAnswer(this)">Qu'est-ce que FindStay ?</p>
-                    <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl transition-height duration-300"
-                        style="overflow: hidden; max-height: 0;" data-expanded="false">
-                        FindStay est une plateforme innovante conçue pour simplifier la recherche et la réservation
-                        d'hébergements de qualité à travers le monde. Que vous planifiez des vacances, un voyage
-                        d'affaires ou une escapade de dernière minute, FindStay vous connecte à une vaste sélection de
-                        logements, allant des hôtels de luxe aux appartements cosy, en passant par des maisons d'hôtes
-                        uniques. Grâce à une interface intuitive, des filtres avancés (comme le prix, la localisation,
-                        ou les commodités), et des avis authentiques de voyageurs, FindStay garantit une expérience
-                        personnalisée et fiable. Notre mission est de rendre chaque séjour mémorable en vous offrant des
-                        options adaptées à vos besoins et à votre budget.
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
                     </p>
                 </div>
                 <div class="faq-item">
