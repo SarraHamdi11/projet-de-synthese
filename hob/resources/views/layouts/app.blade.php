@@ -771,9 +771,9 @@
                     <div class="footer-title">Navigation</div>
                     <ul class="footer-links">
                         <li><a href="/">Accueil</a></li>
-                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.logements') : route('logementsloca') }}">Nos logements</a></li>
-                        <li><a href="#">Mes réservations</a></li>
-                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.annoncesproprietaire.index') : route('locataire.annonceslocataire.index') }}">Mes annonces</a></li>
+                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.logements') : route('locataire.logementsloca') }}">Nos logements</a></li>
+                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.reservations.index') : route('locataire.reservations.index') }}">Mes réservations</a></li>
+                        <li><a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.annoncesproprietaire.index') : route('locataire.annonces.index') }}">Mes annonces</a></li>
                     </ul>
                 </div>
             </div>
