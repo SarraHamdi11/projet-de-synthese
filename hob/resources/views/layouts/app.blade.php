@@ -654,7 +654,7 @@
                                     @endforeach
                                 </div>
                                 <div class="dropdown-divider"></div>
-                                <a href="{{ route('conversations.index') }}" class="dropdown-item text-center">Voir tous les messages</a>
+                                <a href="{{ route('messages.index') }}" class="dropdown-item text-center">Voir tous les messages</a>
                             </ul>
                         </div>
                         <!-- Notification Icon -->
