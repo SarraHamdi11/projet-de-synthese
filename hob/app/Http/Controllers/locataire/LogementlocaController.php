@@ -256,6 +256,11 @@ class LogementlocaController extends Controller
     public function annonces()
     {
         $user = Auth::user();
+        
+        // Get user's logements for creating annonces
+        $userLogements = \App\Models\Logement::where('proprietaire_id', $user->id)->get();
+        
+        // Get all available annonces from other users
         $annonces = \App\Models\Annonce::with(['logement'])
             ->whereHas('logement', function($query) use ($user) {
                 $query->where('proprietaire_id', '!=', $user->id);
@@ -264,12 +269,13 @@ class LogementlocaController extends Controller
             ->latest()
             ->paginate(12);
             
-        return view('locataire.annonceslocataire', compact('annonces'));
+        return view('locataire.annonceslocataire', compact('annonces', 'userLogements'));
     }
 
     public function storeAnnonce(Request $request)
     {
         $request->validate([
+            'logement_id' => 'required|exists:logements,id',
             'titre_anno' => 'required|string|max:255',
             'description_anno' => 'required|string',
             'prix_anno' => 'required|numeric|min:0',
@@ -280,8 +286,15 @@ class LogementlocaController extends Controller
         try {
             $user = Auth::user();
             
+            // Verify the logement belongs to the user
+            $logement = \App\Models\Logement::findOrFail($request->logement_id);
+            if ($logement->proprietaire_id !== $user->id) {
+                return back()->withInput()->with('error', 'Accès non autorisé à ce logement');
+            }
+            
             // Create the annonce
             $annonce = new \App\Models\Annonce();
+            $annonce->logement_id = $request->logement_id;
             $annonce->titre_anno = $request->titre_anno;
             $annonce->description_anno = $request->description_anno;
             $annonce->prix_anno = $request->prix_anno;
@@ -302,6 +315,54 @@ class LogementlocaController extends Controller
                 ->with('success', 'Annonce créée avec succès!');
         } catch (\Exception $e) {
             return back()->withInput()->with('error', 'Erreur lors de la création de l\'annonce: ' . $e->getMessage());
+        }
+    }
+
+    public function createLogement()
+    {
+        return view('locataire.create-logement');
+    }
+
+    public function storeLogement(Request $request)
+    {
+        $request->validate([
+            'titre_log' => 'required|string|max:255',
+            'description_log' => 'required|string',
+            'prix_log' => 'required|numeric|min:0',
+            'localisation_log' => 'required|string|max:255',
+            'type_log' => 'required|string|in:appartement,maison,studio',
+            'nombre_colocataire_log' => 'required|integer|min:1',
+            'ville' => 'required|string|max:255',
+            'photos.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            $photos = [];
+            if ($request->hasFile('photos')) {
+                foreach ($request->file('photos') as $photo) {
+                    $path = $photo->store('logements', 'public');
+                    $photos[] = $path;
+                }
+            }
+
+            $logement = \App\Models\Logement::create([
+                'titre_log' => $request->titre_log,
+                'description_log' => $request->description_log,
+                'prix_log' => $request->prix_log,
+                'localisation_log' => $request->localisation_log,
+                'type_log' => $request->type_log,
+                'nombre_colocataire_log' => $request->nombre_colocataire_log,
+                'ville' => $request->ville,
+                'photos' => $photos,
+                'proprietaire_id' => Auth::id(), // Locataires can own logements too
+                'date_creation_log' => now(),
+                'views' => 0,
+            ]);
+
+            return redirect()->route('locataire.annonces.index')
+                ->with('success', 'Logement créé avec succès! Vous pouvez maintenant créer une annonce.');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Erreur lors de la création du logement: ' . $e->getMessage());
         }
     }
 

@@ -234,12 +234,43 @@
         <p class="text-muted mt-3" style="font-size: 1.1rem;">Publiez votre annonce de colocation en quelques clics</p>
     </div>
 
+    @if($userLogements->count() == 0)
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle fa-2x mb-3"></i>
+                <h5>Vous devez d'abord créer un logement</h5>
+                <p>Pour pouvoir créer une annonce, vous devez d'abord ajouter un logement à votre profil.</p>
+                <a href="{{ route('locataire.logements.create') }}" class="btn btn-primary-custom mt-3">
+                    <i class="fas fa-plus me-2"></i>Créer un logement
+                </a>
+            </div>
+        </div>
+    </div>
+    @else
     <div class="row justify-content-center mb-5">
         <div class="col-lg-8">
             <div class="professional-card p-4 p-md-5">
                 <form id="form-annonce" method="POST" action="{{ route('locataire.annonces.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="logement_id" class="form-label">
+                                <i class="fas fa-home me-2"></i>Sélectionner un logement
+                            </label>
+                            <select name="logement_id" id="logement_id" class="form-select" required>
+                                <option value="">Choisir un logement...</option>
+                                @foreach($userLogements as $logement)
+                                    <option value="{{ $logement->id }}">
+                                        {{ $logement->titre_log ?? 'Logement #' . $logement->id }} - {{ $logement->prix_log ?? 0 }} DH/mois
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('logement_id')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
+
                         <div class="col-md-6">
                             <label for="titre_anno" class="form-label">
                                 <i class="fas fa-heading me-2"></i>Titre de l'annonce
@@ -250,84 +281,14 @@
                                 <div class="text-danger mt-2"><small>{{ $message }}</small></div>
                             @enderror
                         </div>
-                        
-                        <div class="col-md-6">
-                            <label for="type_log" class="form-label">
-                                <i class="fas fa-home me-2"></i>Type de logement
-                            </label>
-                            <select name="type_log" id="type_log" class="form-select" required>
-                                <option value="">Choisissez le type</option>
-                                <option value="studio" {{ old('type_log') == 'studio' ? 'selected' : '' }}>Studio</option>
-                                <option value="appartement" {{ old('type_log') == 'appartement' ? 'selected' : '' }}>Appartement</option>
-                                <option value="maison" {{ old('type_log') == 'maison' ? 'selected' : '' }}>Maison</option>
-                            </select>
-                            @error('type_log')
-                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                            @enderror
-                        </div>
 
                         <div class="col-md-6">
-                            <label for="prix_log" class="form-label">
-                                <i class="fas fa-coins me-2"></i>Budget mensuel (MAD)
+                            <label for="prix_anno" class="form-label">
+                                <i class="fas fa-coins me-2"></i>Prix mensuel (DH)
                             </label>
-                            <input type="number" name="prix_log" id="prix_log" class="form-control" 
-                                   value="{{ old('prix_log') }}" required placeholder="Ex: 3000">
-                            @error('prix_log')
-                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="ville" class="form-label">
-                                <i class="fas fa-city me-2"></i>Ville
-                            </label>
-                            <select name="ville" id="ville" class="form-select" required>
-                                <option value="">Sélectionnez une ville</option>
-                                <option value="Tétouan" {{ old('ville') == 'Tétouan' ? 'selected' : '' }}>Tétouan</option>
-                                <option value="Tanger" {{ old('ville') == 'Tanger' ? 'selected' : '' }}>Tanger</option>
-                                <option value="Martil" {{ old('ville') == 'Martil' ? 'selected' : '' }}>Martil</option>
-                                <option value="Rincon" {{ old('ville') == 'Rincon' ? 'selected' : '' }}>Rincon</option>
-                                <option value="Hoceima" {{ old('ville') == 'Hoceima' ? 'selected' : '' }}>Hoceima</option>
-                                <option value="Chaouen" {{ old('ville') == 'Chaouen' ? 'selected' : '' }}>Chaouen</option>
-                            </select>
-                            @error('ville')
-                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="nombre_colocataire_log" class="form-label">
-                                <i class="fas fa-users me-2"></i>Nombre de colocataires
-                            </label>
-                            <input type="number" name="nombre_colocataire_log" id="nombre_colocataire_log" class="form-control" 
-                                   value="{{ old('nombre_colocataire_log') }}" required placeholder="Ex: 2">
-                            @error('nombre_colocataire_log')
-                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="localisation_log" class="form-label">
-                                <i class="fas fa-map-marker-alt me-2"></i>Localisation précise
-                            </label>
-                            <input type="text" name="localisation_log" id="localisation_log" class="form-control" 
-                                   value="{{ old('localisation_log') }}" required placeholder="Ex: Quartier Hassan">
-                            @error('localisation_log')
-                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                            @enderror
-                        </div>
-
-                        <div class="col-12">
-                            <label for="photos_locataire" class="form-label">
-                                <i class="fas fa-camera me-2"></i>Photos du logement
-                            </label>
-                            <input type="file" name="photos[]" id="photos_locataire" multiple 
-                                   accept="image/jpeg,image/png,image/jpg" class="form-control">
-                            <small class="text-muted mt-1">Formats acceptés: JPG, PNG. Plusieurs photos possibles.</small>
-                            @error('photos.*')
-                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                            @enderror
-                            @error('photos')
+                            <input type="number" name="prix_anno" id="prix_anno" class="form-control" 
+                                   value="{{ old('prix_anno') }}" required placeholder="Ex: 3000">
+                            @error('prix_anno')
                                 <div class="text-danger mt-2"><small>{{ $message }}</small></div>
                             @enderror
                         </div>
@@ -337,8 +298,34 @@
                                 <i class="fas fa-align-left me-2"></i>Description détaillée
                             </label>
                             <textarea name="description_anno" id="description_anno" rows="5" class="form-control" 
-                                      required placeholder="Décrivez votre logement, les commodités, l'ambiance recherchée...">{{ old('description_anno') }}</textarea>
+                                      required placeholder="Décrivez votre logement, les commodités...">{{ old('description_anno') }}</textarea>
                             @error('description_anno')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="disponibilite_annonce" class="form-label">
+                                <i class="fas fa-calendar-check me-2"></i>Disponibilité
+                            </label>
+                            <select name="disponibilite_annonce" id="disponibilite_annonce" class="form-select" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="1" {{ old('disponibilite_annonce', 1) == 1 ? 'selected' : '' }}>Disponible immédiatement</option>
+                                <option value="0" {{ old('disponibilite_annonce') == 0 ? 'selected' : '' }}>Non disponible</option>
+                            </select>
+                            @error('disponibilite_annonce')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="photo_anno" class="form-label">
+                                <i class="fas fa-camera me-2"></i>Photo de l'annonce
+                            </label>
+                            <input type="file" name="photo_anno" id="photo_anno" 
+                                   accept="image/jpeg,image/png,image/jpg" class="form-control">
+                            <small class="text-muted mt-1">Format accepté: JPG, PNG.</small>
+                            @error('photo_anno')
                                 <div class="text-danger mt-2"><small>{{ $message }}</small></div>
                             @enderror
                         </div>
@@ -353,8 +340,7 @@
             </div>
         </div>
     </div>
-
-    {{-- Liste des annonces avec design amélioré --}}
+    @endif {{-- Liste des annonces avec design amélioré --}}
     <div class="text-center mb-5">
         <h2 class="title-font section-title" style="color: #244F76; font-size: 2.2rem; font-weight: 700;">
             Mes Annonces

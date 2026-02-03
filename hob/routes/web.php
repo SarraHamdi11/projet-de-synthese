@@ -100,6 +100,10 @@ Route::prefix('locataire')->name('locataire.')->middleware(['auth', 'role:locata
     Route::post('/reservations/store', [ReservationlocaController::class, 'store'])->name('reservations.store');
     Route::get('/reservations/create/{annonce_id}', [ReservationlocaController::class, 'create'])->name('reservations.create');
     
+    // Logement creation routes for locataires
+    Route::get('/logements/create', [LogementlocaController::class, 'createLogement'])->name('logements.create');
+    Route::post('/logements/store', [LogementlocaController::class, 'storeLogement'])->name('logements.store');
+    
     // Additional routes for navigation
     Route::get('/annonces', [LogementlocaController::class, 'annonces'])->name('annonces.index');
     Route::post('/annonces', [LogementlocaController::class, 'storeAnnonce'])->name('annonces.store');
