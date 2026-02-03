@@ -1,0 +1,21 @@
+[build]
+builder = "nixpacks"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[[services]]
+name = "app"
+
+[services.variables]
+APP_ENV = "production"
+APP_DEBUG = "false"
+APP_KEY = "base64:9bkyESiXFYu7skLxQnaj/F4YWoo+7j6FeC6lJFtfP7Q="
+DB_CONNECTION = "sqlite"
+DB_DATABASE = "/tmp/database.sqlite"
+CACHE_DRIVER = "file"
+SESSION_DRIVER = "file"
+QUEUE_CONNECTION = "sync"
