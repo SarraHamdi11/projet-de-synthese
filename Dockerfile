@@ -11,6 +11,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY . /app
 WORKDIR /app/hob
+# Force rebuild
 
 RUN /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist
 RUN npm ci && npm run build 2>/dev/null || true
