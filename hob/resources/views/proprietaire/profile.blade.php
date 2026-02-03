@@ -205,7 +205,7 @@
                     <h2 class="title-font section-title" style="color: var(--bleu-fonce); font-size: 2rem; font-weight: 700;">
                         Profil de {{ $proprietaire->nom ?? '' }}
                     </h2>
-                    <a href="{{ route('proprietaire.myprofile') }}">
+                    <a href="{{ route('proprietaire.profile.index') }}">
                         <img src="{{ $proprietaire->photodeprofil_uti ? asset('storage/' . $proprietaire->photodeprofil_uti) : 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg' }}" alt="Photo de profil" class="avatar-circle">
                     </a>
                     <h1 class="title-font">Bonjour {{ $proprietaire->nom ?? '' }}</h1>

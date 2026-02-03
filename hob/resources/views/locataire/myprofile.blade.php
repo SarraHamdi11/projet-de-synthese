@@ -234,7 +234,7 @@
         <div class="col-md-4 mb-4">
             <div class="professional-card sidebar-profile">
                 <div class="profile-header">
-                    <a href="{{ route('locataire.myprofile') }}">
+                    <a href="{{ route('locataire.profile.index') }}">
                         <img src="{{ $locataire->photodeprofil_uti ? asset('storage/' . $locataire->photodeprofil_uti) : asset('images/default-avatar.png') }}" alt="Photo de profil" class="avatar-circle">
                     </a>
                     <h1 class="title-font">Bonjour {{ $locataire->prenom }} {{ $locataire->nom_uti }}</h1>

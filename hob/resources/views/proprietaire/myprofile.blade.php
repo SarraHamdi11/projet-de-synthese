@@ -205,7 +205,7 @@
             <div class="professional-card sidebar-profile">
                 <div class="profile-header">
                     
-                    <a href="{{ route('proprietaire.myprofile') }}">
+                    <a href="{{ route('proprietaire.profile.index') }}">
                         <img src="{{ $proprietaire->photodeprofil_uti ? asset('storage/' . $proprietaire->photodeprofil_uti) : asset('images/default-avatar.png') }}" alt="Photo de profil" class="avatar-circle">
                     </a>
                     <h1 class="title-font">Bonjour {{ $proprietaire->prenom ?? '' }} {{ $proprietaire->nom_uti ?? '' }}</h1>
