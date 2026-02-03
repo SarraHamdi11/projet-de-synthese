@@ -709,10 +709,14 @@
                         <div class="ms-2">
                             <a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.profile.index') : route('locataire.profile.index') }}">
                                 @php
-                                    $photoPath = auth()->user()->photodeprofil_uti;
-                                    Log::info('Navbar photo check', ['photoPath' => $photoPath, 'user_id' => auth()->user()->id]);
+                                    $profilePhoto = auth()->user()->photodeprofil_uti;
+                                    if ($profilePhoto) {
+                                        $photoUrl = asset('storage/' . $profilePhoto);
+                                    } else {
+                                        $photoUrl = asset('images/default-avatar.png');
+                                    }
                                 @endphp
-                                <img src="{{ $photoPath ? asset('storage/' . $photoPath) : asset('images/default-avatar.png') }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #24507a;">
+                                <img src="{{ $photoUrl }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #24507a;" onerror="this.src='{{ asset('images/default-avatar.png') }}';">
                             </a>
                         </div>
                         <!-- Settings Icon Dropdown -->
