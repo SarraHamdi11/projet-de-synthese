@@ -41,38 +41,45 @@ class AnnoncepropController extends Controller
 
     public function create($logement_id)
     {
-        $logement = Logement::findOrFail($logement_id);
-        
-        if ($logement->proprietaire_id !== Auth::id()) {
-            return redirect()->route('proprietaire.logements.index')->with('error', 'Accès non autorisé');
+        try {
+            $logement = Logement::findOrFail($logement_id);
+            
+            if ($logement->proprietaire_id !== Auth::id()) {
+                return redirect()->route('proprietaire.logements')->with('error', 'Accès non autorisé à ce logement');
+            }
+            
+            return view('proprietaire.annonces.create', compact('logement'));
+        } catch (\Exception $e) {
+            return redirect()->route('proprietaire.annoncesproprietaire.index')->with('error', 'Erreur lors du chargement du formulaire: ' . $e->getMessage());
         }
-        
-        return view('proprietaire.annonces.create', compact('logement'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'logement_id' => 'required|exists:logements,id',
-            'titre_annonce' => 'required|string|max:255',
-            'description_annonce' => 'required|string',
-            'disponibilite' => 'required|boolean',
+            'titre_anno' => 'required|string|max:255',
+            'description_anno' => 'required|string',
+            'disponibilite_annonce' => 'required|boolean',
         ]);
 
-        $logement = Logement::findOrFail($request->logement_id);
-        
-        if ($logement->proprietaire_id !== Auth::id()) {
-            return redirect()->route('proprietaire.logements.index')->with('error', 'Accès non autorisé');
+        try {
+            $logement = Logement::findOrFail($request->logement_id);
+            
+            if ($logement->proprietaire_id !== Auth::id()) {
+                return redirect()->route('proprietaire.annoncesproprietaire.index')->with('error', 'Accès non autorisé');
+            }
+
+            $annonce = new \App\Models\Annonce();
+            $annonce->logement_id = $request->logement_id;
+            $annonce->titre_anno = $request->titre_anno;
+            $annonce->description_anno = $request->description_anno;
+            $annonce->disponibilite_annonce = $request->disponibilite_annonce;
+            $annonce->save();
+
+            return redirect()->route('proprietaire.annoncesproprietaire.index')->with('success', 'Annonce créée avec succès!');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'Erreur lors de la création de l\'annonce: ' . $e->getMessage());
         }
-
-        Annonce::create([
-            'logements_id' => $request->logement_id,
-            'titre_annonce' => $request->titre_annonce,
-            'description_annonce' => $request->description_annonce,
-            'disponibilite_annonce' => $request->disponibilite,
-            'date_creation_annonce' => now(),
-        ]);
-
-        return redirect()->route('proprietaire.annonces.index')->with('success', 'Annonce créée avec succès');
     }
 }
