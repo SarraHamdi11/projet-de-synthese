@@ -23,12 +23,22 @@ class ReservationlocaController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
+        
+        // Get statistics for the dashboard
+        $totalReservations = \App\Models\Reservation::where('locataire_id', $user->id)->count();
+        $totalFavorites = \App\Models\Favorite::where('user_id', $user->id)->count();
+        $totalMessages = \App\Models\Message::where(function($query) use ($user) {
+            $query->where('sender_id', $user->id)
+                  ->orWhere('receiver_id', $user->id);
+        })->count();
+        
         $reservations = Reservation::where('locataire_id', Auth::id())
             ->with('logement', 'proprietaire')
             ->latest()
             ->paginate(10);
         
-        return view('locataire.reservations.index', compact('reservations'));
+        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages'));
     }
 
     public function create($annonce_id)

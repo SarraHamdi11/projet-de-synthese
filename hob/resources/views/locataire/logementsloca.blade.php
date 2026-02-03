@@ -32,7 +32,7 @@
                             </h5>
                         </div>
                         <div class="card-body p-0">
-                            <form method="GET" action="{{ route('logementsloca') }}" class="needs-validation" id="filterForm" novalidate>
+                            <form method="GET" action="{{ route('locataire.logementsloca') }}" class="needs-validation" id="filterForm" novalidate>
                                 
                                 <!-- Search Bar -->
                                 <div class="p-3 border-bottom bg-light">

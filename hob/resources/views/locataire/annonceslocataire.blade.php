@@ -237,7 +237,7 @@
     <div class="row justify-content-center mb-5">
         <div class="col-lg-8">
             <div class="professional-card p-4 p-md-5">
-                <form id="form-annonce" method="POST" action="{{ route('locataire.annoncelocataire.store') }}" enctype="multipart/form-data">
+                <form id="form-annonce" method="POST" action="{{ route('locataire.annonces.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row g-4">
                         <div class="col-md-6">

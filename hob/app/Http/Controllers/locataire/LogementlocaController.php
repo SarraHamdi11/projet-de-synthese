@@ -267,10 +267,42 @@ class LogementlocaController extends Controller
         return view('locataire.annonceslocataire', compact('annonces'));
     }
 
+    public function storeAnnonce(Request $request)
+    {
+        $request->validate([
+            'titre_anno' => 'required|string|max:255',
+            'description_anno' => 'required|string',
+            'prix_anno' => 'required|numeric|min:0',
+            'disponibilite_annonce' => 'required|boolean',
+            'photo_anno' => 'nullable|image|max:2048',
+        ]);
+
+        $user = Auth::user();
+        
+        // Create the annonce
+        $annonce = new \App\Models\Annonce();
+        $annonce->titre_anno = $request->titre_anno;
+        $annonce->description_anno = $request->description_anno;
+        $annonce->prix_anno = $request->prix_anno;
+        $annonce->disponibilite_annonce = $request->disponibilite_annonce;
+        $annonce->locataire_id = $user->id;
+        
+        // Handle photo upload
+        if ($request->hasFile('photo_anno')) {
+            $path = $request->file('photo_anno')->store('annonces', 'public');
+            $annonce->photo_anno = $path;
+        }
+        
+        $annonce->save();
+        
+        return redirect()->route('locataire.annonces.index')
+            ->with('success', 'Annonce créée avec succès!');
+    }
+
     public function profile()
     {
         $user = Auth::user();
-        return view('locataire.myprofile', compact('user'));
+        return view('locataire.myprofile', ['locataire' => $user, 'user' => $user]);
     }
 
     public function messages()

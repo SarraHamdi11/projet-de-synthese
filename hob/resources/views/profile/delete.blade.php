@@ -7,7 +7,7 @@
         <div class="col-md-8 col-lg-7">
             <div class="card shadow-lg rounded-4 border-0" style="background: #fff;">
                 <div class="card-body p-5">
-                    <form method="post" action="{{ route('profile.destroy') }}">
+                    <form method="post" action="{{ route('profile.delete') }}">
                         @csrf
                         @method('delete')
                         <div class="mb-3 text-center" style="font-size:1.1rem; color:#244F76;">

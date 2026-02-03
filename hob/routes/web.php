@@ -101,6 +101,7 @@ Route::prefix('locataire')->name('locataire.')->middleware(['auth', 'role:locata
     
     // Additional routes for navigation
     Route::get('/annonces', [LogementlocaController::class, 'annonces'])->name('annonces.index');
+    Route::post('/annonces', [LogementlocaController::class, 'storeAnnonce'])->name('annonces.store');
     Route::get('/profile', [LogementlocaController::class, 'profile'])->name('profile.index');
     Route::get('/messages', [LogementlocaController::class, 'messages'])->name('messages.index');
     Route::get('/favorites', [LogementlocaController::class, 'showFavorites'])->name('favorites');
