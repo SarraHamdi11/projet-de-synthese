@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Auth;
 
 class LogementlocaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (!in_array(auth()->user()->role_uti, ['locataire', 'colocataire'])) {
+                return redirect()->route('visitor')->with('error', 'Accès non autorisé');
+            }
+            return $next($request);
+        });
+    }
     public function index()
     {
         $user = Auth::user();
@@ -37,6 +47,8 @@ class LogementlocaController extends Controller
     public function indexLocataire(Request $request)
     {
         $user = Auth::user();
+        
+        // Get real user IDs (users with complete profiles)
         $realUserIds = Utilisateur::whereNotNull('email_uti')
             ->where('email_uti', '!=', '')
             ->whereNotNull('tel_uti')
@@ -55,7 +67,6 @@ class LogementlocaController extends Controller
 
         // Search by city
         if ($request->filled('city')) {
-            // Extract just the city name before any comma
             $cityName = explode(',', $request->city)[0];
             $query->where('ville', 'like', '%' . trim($cityName) . '%');
         }
@@ -66,25 +77,6 @@ class LogementlocaController extends Controller
         }
         if ($request->filled('max_price')) {
             $query->where('prix_log', '<=', $request->max_price);
-        }
-
-        // Filter by search type (logement/colocation)
-        if ($request->filled('search_type')) {
-            $searchTypes = $request->search_type;
-            
-            $query->where(function($q) use ($searchTypes) {
-                foreach ($searchTypes as $type) {
-                    if ($type === 'logement') {
-                        $q->orWhereHas('proprietaire', function($q) {
-                            $q->where('type_uti', 'proprietaire');
-                        });
-                    } elseif ($type === 'colocation') {
-                        $q->orWhereHas('proprietaire', function($q) {
-                            $q->where('type_uti', 'locataire');
-                        });
-                    }
-                }
-            });
         }
 
         // Filter by property type
