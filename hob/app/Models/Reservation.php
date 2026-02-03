@@ -28,14 +28,13 @@ class Reservation extends Model
             return $this->belongsTo(Utilisateur::class, 'proprietaire_id');
         }
 
-    public function logments()
-        {
-            return $this->belongsTo(Logement::class);
-        }
-         public function logements()
+    public function logement()
     {
         return $this->belongsTo(Logement::class, 'logements_id');
     }
 
-
+    public function logements()
+    {
+        return $this->belongsTo(Logement::class, 'logements_id');
+    }
 }
