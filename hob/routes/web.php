@@ -109,7 +109,7 @@ Route::prefix('locataire')->name('locataire.')->middleware(['auth', 'role:locata
 // Profile routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile/update', [UserProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/update', [UserProfileController::class, 'update'])->name('profile.update.main');
     Route::get('/profile/password', [UserProfileController::class, 'showPasswordForm'])->name('profile.password.form');
     Route::put('/profile/password', [UserProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::get('/profile/delete', [UserProfileController::class, 'showDeleteForm'])->name('profile.delete.form');
