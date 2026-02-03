@@ -36,7 +36,7 @@ class AnnoncepropController extends Controller
             $query->where('proprietaire_id', Auth::id());
         })->where('disponibilite_annonce', true)->count();
         
-        return view('proprietaire.annonces.index', compact('annonces', 'totalAnnonces', 'activeAnnonces'));
+        return view('proprietaire.annoncesproprietaire.index', compact('annonces', 'totalAnnonces', 'activeAnnonces'));
     }
 
     public function create($logement_id)

@@ -121,7 +121,7 @@ class LogementpropController extends Controller
             ->latest()
             ->paginate(12);
 
-        return view('proprietaire.logements', compact('logements'));
+        return view('proprietaire.Logements', compact('logements'));
     }
 
     public function create()
@@ -192,7 +192,17 @@ class LogementpropController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('proprietaire.myprofile', ['proprietaire' => $user, 'user' => $user]);
+        
+        // Get user's statistics
+        $annoncesCount = \App\Models\Annonce::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->count();
+        
+        $commentairesCount = \App\Models\Avis::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->count();
+        
+        return view('proprietaire.myprofile', ['proprietaire' => $user, 'user' => $user, 'annoncesCount' => $annoncesCount, 'commentairesCount' => $commentairesCount]);
     }
 
     public function messages()
