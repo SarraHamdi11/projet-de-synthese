@@ -239,37 +239,6 @@
         </div>
     </header>
 
-    <!-- Stats Section -->
-    <section class="py-16">
-        <div class="container mx-auto px-4">
-            <h2 class="section-title">Des Chiffres Qui Parlent</h2>
-            <p class="section-subtitle">L'excellence de notre service à travers des statistiques impressionnantes</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="enhanced-card">
-                    <div class="stat-icon"><i class="fas fa-home"></i></div>
-                    <div class="stat-number">{{ $statsData['nombre_annonce'] }}+</div>
-                    <div class="stat-label">Logements Disponibles</div>
-                </div>
-                <div class="enhanced-card">
-                    <div class="stat-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-number">{{ $statsData['nombre_utilisateur'] }}+</div>
-                    <div class="stat-label">Utilisateurs Actifs</div>
-                </div>
-                <div class="enhanced-card">
-                    <div class="stat-icon"><i class="fas fa-star"></i></div>
-                    <div class="stat-number">{{ $statsData['note_moyenne_annonce'] }}%</div>
-                    <div class="stat-label">Satisfaction Client</div>
-                </div>
-                <div class="enhanced-card">
-                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="stat-number">{{ $statsData['nombre_reservation'] }}</div>
-                    <div class="stat-label">Réservations Mensuelles</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Cities Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
