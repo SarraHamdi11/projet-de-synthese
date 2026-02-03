@@ -15,7 +15,13 @@ class LogementlocaController extends Controller
 {
     public function index()
     {
-        return view('locataire.accueillocataire');
+        $user = Auth::user();
+        
+        // Get statistics for the dashboard
+        $totalReservations = \App\Models\Reservation::where('locataire_id', $user->id)->count();
+        $totalFavorites = \App\Models\Favorite::where('user_id', $user->id)->count();
+        
+        return view('locataire.accueillocataire', compact('totalReservations', 'totalFavorites'));
     }
 
     public function indexLocataire(Request $request)
