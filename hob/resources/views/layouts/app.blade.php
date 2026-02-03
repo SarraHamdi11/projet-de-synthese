@@ -726,7 +726,7 @@
                                 <i class="fas fa-cog fa-lg"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
-                                <li><a class="dropdown-item" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.profile.index') : route('locataire.profile.index') }}">Modifier le profil</a></li>
+                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Modifier le profil</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.password.form') }}">Changer le mot de passe</a></li>
                                 <li><a class="dropdown-item text-danger" href="{{ route('profile.delete.form') }}">Supprimer le compte</a></li>
                                 <li><hr class="dropdown-divider"></li>

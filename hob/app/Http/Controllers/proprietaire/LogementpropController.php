@@ -123,8 +123,10 @@ class LogementpropController extends Controller
 
         $total = $logements->total();
         $filteredListings = $logements;
+        $perPage = $logements->perPage();
+        $page = $logements->currentPage();
 
-        return view('proprietaire.Logements', compact('logements', 'total', 'filteredListings'));
+        return view('proprietaire.Logements', compact('logements', 'total', 'filteredListings', 'perPage', 'page'));
     }
 
     public function create()

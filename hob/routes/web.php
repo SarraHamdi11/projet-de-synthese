@@ -58,6 +58,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Profile routes
 Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
+Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
 Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
 
 // Admin routes
