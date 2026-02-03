@@ -72,6 +72,11 @@ public function visitor()
         return view('auth.login');
     }
 
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
     public function login(Request $request)
     {
         Log::info('Login attempt', ['login' => $request->login]);
