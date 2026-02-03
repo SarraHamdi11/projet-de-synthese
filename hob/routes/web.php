@@ -31,6 +31,15 @@ use App\Http\Controllers\VisitorController;
 // Route for the visitor page (root)
 Route::get('/', [VisitorController::class, 'index'])->name('visitor');
 
+// Simple fallback route for testing
+Route::get('/welcome', function () {
+    return response()->json([
+        'message' => 'Welcome to StayFind!',
+        'status' => 'working',
+        'timestamp' => now()->toISOString()
+    ]);
+});
+
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
