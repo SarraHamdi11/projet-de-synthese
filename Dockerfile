@@ -15,10 +15,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 WORKDIR /app
 COPY . /app
 
-RUN cd hob && composer install --no-dev --no-interaction --prefer-dist
-RUN cd hob && npm ci && npm run build 2>/dev/null || true
-RUN cd hob && php artisan config:cache && php artisan route:cache
+WORKDIR /app/hob
+
+RUN /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist
+RUN npm ci && npm run build 2>/dev/null || true
+RUN php artisan config:cache && php artisan route:cache
 
 EXPOSE 8000
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["cd hob && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
