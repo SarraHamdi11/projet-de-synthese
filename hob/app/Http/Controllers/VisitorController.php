@@ -13,7 +13,8 @@ class VisitorController extends Controller
         $statsData = [
             'nombre_reservation' => 0,
             'note_moyenne_annonce' => 0,
-            'nombre_utilisateur' => 0
+            'nombre_utilisateur' => 0,
+            'nombre_annonce' => 0
         ]; // Empty stats data
         return view('visitor', compact('latestLogements', 'avis', 'statsData'));
     }
