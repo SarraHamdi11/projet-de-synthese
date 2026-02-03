@@ -17,7 +17,7 @@ COPY . /app
 
 RUN cd hob && composer install --no-dev --no-interaction --prefer-dist
 RUN cd hob && npm ci && npm run build 2>/dev/null || true
-RUN cd hob && php artisan config:cache && php artisan route:cache && php artisan view:cache
+RUN cd hob && php artisan config:cache && php artisan route:cache
 
 EXPOSE 8000
 CMD ["sh", "-c", "cd hob && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
