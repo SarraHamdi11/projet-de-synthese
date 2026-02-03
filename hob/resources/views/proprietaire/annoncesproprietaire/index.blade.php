@@ -7,9 +7,23 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Mes Annonces</h4>
-                    <a href="{{ route('proprietaire.annonces.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Nouvelle Annonce
-                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="createAnnonceDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-plus"></i> Nouvelle Annonce
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="createAnnonceDropdown">
+                            @php
+                                $logements = \App\Models\Logement::where('proprietaire_id', auth()->user()->id)->get();
+                            @endphp
+                            @forelse($logements as $logement)
+                                <li><a class="dropdown-item" href="{{ route('proprietaire.annonces.create', $logement->id) }}">
+                                    <i class="fas fa-home"></i> {{ $logement->titre_log ?? 'Logement #' . $logement->id }}
+                                </a></li>
+                            @empty
+                                <li><span class="dropdown-item text-muted">Aucun logement disponible</span></li>
+                            @endforelse
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="card-body">

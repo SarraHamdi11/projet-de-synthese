@@ -122,8 +122,9 @@ class LogementpropController extends Controller
             ->paginate(12);
 
         $total = $logements->total();
+        $filteredListings = $logements;
 
-        return view('proprietaire.Logements', compact('logements', 'total'));
+        return view('proprietaire.Logements', compact('logements', 'total', 'filteredListings'));
     }
 
     public function create()
@@ -206,7 +207,12 @@ class LogementpropController extends Controller
             });
         })->count();
         
-        return view('proprietaire.myprofile', ['proprietaire' => $user, 'user' => $user, 'annoncesCount' => $annoncesCount, 'commentairesCount' => $commentairesCount]);
+        // Get user's annonces for publications section
+        $annonces = \App\Models\Annonce::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->with(['logement', 'avis'])->latest()->get();
+        
+        return view('proprietaire.myprofile', ['proprietaire' => $user, 'user' => $user, 'annoncesCount' => $annoncesCount, 'commentairesCount' => $commentairesCount, 'annonces' => $annonces]);
     }
 
     public function messages()
