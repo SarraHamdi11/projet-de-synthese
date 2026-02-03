@@ -284,7 +284,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Sample Properties -->
                 <div class="property-card scroll-animate">
-                    <img src="{{ asset('images/header_images.jpg') }}" alt="Appartement" class="property-image">
+                    <img src="https://images.unsplash.com/photo-1564013799919-600e2a591c5a?w=600&h=400&fit=crop" alt="Appartement" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Appartement Moderne</h3>
                         <div class="property-price">8,500 DH/mois</div>
@@ -296,7 +296,7 @@
                 </div>
                 
                 <div class="property-card scroll-animate">
-                    <img src="{{ asset('images/header_images.jpg') }}" alt="Villa" class="property-image">
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop" alt="Villa" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Villa de Luxe</h3>
                         <div class="property-price">15,000 DH/mois</div>
@@ -308,7 +308,7 @@
                 </div>
                 
                 <div class="property-card scroll-animate">
-                    <img src="{{ asset('images/header_images.jpg') }}" alt="Studio" class="property-image">
+                    <img src="https://images.unsplash.com/photo-1570129477491-45c16e536a6f?w=600&h=400&fit=crop" alt="Studio" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Studio Centre-Ville</h3>
                         <div class="property-price">4,200 DH/mois</div>
