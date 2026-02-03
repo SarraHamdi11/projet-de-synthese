@@ -103,6 +103,7 @@ Route::prefix('locataire')->name('locataire.')->middleware(['auth', 'role:locata
     Route::get('/annonces', [LogementlocaController::class, 'annonces'])->name('annonces.index');
     Route::get('/profile', [LogementlocaController::class, 'profile'])->name('profile.index');
     Route::get('/messages', [LogementlocaController::class, 'messages'])->name('messages.index');
+    Route::get('/favorites', [LogementlocaController::class, 'showFavorites'])->name('favorites');
 });
 
 // Message routes

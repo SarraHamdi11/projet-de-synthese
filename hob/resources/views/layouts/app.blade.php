@@ -608,7 +608,7 @@
                             <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.accueilproprietaire') : route('locataire.accueillocataire') }}">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.logements') : route('logementsloca') }}">Nos logements</a>
+                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.logements') : route('locataire.logementsloca') }}">Nos logements</a>
                         </li>
                         <li class="nav-item">
 
@@ -616,7 +616,7 @@
 
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.annoncesproprietaire.index') : route('locataire.annonceslocataire.index') }}">Mes annonces</a>
+                            <a class="nav-link" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.annoncesproprietaire.index') : route('locataire.annonces.index') }}">Mes annonces</a>
                         </li>
                         @if(auth()->user()->role_uti === 'locataire')
                         <li class="nav-item">
