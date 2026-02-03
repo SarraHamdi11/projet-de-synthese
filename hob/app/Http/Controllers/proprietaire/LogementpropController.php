@@ -50,8 +50,15 @@ class LogementpropController extends Controller
         
         // Get monthly earnings (simplified - you might need to adjust based on your payment model)
         $monthlyEarnings = 0; // Placeholder - implement actual earnings calculation
+        
+        // Get latest popular logements for carousel
+        $latestLogements = \App\Models\Annonce::with('logement')
+            ->where('disponibilite_annonce', true)
+            ->latest()
+            ->take(5)
+            ->get();
 
-        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalRequests', 'confirmedBookings', 'activeAnnonces', 'unreadMessages', 'monthlyEarnings'));
+        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalRequests', 'confirmedBookings', 'activeAnnonces', 'unreadMessages', 'monthlyEarnings', 'latestLogements'));
     }
 
     public function details($id)
