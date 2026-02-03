@@ -302,7 +302,14 @@ class LogementlocaController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('locataire.myprofile', ['locataire' => $user, 'user' => $user]);
+        
+        // Get user's reviews/avis
+        $avis = \App\Models\Avis::where('locataire_id', $user->id)
+            ->with('logement')
+            ->latest()
+            ->get();
+        
+        return view('locataire.myprofile', ['locataire' => $user, 'user' => $user, 'avis' => $avis]);
     }
 
     public function messages()

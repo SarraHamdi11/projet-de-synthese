@@ -22,23 +22,37 @@ class ReservationpropController extends Controller
 
     public function index()
     {
+        $user = Auth::user();
+        
+        // Get reservations for the owner's properties
         $reservations = Reservation::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
         })->with('locataire', 'logement')->latest()->paginate(10);
         
         // Get statistics
-        $totalReservations = Reservation::whereHas('logement', function($query) {
+        $totalDemandes = Reservation::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
         })->count();
         
-        $pendingReservations = Reservation::whereHas('logement', function($query) {
+        $enAttente = Reservation::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
         })->where('statut_res', 'en_attente')->count();
         
-        $confirmedReservations = Reservation::whereHas('logement', function($query) {
+        $acceptees = Reservation::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
-        })->where('statut_res', 'confirmee')->count();
+        })->where('statut_res', 'acceptee')->count();
         
-        return view('proprietaire.reservations.index', compact('reservations', 'totalReservations', 'pendingReservations', 'confirmedReservations'));
+        $annulees = Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('statut_res', 'annulee')->count();
+        
+        $terminees = Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('statut_res', 'terminee')->count();
+        
+        // Get owner's properties for filter
+        $logements = \App\Models\Logement::where('proprietaire_id', Auth::id())->get();
+        
+        return view('proprietaire.reservations.index', compact('reservations', 'totalDemandes', 'enAttente', 'acceptees', 'annulees', 'terminees', 'logements'));
     }
 }

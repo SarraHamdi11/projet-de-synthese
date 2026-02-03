@@ -33,12 +33,22 @@ class ReservationlocaController extends Controller
                   ->orWhere('receiver_id', $user->id);
         })->count();
         
+        // Get accepted reservations count
+        $acceptees = \App\Models\Reservation::where('locataire_id', $user->id)
+            ->where('statut_reservation', 'acceptee')
+            ->count();
+        
+        // Get pending reservations count  
+        $enAttente = \App\Models\Reservation::where('locataire_id', $user->id)
+            ->where('statut_reservation', 'en_attente')
+            ->count();
+        
         $reservations = Reservation::where('locataire_id', Auth::id())
             ->with('logement', 'proprietaire')
             ->latest()
             ->paginate(10);
         
-        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages'));
+        return view('locataire.reservations.index', compact('reservations', 'totalReservations', 'totalFavorites', 'totalMessages', 'acceptees', 'enAttente'));
     }
 
     public function create($annonce_id)

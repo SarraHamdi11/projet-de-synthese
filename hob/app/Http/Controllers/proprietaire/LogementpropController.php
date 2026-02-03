@@ -174,7 +174,7 @@ class LogementpropController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('proprietaire.myprofile', compact('user'));
+        return view('proprietaire.myprofile', ['proprietaire' => $user, 'user' => $user]);
     }
 
     public function messages()
