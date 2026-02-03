@@ -4,7 +4,8 @@ nixPkgs = ["php", "nodejs"]
 [phases.install]
 cmds = [
     "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
-    "cd hob && composer install --no-dev --optimize-autoloader",
+    "chmod +x /usr/local/bin/composer",
+    "cd hob && /usr/local/bin/composer install --no-dev --optimize-autoloader",
     "cd hob && npm ci",
     "cd hob && npm run build"
 ]
