@@ -8,6 +8,7 @@ class VisitorController extends Controller
 {
     public function index()
     {
-        return view('visitor');
+        $latestLogements = []; // Empty array for now
+        return view('visitor', compact('latestLogements'));
     }
 }
