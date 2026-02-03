@@ -42,8 +42,16 @@ class LogementpropController extends Controller
         $activeAnnonces = \App\Models\Annonce::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
         })->where('disponibilite_annonce', true)->count();
+        
+        // Get unread messages count
+        $unreadMessages = \App\Models\Message::where('receiver_id', Auth::id())
+            ->where('is_read', false)
+            ->count();
+        
+        // Get monthly earnings (simplified - you might need to adjust based on your payment model)
+        $monthlyEarnings = 0; // Placeholder - implement actual earnings calculation
 
-        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalRequests', 'confirmedBookings', 'activeAnnonces'));
+        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalRequests', 'confirmedBookings', 'activeAnnonces', 'unreadMessages', 'monthlyEarnings'));
     }
 
     public function details($id)
