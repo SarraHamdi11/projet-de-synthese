@@ -306,60 +306,105 @@
         </div>
     </section>
 
-    <!-- Properties Section -->
+    <!-- Enhanced Properties Section -->
     <section class="py-16">
         <div class="container mx-auto px-4">
-            <h2 class="section-title">Dernières Propriétés</h2>
-            <p class="section-subtitle">Découvrez nos logements les plus récents</p>
+            <h2 class="section-title scroll-animate">Dernières Propriétés</h2>
+            <p class="section-subtitle scroll-animate">Découvrez nos logements les plus récents</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @forelse ($latestLogements as $logement)
-                    <div class="property-card">
-                        <img src="{{ !empty($logement->photos) ? asset('images/' . (is_array($logement->photos) ? $logement->photos[0] : json_decode($logement->photos, true)[0])) : asset('images/placeholder.jpg') }}" 
-                             alt="{{ $logement->type_log }} à {{ $logement->ville }}" 
-                             class="property-image">
-                        <div class="property-content">
-                            <h3 class="property-type">{{ ucfirst($logement->type_log) }}</h3>
-                            <div class="property-price">{{ number_format($logement->prix_log, 0) }} DH/mois</div>
-                            <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> {{ $logement->ville }}</div>
-                            <div class="flex justify-center gap-1">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $logement->average_note)
-                                        <span class="star">★</span>
-                                    @else
-                                        <span class="star">☆</span>
-                                    @endif
-                                @endfor
-                            </div>
+                <!-- Sample Properties -->
+                <div class="property-card scroll-animate">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500" alt="Appartement" class="property-image">
+                    <div class="property-content">
+                        <h3 class="property-type">Appartement Moderne</h3>
+                        <div class="property-price">8,500 DH/mois</div>
+                        <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> Casablanca</div>
+                        <div class="flex justify-center gap-1">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
                         </div>
                     </div>
-                @empty
-                    <div class="text-center col-span-full">
-                        <p class="text-gray-600">Aucun logement récent disponible pour le moment.</p>
+                </div>
+                
+                <div class="property-card scroll-animate">
+                    <img src="https://images.unsplash.com/photo-1570129477491-45c16e536a6f?w=500" alt="Villa" class="property-image">
+                    <div class="property-content">
+                        <h3 class="property-type">Villa de Luxe</h3>
+                        <div class="property-price">15,000 DH/mois</div>
+                        <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> Marrakech</div>
+                        <div class="flex justify-center gap-1">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">☆</span>
+                        </div>
                     </div>
-                @endforelse
+                </div>
+                
+                <div class="property-card scroll-animate">
+                    <img src="https://images.unsplash.com/photo-1522708323490-b6c3297ec627?w=500" alt="Studio" class="property-image">
+                    <div class="property-content">
+                        <h3 class="property-type">Studio Centre-Ville</h3>
+                        <div class="property-price">4,200 DH/mois</div>
+                        <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> Rabat</div>
+                        <div class="flex justify-center gap-1">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
+    <!-- Enhanced Stats Section -->
+    <section class="stats-section">
         <div class="container mx-auto px-4">
-            <h2 class="section-title text-white">Prêt à Trouver Votre Chez-Vous ?</h2>
-            <p class="section-subtitle text-white opacity-90">Rejoignez des milliers de clients satisfaits</p>
-            <div class="flex justify-center flex-wrap">
-                <a href="{{ route('signup') }}" class="btn-cta">
-                    <i class="fas fa-rocket"></i> Commencer Maintenant
-                </a>
-                <a href="{{ route('login') }}" class="btn-cta">
-                    <i class="fas fa-sign-in-alt"></i> Se Connecter
-                </a>
+            <h2 class="section-title text-white scroll-animate">Des Chiffres Qui Parlent</h2>
+            <p class="section-subtitle text-white opacity-90 scroll-animate">L'excellence de notre service à travers des statistiques impressionnantes</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="text-center scroll-animate">
+                    <div class="stat-icon"><i class="fas fa-home"></i></div>
+                    <div class="stat-number" data-target="1250">0</div>
+                    <div class="stat-label">Logements Disponibles</div>
+                </div>
+                <div class="text-center scroll-animate">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-number" data-target="85000">0</div>
+                    <div class="stat-label">Utilisateurs Actifs</div>
+                </div>
+                <div class="text-center scroll-animate">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-number" data-target="4.9">0</div>
+                    <div class="stat-label">Satisfaction Client</div>
+                </div>
+                <div class="text-center scroll-animate">
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-number" data-target="320">0</div>
+                    <div class="stat-label">Réservations Mensuelles</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12">
+    <!-- Enhanced CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 5rem 0; text-align: center; color: white; position: relative;">
+        <div class="container mx-auto px-4">
+            <h2 class="section-title text-white scroll-animate">Prêt à Trouver Votre Chez-Vous ?</h2>
+            <p class="section-subtitle text-white opacity-90 scroll-animate">Rejoignez des milliers de clients satisfaits</p>
+            <div class="flex justify-center flex-wrap gap-4 scroll-animate">
+                <a href="{{ route('signup') }}" class="btn btn-white">
+                    <i class="fas fa-rocket"></i>
+                    Commencer Maintenant
+                </a>
+                <a href="{{ route('login') }}" class="btn btn-outline">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Se Connecter
+                </a>
+            </div>
+        </div>
+    </section>
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="footer" style="background: #1f2937; color: white; padding: 3rem 0 1rem;">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
@@ -369,11 +414,21 @@
                         <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="text-2xl hover:text-pink-400 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Services</h3>
+                    <div class="footer-links space-y-2">
+                        <a href="#properties" class="block hover:text-blue-400 transition">Propriétés</a>
+                        <a href="#stats" class="block hover:text-blue-400 transition">Statistiques</a>
+                        <a href="#" class="block hover:text-blue-400 transition">À Propos</a>
+                        <a href="#" class="block hover:text-blue-400 transition">Contact</a>
                     </div>
                 </div>
                 <div>
                     <h3 class="text-xl font-bold mb-4">Pages</h3>
-                    <div class="space-y-2">
+                    <div class="footer-links space-y-2">
                         <a href="{{ route('login') }}" class="block hover:text-blue-400 transition">Connexion</a>
                         <a href="{{ route('signup') }}" class="block hover:text-blue-400 transition">Inscription</a>
                     </div>
@@ -382,6 +437,7 @@
                     <h3 class="text-xl font-bold mb-4">Contact</h3>
                     <p><i class="fas fa-envelope"></i> findstay@gmail.com</p>
                     <p><i class="fas fa-phone"></i> +212 5XX XXX XXX</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Maroc</p>
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-4 text-center">
@@ -391,6 +447,62 @@
     </footer>
 
     <script>
+        // Enhanced animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.scroll-animate');
+            animateElements.forEach(el => observer.observe(el));
+        });
+
+        // Counter animation for stats
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                if (target % 1 === 0) {
+                    element.textContent = Math.floor(current).toLocaleString() + '+';
+                } else {
+                    element.textContent = current.toFixed(1);
+                }
+            }, 16);
+        }
+
+        // Animate stats when they come into view
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    const target = parseFloat(entry.target.getAttribute('data-target'));
+                    animateCounter(entry.target, target);
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number').forEach(stat => {
+            statsObserver.observe(stat);
+        });
+
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -401,164 +513,162 @@
             });
         });
     </script>
-</body>
-</html>
-                    </p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600 animate-fade-in"
-                        onclick="toggleAnswer(this)">Comment créer un compte sur FindStay ?</p>
-                    <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl transition-height duration-300"
-                        style="overflow: hidden; max-height: 0;" data-expanded="false">
-                        Créer un compte sur FindStay est simple et rapide. Cliquez sur le bouton "S'inscrire" situé en
-                        haut à droite de notre site web ou application mobile. Remplissez le formulaire avec vos
-                        informations personnelles, telles que votre nom, votre adresse e-mail et un mot de passe
-                        sécurisé. Vous pouvez également vous inscrire via votre compte Google ou Facebook pour une
-                        inscription encore plus rapide. Une fois le formulaire soumis, vous recevrez un e-mail de
-                        confirmation pour activer votre compte. Après activation, vous pourrez personnaliser votre
-                        profil, sauvegarder vos préférences de voyage, et accéder à des offres exclusives réservées aux
-                        membres.
-                    </p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600 animate-fade-in"
-                        onclick="toggleAnswer(this)">Comment modifier ou annuler une réservation ?</p>
-                    <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl transition-height duration-300"
-                        style="overflow: hidden; max-height: 0;" data-expanded="false">
-                        Pour modifier ou annuler une réservation, connectez-vous à votre compte FindStay et accédez à la
-                        section "Mes Réservations" dans votre profil. Sélectionnez la réservation concernée pour voir
-                        les options disponibles. Selon les conditions de l'hébergement, vous pourrez modifier les dates,
-                        le type de chambre, ou d'autres détails, sous réserve de disponibilité. Pour annuler, cliquez
-                        sur "Annuler la réservation" et suivez les instructions. Notez que les politiques d'annulation
-                        varient selon les établissements ; certaines réservations offrent une annulation gratuite
-                        jusqu'à une certaine date, tandis que d'autres peuvent entraîner des frais. Vous recevrez une
-                        confirmation par e-mail une fois la modification ou l'annulation effectuée. En cas de problème,
-                        notre service client est disponible 24/7 pour vous assister.
-                    </p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-question font-semibold mb-2 cursor-pointer text-gray-800 hover:text-blue-600 animate-fade-in"
-                        onclick="toggleAnswer(this)">FindStay propose-t-il une application mobile ?</p>
-                    <p class="faq-answer text-gray-600 mb-4 mx-auto max-w-2xl transition-height duration-300"
-                        style="overflow: hidden; max-height: 0;" data-expanded="false">
-                        Oui, FindStay propose une application mobile intuitive disponible sur iOS (via l'App Store) et
-                        Android (via Google Play). L'application vous permet de rechercher, réserver et gérer vos
-                        séjours en toute simplicité, où que vous soyez. Elle offre des fonctionnalités pratiques comme
-                        la recherche par géolocalisation, la synchronisation avec votre calendrier, des notifications
-                        pour les offres spéciales, et un accès hors ligne à vos réservations confirmées. L'interface est
-                        optimisée pour une navigation fluide, avec des filtres personnalisables et des recommandations
-                        basées sur vos préférences. Téléchargez l'application dès aujourd'hui pour planifier vos voyages
-                        en un clin d'œil et bénéficier d'une expérience utilisateur optimale.
-                    </p>
-                </div>
-            </div>
-        </section>
-        <!-- En quelques chiffres -->
-        <section id="stats-section" class="w-full bg-[#c5d6e1] h-100">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="w-full md:w-1/2 footer_color">
-                    <div class="relative flex items-center justify-center h-80">
-                        <img src="{{ asset('images/map.png') }}" alt="Carte du Maroc avec logements gérés"
-                            class="w-full h-full object-cover rounded-lg">
-                        <div class="absolute top-1/4 left-1/6 text-center">
-                            <p class="text-5xl md:text-6xl font-bold text-blue-900 mb-2">93</p>
-                            <p class="text-sm md:text-base text-black px-2 py-1 rounded">Logements Gérés au Maroc</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full md:w-1/2 p-4 md:p-6">
-                    <h2 class="text-2xl md:text-3xl font-semibold text-blue-900 mb-4 md:mb-6">En quelques chiffres</h2>
-                    <div class="grid grid-cols-2 gap-4 md:gap-6 text-center">
-                        <div>
-                            <p class="text-3xl md:text-4xl font-bold text-blue-700">
-                                {{ $statsData['nombre_reservation'] }}</p>
-                            <p class="text-sm md:text-base text-blue-700">JEUNES LOGÉS</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl md:text-4xl font-bold text-blue-700">
-                                {{ $statsData['note_moyenne_annonce'] }}%</p>
-                            <p class="text-sm md:text-base text-blue-700">Résidences satisfaisantes</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl md:text-4xl font-bold text-blue-700">
-                                {{ $statsData['nombre_utilisateur'] }}+</p>
-                            <p class="text-sm md:text-base text-blue-700">UTILISATEURS ACTIFS</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl md:text-4xl font-bold text-blue-700">
-                                {{ $statsData['nombre_annonce'] }}+</p>
-                            <p class="text-sm md:text-base text-blue-700">LOGEMENTS DISPONIBLES</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="footer_color text-[#2E4053]">
-        <div class="container mx-auto px-4">
-            <div class="row mb-4 flex justify-center">
-                <div class="col-12 text-center mt-1">
-                    <div class="contact-info text-blue-900 text-lg font-semibold">
-                        <strong>findstay@gmail.com</strong>
-                    </div>
-                </div>
-            </div>
-            <div class="row flex flex-wrap justify-center md:justify-between">
-                <div class="col-lg-4 col-md-12 mb-6 text-center text-lg-start">
-                    <a href="/"
-                        class="footer-logo d-flex align-items-center justify-content-center justify-content-lg-start">
-                        <img src="{{ asset('images/findStay-removebg-preview.png') }}" alt="FindStay Logo"
-                            style="height: 100px; width: auto;">
-                    </a>
-                    <p class="footer-description text-[#244F76] text-sm">
-                        Trouvez votre chez-vous avec FindStay. <br />Facile, rapide, fiable
-                    </p>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4 text-center">
-                    <h6 class="footer-title text-lg font-bold mb-4 text-blue-900">Nos Services</h6>
-                    <ul class="footer-links space-y-2">
-                        <li><a href="#faq-section"
-                                class="text-[#244F76] hover:text-[#00DDEB] transition-colors duration-200">FAQ</a></li>
-                        <li><a href="#stats-section"
-                                class="text-[#244F76] hover:text-[#00DDEB] transition-colors duration-200">En quelques
-                                chiffres</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4 text-center">
-                    <h6 class="footer-title text-lg font-bold mb-4 text-blue-900">Pages</h6>
-                    <ul class="footer-links space-y-2">
-                        <li><a href="{{ route('login') }}"
-                                class="text-[#244F76] hover:text-[#00DDEB] transition-colors duration-200">Connexion</a>
-                        </li>
-                        <li><a href="{{ route('signup') }}"
-                                class="text-[#244F76] hover:text-[#00DDEB] transition-colors duration-200">Inscription</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom border-t border-[#3E4A4B] pt-4 mt-6 text-center">
-                <p class="mb-0 text-[#2E4053] text-sm">© 2025 FindStay. Tous droits réservés.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript for FAQ Accordion -->
-    <script>
-        function toggleAnswer(question) {
-            const answer = question.nextElementSibling;
-            const isExpanded = answer.getAttribute('data-expanded') === 'true';
-
-            if (isExpanded) {
-                answer.style.maxHeight = '0';
-                answer.setAttribute('data-expanded', 'false');
-            } else {
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-                answer.setAttribute('data-expanded', 'true');
-            }
+    <style>
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
         }
-    </script>
+
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #f3f4f6;
+        }
+
+        .property-card:hover {
+            transform: translateY(-8px);
+            border-color: #1e3a8a;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover .property-image {
+            transform: scale(1.05);
+        }
+
+        .property-content {
+            padding: 1.5rem;
+        }
+
+        .property-type {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .property-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #ea580c;
+            margin-bottom: 0.5rem;
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 1.1rem;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            padding: 5rem 0;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-white {
+            background: white;
+            color: #1a1a1a;
+        }
+
+        .btn-white:hover {
+            background: #f9fafb;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: #1e3a8a;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+    </style>
 </body>
 
 </html>
