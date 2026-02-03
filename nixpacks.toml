@@ -9,4 +9,4 @@ cmds = [
 ]
 
 [start]
-cmd = "cd hob && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "cd hob && php artisan migrate:reset && php artisan migrate:fresh && php artisan serve --host=0.0.0.0 --port=$PORT"
