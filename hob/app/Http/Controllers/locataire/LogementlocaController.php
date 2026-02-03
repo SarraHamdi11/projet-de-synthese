@@ -21,7 +21,17 @@ class LogementlocaController extends Controller
         $totalReservations = \App\Models\Reservation::where('locataire_id', $user->id)->count();
         $totalFavorites = \App\Models\Favorite::where('user_id', $user->id)->count();
         
-        return view('locataire.accueillocataire', compact('totalReservations', 'totalFavorites'));
+        // Get message statistics
+        $totalMessages = \App\Models\Message::where(function($query) use ($user) {
+            $query->where('sender_id', $user->id)
+                  ->orWhere('receiver_id', $user->id);
+        })->count();
+        
+        $unreadCount = \App\Models\Message::where('receiver_id', $user->id)
+            ->where('is_read', false)
+            ->count();
+        
+        return view('locataire.accueillocataire', compact('totalReservations', 'totalFavorites', 'totalMessages', 'unreadCount'));
     }
 
     public function indexLocataire(Request $request)
