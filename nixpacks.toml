@@ -1,5 +1,7 @@
 [build]
 cmds = [
+  "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+  "chmod +x /usr/local/bin/composer",
   "cd hob && /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist",
   "cd hob && php artisan config:cache",
   "cd hob && php artisan route:cache",
