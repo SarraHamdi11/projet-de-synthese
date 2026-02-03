@@ -125,6 +125,11 @@ public function visitor()
         return view('auth.signup');
     }
 
+    public function showSignupForm()
+    {
+        return view('auth.signup');
+    }
+
     public function signup(Request $request)
     {
         Log::info('Signup attempt', ['email' => $request->email_uti, 'tel' => $request->tel_uti, 'all_data' => $request->all()]);
