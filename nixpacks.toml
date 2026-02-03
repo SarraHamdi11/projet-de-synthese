@@ -1,14 +1,10 @@
-[phases.setup]
-nixPkgs = ["php", "nodejs"]
-
-[phases.install]
+[build]
 cmds = [
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
-    "chmod +x /usr/local/bin/composer",
-    "cd hob && /usr/local/bin/composer install --no-dev --optimize-autoloader",
-    "cd hob && npm ci",
-    "cd hob && npm run build"
+  "cd hob && /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist",
+  "cd hob && php artisan config:cache",
+  "cd hob && php artisan route:cache",
+  "cd hob && php artisan view:cache"
 ]
 
 [start]
-cmd = "cd hob && php artisan migrate:fresh --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "cd hob && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
