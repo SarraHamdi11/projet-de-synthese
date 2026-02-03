@@ -10,6 +10,11 @@ class VisitorController extends Controller
     {
         $latestLogements = []; // Empty array for now - fix undefined variable
         $avis = []; // Empty array for reviews/testimonials
-        return view('visitor', compact('latestLogements', 'avis'));
+        $statsData = [
+            'nombre_reservation' => 0,
+            'note_moyenne_annonce' => 0,
+            'nombre_utilisateur' => 0
+        ]; // Empty stats data
+        return view('visitor', compact('latestLogements', 'avis', 'statsData'));
     }
 }
