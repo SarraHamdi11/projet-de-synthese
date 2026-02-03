@@ -15,9 +15,8 @@ WORKDIR /app/hob
 RUN /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist
 RUN npm ci && npm run build 2>/dev/null || true
 RUN php artisan config:cache && php artisan route:cache
-
-RUN chmod +x /app/start.sh
+RUN php artisan migrate --force
 
 EXPOSE 8000
 
-CMD ["/app/start.sh"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
