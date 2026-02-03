@@ -41,7 +41,14 @@ class LogementlocaController extends Controller
             ->where('is_read', false)
             ->count();
         
-        return view('locataire.accueillocataire', compact('totalReservations', 'totalFavorites', 'totalMessages', 'unreadCount'));
+        // Get latest annonces for the carousel
+        $latestAnnonces = \App\Models\Annonce::with(['logement'])
+            ->where('disponibilite_annonce', true)
+            ->latest()
+            ->take(5)
+            ->get();
+        
+        return view('locataire.accueillocataire', compact('totalReservations', 'totalFavorites', 'totalMessages', 'unreadCount', 'latestAnnonces'));
     }
 
     public function indexLocataire(Request $request)
