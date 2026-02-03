@@ -9,6 +9,7 @@ class VisitorController extends Controller
     public function index()
     {
         $latestLogements = []; // Empty array for now - fix undefined variable
-        return view('visitor', compact('latestLogements'));
+        $avis = []; // Empty array for reviews/testimonials
+        return view('visitor', compact('latestLogements', 'avis'));
     }
 }
