@@ -10,11 +10,11 @@ RUN apt-get update && apt-get install -y curl git unzip libzip-dev libpq-dev lib
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY . /app
-WORKDIR /app
+WORKDIR /app/hob
 
-RUN cd hob && composer install --no-dev --no-interaction --prefer-dist
-RUN cd hob && npm ci && npm run build 2>/dev/null || true
-RUN cd hob && php artisan config:cache && php artisan route:cache
+RUN /usr/local/bin/composer install --no-dev --no-interaction --prefer-dist
+RUN npm ci && npm run build 2>/dev/null || true
+RUN php artisan config:cache && php artisan route:cache
 
 RUN chmod +x /app/start.sh
 
