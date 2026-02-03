@@ -289,25 +289,4 @@
         @endforelse
     </div>
 </div>
-@endsection
-
-@push('styles')
-<style>
-    .carousel-item img {
-        border-top-left-radius: 0.25rem;
-        border-top-right-radius: 0.25rem;
-    }
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 10%;
-        opacity: 0.8;
-    }
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-        background-color: rgba(0, 0, 0, 0.5);
-        border-radius: 50%;
-        padding: 1rem;
-    }
-</style>
-@endpush
 @endsection 
