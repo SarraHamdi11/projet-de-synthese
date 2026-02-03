@@ -24,3 +24,5 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 database/database.sqlite
+.htaccess
+deploy/

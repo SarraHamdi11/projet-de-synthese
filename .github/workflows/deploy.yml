@@ -61,27 +61,35 @@ jobs:
         php artisan config:cache
         php artisan route:cache
 
-    - name: Create deployment artifact (exclude dev files)
+    - name: Create deployment artifact (minimal)
       run: |
         cd hob
         # Remove any existing deploy directory
         rm -rf deploy
         # Create a clean deploy directory
         mkdir deploy
-        rsync -av --exclude-from=.deployexclude . deploy/
-        # Move public contents to root for shared hosting
-        cp -r public/* deploy/
-        # Ensure .htaccess is at the root
-        cp .htaccess deploy/
-        # Create storage folders but keep them minimal
-        mkdir -p deploy/storage/app/public
-        mkdir -p deploy/storage/framework/cache
-        mkdir -p deploy/storage/framework/sessions
-        mkdir -p deploy/storage/framework/views
-        touch deploy/storage/framework/cache/.gitkeep
-        touch deploy/storage/framework/sessions/.gitkeep
-        touch deploy/storage/framework/views/.gitkeep
-        # Set proper permissions for shared hosting
+        # Copy only essential files
+        cp -r app deploy/
+        cp -r bootstrap deploy/
+        cp -r config deploy/
+        cp -r database deploy/
+        cp -r public deploy/
+        cp -r resources deploy/
+        cp -r routes deploy/
+        cp -r storage deploy/
+        cp -r vendor deploy/
+        cp composer.json deploy/
+        cp composer.lock deploy/
+        cp artisan deploy/
+        # Create minimal .htaccess
+        echo "<IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^(.*)$ index.php [L]
+        </IfModule>
+        DirectoryIndex index.php" > deploy/.htaccess
+        # Set permissions
         chmod -R 755 deploy/
         chmod -R 777 deploy/storage/
 
