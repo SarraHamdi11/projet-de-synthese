@@ -11,4 +11,4 @@ cmds = [
 ]
 
 [start]
-cmd = "cd hob && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=$PORT"
+cmd = "cd hob && /usr/local/bin/composer install --no-dev --optimize-autoloader && php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=$PORT"
