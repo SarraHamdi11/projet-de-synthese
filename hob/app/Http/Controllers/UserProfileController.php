@@ -112,26 +112,33 @@ class UserProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request)
+    public function deleteAccount(Request $request)
     {
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = $request->user();
-
-        Auth::logout();
-
-        // Delete profile picture if exists
+        $user = Auth::user();
+        
+        // Delete the user's profile picture if exists
         if ($user->photodeprofil_uti) {
             Storage::disk('public')->delete($user->photodeprofil_uti);
         }
-
+        
+        // Delete the user
         $user->delete();
+        
+        // Logout the user
+        Auth::logout();
+        
+        return redirect()->route('visitor')->with('success', 'Votre compte a été supprimé avec succès.');
+    }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('visitor')->with('status', 'account-deleted');
+    /**
+     * Delete the user's account (alias for deleteAccount).
+     */
+    public function destroy(Request $request)
+    {
+        return $this->deleteAccount($request);
     }
 }

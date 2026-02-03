@@ -106,7 +106,15 @@ Route::prefix('locataire')->name('locataire.')->middleware(['auth', 'role:locata
     Route::get('/favorites', [LogementlocaController::class, 'showFavorites'])->name('favorites');
 });
 
-// Message routes
+// Profile routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile/update', [UserProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/password', [UserProfileController::class, 'showPasswordForm'])->name('profile.password.form');
+    Route::put('/profile/password', [UserProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::get('/profile/delete', [UserProfileController::class, 'showDeleteForm'])->name('profile.delete.form');
+    Route::delete('/profile/delete', [UserProfileController::class, 'deleteAccount'])->name('profile.delete');
+});
 Route::middleware('auth')->group(function () {
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');

@@ -707,7 +707,7 @@
                         </div>
                         <!-- Profile Picture Icon -->
                         <div class="ms-2">
-                            <a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.myprofile') : route('locataire.myprofile') }}">
+                            <a href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.profile.index') : route('locataire.profile.index') }}">
                                 <img src="{{ auth()->user()->photodeprofil_uti ? asset('storage/' . auth()->user()->photodeprofil_uti) : asset('images/default-avatar.png') }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; border: 2px solid #24507a;">
                             </a>
                         </div>
@@ -718,7 +718,7 @@
                                 <i class="fas fa-cog fa-lg"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="settingsDropdown">
-                                <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Modifier le profil</a></li>
+                                <li><a class="dropdown-item" href="{{ auth()->user()->role_uti === 'proprietaire' ? route('proprietaire.profile.index') : route('locataire.profile.index') }}">Modifier le profil</a></li>
                                 <li><a class="dropdown-item" href="{{ route('profile.password.form') }}">Changer le mot de passe</a></li>
                                 <li><a class="dropdown-item text-danger" href="{{ route('profile.delete.form') }}">Supprimer le compte</a></li>
                                 <li><hr class="dropdown-divider"></li>
