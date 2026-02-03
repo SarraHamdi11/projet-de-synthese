@@ -308,7 +308,7 @@
                 </div>
                 
                 <div class="property-card scroll-animate">
-                    <img src="https://images.unsplash.com/photo-1522708323490-b6c3297ec627?w=600&h=400&fit=crop" alt="Studio" class="property-image">
+                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop" alt="Studio" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Studio Centre-Ville</h3>
                         <div class="property-price">4,200 DH/mois</div>
