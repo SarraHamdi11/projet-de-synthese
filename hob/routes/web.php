@@ -83,6 +83,11 @@ Route::prefix('proprietaire')->name('proprietaire.')->middleware(['auth', 'role:
     Route::get('/annonces/create/{logement_id}', [AnnoncepropController::class, 'create'])->name('annonces.create');
     Route::post('/annonces/store', [AnnoncepropController::class, 'store'])->name('annonces.store');
     Route::get('/reservations', [ReservationpropController::class, 'index'])->name('reservations.index');
+    
+    // Additional routes for navigation
+    Route::get('/annoncesproprietaire', [AnnoncepropController::class, 'index'])->name('annoncesproprietaire.index');
+    Route::get('/profile', [LogementpropController::class, 'profile'])->name('profile.index');
+    Route::get('/messages', [LogementpropController::class, 'messages'])->name('messages.index');
 });
 
 // Locataire routes
@@ -93,6 +98,11 @@ Route::prefix('locataire')->name('locataire.')->middleware(['auth', 'role:locata
     Route::get('/reservations', [ReservationlocaController::class, 'index'])->name('reservations.index');
     Route::post('/reservations/store', [ReservationlocaController::class, 'store'])->name('reservations.store');
     Route::get('/reservations/create/{annonce_id}', [ReservationlocaController::class, 'create'])->name('reservations.create');
+    
+    // Additional routes for navigation
+    Route::get('/annonces', [LogementlocaController::class, 'annonces'])->name('annonces.index');
+    Route::get('/profile', [LogementlocaController::class, 'profile'])->name('profile.index');
+    Route::get('/messages', [LogementlocaController::class, 'messages'])->name('messages.index');
 });
 
 // Message routes

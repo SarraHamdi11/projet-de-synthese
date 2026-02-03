@@ -26,6 +26,19 @@ class ReservationpropController extends Controller
             $query->where('proprietaire_id', Auth::id());
         })->with('locataire', 'logement')->latest()->paginate(10);
         
-        return view('proprietaire.reservations.index', compact('reservations'));
+        // Get statistics
+        $totalReservations = Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->count();
+        
+        $pendingReservations = Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('statut_res', 'en_attente')->count();
+        
+        $confirmedReservations = Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('statut_res', 'confirmee')->count();
+        
+        return view('proprietaire.reservations.index', compact('reservations', 'totalReservations', 'pendingReservations', 'confirmedReservations'));
     }
 }

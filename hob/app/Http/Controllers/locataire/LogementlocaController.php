@@ -252,4 +252,39 @@ class LogementlocaController extends Controller
     {
         return $this->indexLocataire(request());
     }
+
+    public function annonces()
+    {
+        $user = Auth::user();
+        $annonces = \App\Models\Annonce::with(['logement'])
+            ->whereHas('logement', function($query) use ($user) {
+                $query->where('proprietaire_id', '!=', $user->id);
+            })
+            ->where('disponibilite_annonce', true)
+            ->latest()
+            ->paginate(12);
+            
+        return view('locataire.annonces.index', compact('annonces'));
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('locataire.profile', compact('user'));
+    }
+
+    public function messages()
+    {
+        $user = Auth::user();
+        $conversations = \App\Models\Conversation::where(function($query) use ($user) {
+            $query->where('expediteur_id', $user->id)
+                  ->orWhere('destinataire_id', $user->id);
+        })->with(['expediteur', 'destinataire', 'messages' => function($query) {
+            $query->latest()->first();
+        }])
+        ->latest('date_debut_conv')
+        ->get();
+        
+        return view('locataire.messages.index', compact('conversations'));
+    }
 }

@@ -10,28 +10,37 @@ use App\Models\Utilisateur;
 
 class LogementpropController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (auth()->user()->role_uti !== 'proprietaire') {
+                return redirect()->route('visitor')->with('error', 'Accès non autorisé');
+            }
+            return $next($request);
+        });
+    }
     public function index(Request $request)
     {
-        $realUserIds = Utilisateur::whereIn('role_uti', ['proprietaire', 'locataire'])
-            ->whereNotNull('email_uti')
-            ->where('email_uti', '!=', '')
-            ->whereNotNull('tel_uti')
-            ->where('tel_uti', '!=', '')
-            ->whereNotNull('prenom')
-            ->where('prenom', '!=', '')
-            ->whereNotNull('nom_uti')
-            ->where('nom_uti', '!=', '')
-            ->whereNotNull('date_naissance')
-            ->pluck('id');
-        $query = \App\Models\Logement::with('proprietaire')
-            ->whereIn('proprietaire_id', $realUserIds);
+        // Get only current user's properties
+        $query = Logement::with(['proprietaire', 'annonce'])
+            ->where('proprietaire_id', Auth::id());
 
         $perPage = 9;
         $page = $request->input('page', 1);
         $filteredListings = $query->paginate($perPage, ['*'], 'page', $page);
         $total = $filteredListings->total();
 
-        return view('proprietaire.Logements', compact('filteredListings', 'total', 'perPage', 'page'));
+        // Get statistics for dashboard
+        $totalProperties = Logement::where('proprietaire_id', Auth::id())->count();
+        $totalReservations = \App\Models\Reservation::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->count();
+        $activeAnnonces = \App\Models\Annonce::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('disponibilite_annonce', true)->count();
+
+        return view('proprietaire.accueilproprietaire', compact('filteredListings', 'total', 'perPage', 'page', 'totalProperties', 'totalReservations', 'activeAnnonces'));
     }
 
     public function details($id)
@@ -89,7 +98,12 @@ class LogementpropController extends Controller
 
     public function logements()
     {
-        return $this->index(request());
+        $logements = Logement::with(['annonce', 'proprietaire'])
+            ->where('proprietaire_id', Auth::id())
+            ->latest()
+            ->paginate(12);
+
+        return view('proprietaire.logements', compact('logements'));
     }
 
     public function create()
@@ -100,12 +114,23 @@ class LogementpropController extends Controller
     public function edit($id)
     {
         $logement = Logement::findOrFail($id);
+        
+        // Check if the logement belongs to the current user
+        if ($logement->proprietaire_id !== Auth::id()) {
+            return redirect()->route('proprietaire.logements.index')->with('error', 'Accès non autorisé');
+        }
+        
         return view('proprietaire.edit', compact('logement'));
     }
 
     public function update(Request $request, $id)
     {
         $logement = Logement::findOrFail($id);
+        
+        // Check if the logement belongs to the current user
+        if ($logement->proprietaire_id !== Auth::id()) {
+            return redirect()->route('proprietaire.logements.index')->with('error', 'Accès non autorisé');
+        }
         
         $request->validate([
             'titre' => 'required|string|max:255',
@@ -134,9 +159,36 @@ class LogementpropController extends Controller
     public function delete($id)
     {
         $logement = Logement::findOrFail($id);
+        
+        // Check if the logement belongs to the current user
+        if ($logement->proprietaire_id !== Auth::id()) {
+            return redirect()->route('proprietaire.logements.index')->with('error', 'Accès non autorisé');
+        }
+        
         $logement->delete();
         
         return redirect()->route('proprietaire.logements.index')
             ->with('success', 'Logement supprimé avec succès.');
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('proprietaire.profile', compact('user'));
+    }
+
+    public function messages()
+    {
+        $user = Auth::user();
+        $conversations = \App\Models\Conversation::where(function($query) use ($user) {
+            $query->where('expediteur_id', $user->id)
+                  ->orWhere('destinataire_id', $user->id);
+        })->with(['expediteur', 'destinataire', 'messages' => function($query) {
+            $query->latest()->first();
+        }])
+        ->latest('date_debut_conv')
+        ->get();
+        
+        return view('proprietaire.messages.index', compact('conversations'));
     }
 }

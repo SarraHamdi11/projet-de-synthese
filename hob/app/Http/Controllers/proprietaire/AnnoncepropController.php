@@ -25,9 +25,18 @@ class AnnoncepropController extends Controller
     {
         $annonces = Annonce::whereHas('logement', function($query) {
             $query->where('proprietaire_id', Auth::id());
-        })->latest()->paginate(10);
+        })->with('logement')->latest()->paginate(10);
         
-        return view('proprietaire.annonces.index', compact('annonces'));
+        // Get statistics
+        $totalAnnonces = Annonce::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->count();
+        
+        $activeAnnonces = Annonce::whereHas('logement', function($query) {
+            $query->where('proprietaire_id', Auth::id());
+        })->where('disponibilite_annonce', true)->count();
+        
+        return view('proprietaire.annonces.index', compact('annonces', 'totalAnnonces', 'activeAnnonces'));
     }
 
     public function create($logement_id)
