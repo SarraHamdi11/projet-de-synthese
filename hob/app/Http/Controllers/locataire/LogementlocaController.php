@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Auth;
 
 class LogementlocaController extends Controller
 {
+    public function index()
+    {
+        return view('locataire.accueillocataire');
+    }
+
     public function indexLocataire(Request $request)
     {
         $user = Auth::user();
