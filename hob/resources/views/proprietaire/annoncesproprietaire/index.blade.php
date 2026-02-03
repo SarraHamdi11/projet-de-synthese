@@ -82,23 +82,6 @@
     transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
-
-.modal-content {
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-}
-
-.modal-header {
-    background: linear-gradient(135deg, #7C9FC0 0%, #24507a 100%);
-    color: white;
-    border-radius: 20px 20px 0 0;
-    border: none;
-}
-
-.modal-body {
-    padding: 2rem;
-}
 </style>
 
 <div class="container mx-auto px-4 py-5">
@@ -130,118 +113,97 @@
     {{-- Formulaire de création avec design professionnel --}}
     <div class="text-center mb-5">
         <h2 class="title-font section-title" style="color:#244F76; font-weight:700; font-size:2.5rem;">
-            Mes Annonces
+            Créer une annonce
         </h2>
-        <p class="text-muted mt-3" style="font-size: 1.1rem;">Gérez vos annonces de logement</p>
+        <p class="text-muted mt-3" style="font-size: 1.1rem;">Publiez votre annonce de logement en quelques clics</p>
     </div>
 
     <div class="row justify-content-center mb-5">
         <div class="col-lg-8">
             <div class="professional-card p-4 p-md-5">
-                <div class="text-center mb-4">
-                    <button type="button" class="btn btn-primary-custom btn-lg" data-bs-toggle="modal" data-bs-target="#createAnnonceModal">
-                        <i class="fas fa-plus-circle me-2"></i>Créer une nouvelle annonce
-                    </button>
-                </div>
+                <form method="POST" action="{{ route('proprietaire.annonces.store') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="logement_id" class="form-label">
+                                <i class="fas fa-home me-2"></i>Sélectionner un logement
+                            </label>
+                            @php
+                                $logements = \App\Models\Logement::where('proprietaire_id', auth()->user()->id)->get();
+                            @endphp
+                            <select name="logement_id" id="logement_id" class="form-select" required>
+                                <option value="">Choisir un logement...</option>
+                                @forelse($logements as $logement)
+                                    <option value="{{ $logement->id }}">
+                                        {{ $logement->titre_log ?? 'Logement #' . $logement->id }} - {{ $logement->prix_log ?? 0 }} DH/mois
+                                    </option>
+                                @empty
+                                    <option value="" disabled>Aucun logement disponible</option>
+                                @endforelse
+                            </select>
+                            @error('logement_id')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
 
-                <!-- Create Annonce Modal -->
-                <div class="modal fade" id="createAnnonceModal" tabindex="-1" aria-labelledby="createAnnonceModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="createAnnonceModalLabel">
-                                    <i class="fas fa-plus-circle me-2"></i>Créer une annonce
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form action="{{ route('proprietaire.annonces.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="modal-body">
-                                    <div class="row g-4">
-                                        <div class="col-md-6">
-                                            <label for="logement_id" class="form-label">
-                                                <i class="fas fa-home me-2"></i>Sélectionner un logement
-                                            </label>
-                                            @php
-                                                $logements = \App\Models\Logement::where('proprietaire_id', auth()->user()->id)->get();
-                                            @endphp
-                                            <select name="logement_id" id="logement_id" class="form-select" required>
-                                                <option value="">Choisir un logement...</option>
-                                                @forelse($logements as $logement)
-                                                    <option value="{{ $logement->id }}">
-                                                        {{ $logement->titre_log ?? 'Logement #' . $logement->id }} - {{ $logement->prix_log ?? 0 }} DH/mois
-                                                    </option>
-                                                @empty
-                                                    <option value="" disabled>Aucun logement disponible</option>
-                                                @endforelse
-                                            </select>
-                                            @error('logement_id')
-                                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                                            @enderror
-                                        </div>
+                        <div class="col-md-6">
+                            <label for="titre_anno" class="form-label">
+                                <i class="fas fa-heading me-2"></i>Titre de l'annonce
+                            </label>
+                            <input type="text" name="titre_anno" id="titre_anno" class="form-control" 
+                                   value="{{ old('titre_anno') }}" required placeholder="Ex: Appartement moderne centre-ville">
+                            @error('titre_anno')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
 
-                                        <div class="col-md-6">
-                                            <label for="titre_anno" class="form-label">
-                                                <i class="fas fa-heading me-2"></i>Titre de l'annonce
-                                            </label>
-                                            <input type="text" name="titre_anno" id="titre_anno" class="form-control" 
-                                                   value="{{ old('titre_anno') }}" required placeholder="Ex: Appartement moderne centre-ville">
-                                            @error('titre_anno')
-                                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                                            @enderror
-                                        </div>
+                        <div class="col-12">
+                            <label for="description_anno" class="form-label">
+                                <i class="fas fa-align-left me-2"></i>Description détaillée
+                            </label>
+                            <textarea name="description_anno" id="description_anno" rows="5" class="form-control" 
+                                      required placeholder="Décrivez votre logement, les commodités...">{{ old('description_anno') }}</textarea>
+                            @error('description_anno')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
 
-                                        <div class="col-12">
-                                            <label for="description_anno" class="form-label">
-                                                <i class="fas fa-align-left me-2"></i>Description détaillée
-                                            </label>
-                                            <textarea name="description_anno" id="description_anno" rows="5" class="form-control" 
-                                                      required placeholder="Décrivez votre logement, les commodités...">{{ old('description_anno') }}</textarea>
-                                            @error('description_anno')
-                                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                                            @enderror
-                                        </div>
+                        <div class="col-md-6">
+                            <label for="disponibilite_annonce" class="form-label">
+                                <i class="fas fa-calendar-check me-2"></i>Disponibilité
+                            </label>
+                            <select name="disponibilite_annonce" id="disponibilite_annonce" class="form-select" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="1" {{ old('disponibilite_annonce', 1) == 1 ? 'selected' : '' }}>Disponible immédiatement</option>
+                                <option value="0" {{ old('disponibilite_annonce') == 0 ? 'selected' : '' }}>Non disponible</option>
+                            </select>
+                            @error('disponibilite_annonce')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                        </div>
 
-                                        <div class="col-md-6">
-                                            <label for="disponibilite_annonce" class="form-label">
-                                                <i class="fas fa-calendar-check me-2"></i>Disponibilité
-                                            </label>
-                                            <select name="disponibilite_annonce" id="disponibilite_annonce" class="form-select" required>
-                                                <option value="">Sélectionner...</option>
-                                                <option value="1" {{ old('disponibilite_annonce', 1) == 1 ? 'selected' : '' }}>Disponible immédiatement</option>
-                                                <option value="0" {{ old('disponibilite_annonce') == 0 ? 'selected' : '' }}>Non disponible</option>
-                                            </select>
-                                            @error('disponibilite_annonce')
-                                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <label for="photos_annonce" class="form-label">
-                                                <i class="fas fa-camera me-2"></i>Photos du logement
-                                            </label>
-                                            <input type="file" name="photos[]" id="photos_annonce" multiple 
-                                                   accept="image/jpeg,image/png,image/jpg" class="form-control">
-                                            <small class="text-muted mt-1">Formats acceptés: JPG, PNG. Plusieurs photos possibles.</small>
-                                            @error('photos.*')
-                                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                                            @enderror
-                                            @error('photos')
-                                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                    <button type="submit" class="btn btn-primary-custom">
-                                        <i class="fas fa-paper-plane me-2"></i>Publier l'annonce
-                                    </button>
-                                </div>
-                            </form>
+                        <div class="col-md-6">
+                            <label for="photos_annonce" class="form-label">
+                                <i class="fas fa-camera me-2"></i>Photos du logement
+                            </label>
+                            <input type="file" name="photos[]" id="photos_annonce" multiple 
+                                   accept="image/jpeg,image/png,image/jpg" class="form-control">
+                            <small class="text-muted mt-1">Formats acceptés: JPG, PNG. Plusieurs photos possibles.</small>
+                            @error('photos.*')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
+                            @error('photos')
+                                <div class="text-danger mt-2"><small>{{ $message }}</small></div>
+                            @enderror
                         </div>
                     </div>
-                </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary-custom btn-lg">
+                            <i class="fas fa-paper-plane me-2"></i>Publier l'annonce
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -249,9 +211,9 @@
     {{-- Liste des annonces avec design amélioré --}}
     <div class="text-center mb-5">
         <h2 class="title-font section-title" style="color: #244F76; font-size: 2.2rem; font-weight: 700;">
-            Vos Annonces Publiées
+            Mes Annonces
         </h2>
-        <p class="text-muted mt-3">Consultez et gérez vos annonces actives</p>
+        <p class="text-muted mt-3">Gérez vos annonces de logement</p>
     </div>
 
     <div class="row g-4" id="annoncesList">
@@ -284,7 +246,7 @@
             <div class="col-12 text-center py-5">
                 <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
                 <h5 class="text-muted">Aucune annonce pour le moment</h5>
-                <p class="text-muted">Cliquez sur "Créer une nouvelle annonce" pour commencer</p>
+                <p class="text-muted">Utilisez le formulaire ci-dessus pour créer votre première annonce</p>
             </div>
         @endforelse
     </div>
