@@ -48,6 +48,62 @@ class MessageController extends Controller
             ->update(['is_read' => true, 'read_at' => now()]);
 
         // Broadcast read status
+        event(new MessageRead(Auth::id(), $receiverId));
+
+        return view('messages.show', compact('messages', 'receiver'));
+    }
+
+    public function send(Request $request)
+    {
+        $request->validate([
+            'receiver_id' => 'required|exists:utilisateurs,id',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        $message = Message::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $request->receiver_id,
+            'contenu_msg' => $request->message,
+            'date_envoi_msg' => now(),
+            'is_read' => false,
+        ]);
+
+        // Broadcast new message event
+        event(new NewMessage($message));
+
+        return back()->with('success', 'Message envoyé');
+    }
+
+    public function viewConversation($id)
+    {
+        return $this->show($id);
+    }
+
+    public function deleteConversation($id)
+    {
+        $conversation = Conversation::findOrFail($id);
+        
+        if ($conversation->expediteur_id !== Auth::id() && $conversation->destinataire_id !== Auth::id()) {
+            return back()->with('error', 'Accès non autorisé');
+        }
+
+        $conversation->delete();
+        
+        return redirect()->route('messages.index')->with('success', 'Conversation supprimée');
+    }
+
+    public function deleteMessage($id)
+    {
+        $message = Message::findOrFail($id);
+        
+        if ($message->sender_id !== Auth::id()) {
+            return back()->with('error', 'Accès non autorisé');
+        }
+
+        $message->delete();
+        
+        return back()->with('success', 'Message supprimé');
+    }
         foreach ($messages as $message) {
             if ($message->sender_id === Auth::id()) {
                 broadcast(new MessageRead($message))->toOthers();

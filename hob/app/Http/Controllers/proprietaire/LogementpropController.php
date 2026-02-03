@@ -86,4 +86,57 @@ class LogementpropController extends Controller
         return redirect()->route('proprietaire.logements.index')
             ->with('success', 'Logement créé avec succès.');
     }
+
+    public function logements()
+    {
+        return $this->index(request());
+    }
+
+    public function create()
+    {
+        return view('proprietaire.create');
+    }
+
+    public function edit($id)
+    {
+        $logement = Logement::findOrFail($id);
+        return view('proprietaire.edit', compact('logement'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $logement = Logement::findOrFail($id);
+        
+        $request->validate([
+            'titre' => 'required|string|max:255',
+            'description' => 'required|string',
+            'prix' => 'required|numeric|min:0',
+            'localisation' => 'required|string|max:255',
+            'type' => 'required|string|in:appartement,maison,studio',
+            'nombre_colocataire' => 'required|integer|min:1',
+            'ville' => 'required|string|max:255',
+        ]);
+
+        $logement->update([
+            'titre_log' => $request->titre,
+            'description_log' => $request->description,
+            'prix_log' => $request->prix,
+            'localisation_log' => $request->localisation,
+            'type_log' => $request->type,
+            'nombre_colocataire_log' => $request->nombre_colocataire,
+            'ville' => $request->ville,
+        ]);
+
+        return redirect()->route('proprietaire.logements.index')
+            ->with('success', 'Logement mis à jour avec succès.');
+    }
+
+    public function delete($id)
+    {
+        $logement = Logement::findOrFail($id);
+        $logement->delete();
+        
+        return redirect()->route('proprietaire.logements.index')
+            ->with('success', 'Logement supprimé avec succès.');
+    }
 }

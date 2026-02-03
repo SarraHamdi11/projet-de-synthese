@@ -238,4 +238,9 @@ class LogementlocaController extends Controller
 
         return view('locataire.details', compact('logement', 'proprietaire', 'photos'));
     }
+
+    public function logementsloca()
+    {
+        return $this->indexLocataire(request());
+    }
 }
