@@ -264,13 +264,13 @@ class LogementlocaController extends Controller
             ->latest()
             ->paginate(12);
             
-        return view('locataire.annonces.index', compact('annonces'));
+        return view('locataire.annonceslocataire', compact('annonces'));
     }
 
     public function profile()
     {
         $user = Auth::user();
-        return view('locataire.profile', compact('user'));
+        return view('locataire.myprofile', compact('user'));
     }
 
     public function messages()
@@ -285,6 +285,6 @@ class LogementlocaController extends Controller
         ->latest('date_debut_conv')
         ->get();
         
-        return view('locataire.messages.index', compact('conversations'));
+        return view('messages.index', compact('conversations'));
     }
 }

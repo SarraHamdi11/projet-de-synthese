@@ -174,7 +174,7 @@ class LogementpropController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('proprietaire.profile', compact('user'));
+        return view('proprietaire.myprofile', compact('user'));
     }
 
     public function messages()
@@ -189,6 +189,6 @@ class LogementpropController extends Controller
         ->latest('date_debut_conv')
         ->get();
         
-        return view('proprietaire.messages.index', compact('conversations'));
+        return view('messages.index', compact('conversations'));
     }
 }
