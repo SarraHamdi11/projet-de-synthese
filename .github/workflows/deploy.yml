@@ -58,6 +58,7 @@ jobs:
     - name: Prepare Laravel for production
       run: |
         cd hob
+        php artisan key:generate --force
         php artisan config:cache
         php artisan route:cache
 
