@@ -464,6 +464,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             const animateElements = document.querySelectorAll('.scroll-animate');
             animateElements.forEach(el => observer.observe(el));
+            
+            // Animate stats immediately on page load
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                const target = parseFloat(stat.getAttribute('data-target'));
+                if (!isNaN(target)) {
+                    animateCounter(stat, target);
+                }
+            });
         });
 
         // Counter animation for stats
@@ -487,7 +495,7 @@
             }, 16);
         }
 
-        // Animate stats when they come into view
+        // Animate stats when they come into view (backup)
         const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
