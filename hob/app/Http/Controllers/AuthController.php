@@ -167,6 +167,9 @@ public function visitor()
         $photoPath = null;
         if ($request->hasFile('photodeprofil_uti')) {
             $photoPath = $request->file('photodeprofil_uti')->store('profiles', 'public');
+            Log::info('Profile picture uploaded', ['path' => $photoPath]);
+        } else {
+            Log::info('No profile picture uploaded');
         }
 
         $user = Utilisateur::create([
@@ -182,7 +185,7 @@ public function visitor()
             'photodeprofil_uti' => $photoPath,
         ]);
 
-        Log::info('User created successfully', ['user_id' => $user->id, 'email' => $user->email_uti]);
+        Log::info('User created successfully', ['user_id' => $user->id, 'email' => $user->email_uti, 'photo_path' => $user->photodeprofil_uti]);
 
         try {
             Auth::login($user);
