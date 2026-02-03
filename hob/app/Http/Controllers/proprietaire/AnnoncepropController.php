@@ -75,6 +75,9 @@ class AnnoncepropController extends Controller
             $annonce->titre_anno = $request->titre_anno;
             $annonce->description_anno = $request->description_anno;
             $annonce->disponibilite_annonce = $request->disponibilite_annonce;
+            $annonce->statut_anno = 'active';
+            $annonce->date_publication_anno = now();
+            $annonce->proprietaire_id = Auth::id();
             $annonce->save();
 
             return redirect()->route('proprietaire.annoncesproprietaire.index')->with('success', 'Annonce créée avec succès!');
