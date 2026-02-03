@@ -69,9 +69,11 @@ jobs:
         # Create a clean deploy directory
         mkdir deploy
         rsync -av --exclude-from=.deployexclude . deploy/
+        # Move public contents to root for shared hosting
+        cp -r public/* deploy/
         # Ensure .htaccess is at the root
         cp .htaccess deploy/
-        # Ensure storage folders exist but are empty (shared hosting will fill them)
+        # Create storage folders but keep them minimal
         mkdir -p deploy/storage/app/public
         mkdir -p deploy/storage/framework/cache
         mkdir -p deploy/storage/framework/sessions
@@ -79,6 +81,9 @@ jobs:
         touch deploy/storage/framework/cache/.gitkeep
         touch deploy/storage/framework/sessions/.gitkeep
         touch deploy/storage/framework/views/.gitkeep
+        # Set proper permissions for shared hosting
+        chmod -R 755 deploy/
+        chmod -R 777 deploy/storage/
 
     - name: Deploy via FTP
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
