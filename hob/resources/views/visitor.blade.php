@@ -315,7 +315,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Sample Properties -->
                 <div class="property-card scroll-animate">
-                    <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500" alt="Appartement" class="property-image">
+                    <img src="{{ asset('images/header_images.jpg') }}" alt="Appartement" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Appartement Moderne</h3>
                         <div class="property-price">8,500 DH/mois</div>
@@ -327,7 +327,7 @@
                 </div>
                 
                 <div class="property-card scroll-animate">
-                    <img src="https://images.unsplash.com/photo-1570129477491-45c16e536a6f?w=500" alt="Villa" class="property-image">
+                    <img src="{{ asset('images/header_images.jpg') }}" alt="Villa" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Villa de Luxe</h3>
                         <div class="property-price">15,000 DH/mois</div>
@@ -339,7 +339,7 @@
                 </div>
                 
                 <div class="property-card scroll-animate">
-                    <img src="https://images.unsplash.com/photo-1522708323490-b6c3297ec627?w=500" alt="Studio" class="property-image">
+                    <img src="{{ asset('images/header_images.jpg') }}" alt="Studio" class="property-image">
                     <div class="property-content">
                         <h3 class="property-type">Studio Centre-Ville</h3>
                         <div class="property-price">4,200 DH/mois</div>
@@ -492,8 +492,10 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
                     const target = parseFloat(entry.target.getAttribute('data-target'));
-                    animateCounter(entry.target, target);
-                    entry.target.classList.add('animated');
+                    if (!isNaN(target)) {
+                        animateCounter(entry.target, target);
+                        entry.target.classList.add('animated');
+                    }
                 }
             });
         }, { threshold: 0.5 });
