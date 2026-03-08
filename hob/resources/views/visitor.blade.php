@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FindStay - Votre Propriété, Notre Excellence</title>
+    <title>FindStay - Your Property, Our Excellence</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -226,14 +226,14 @@
     <!-- Hero Section -->
     <header class="hero-section">
         <div class="hero-content">
-            <h1 class="hero-title">Trouvez Votre Propriété Idéale</h1>
-            <p class="hero-subtitle">Découvrez des logements exceptionnels à travers le Maroc avec FindStay</p>
+            <h1 class="hero-title">Find Your Ideal Property</h1>
+            <p class="hero-subtitle">Discover exceptional accommodations across Morocco with FindStay</p>
             <div class="hero-buttons">
                 <a href="{{ route('login') }}" class="btn-hero btn-primary-hero">
-                    <i class="fas fa-sign-in-alt"></i> Se Connecter
+                    <i class="fas fa-sign-in-alt"></i> Sign In
                 </a>
                 <a href="{{ route('signup') }}" class="btn-hero btn-secondary-hero">
-                    <i class="fas fa-user-plus"></i> S'inscrire
+                    <i class="fas fa-user-plus"></i> Sign Up
                 </a>
             </div>
         </div>
@@ -242,34 +242,34 @@
     <!-- Cities Section -->
     <section class="py-16 bg-gray-50">
         <div class="container mx-auto px-4">
-            <h2 class="section-title">Villes Populaires</h2>
-            <p class="section-subtitle">Explorez nos logements dans les villes les plus recherchées</p>
+            <h2 class="section-title">Popular Cities</h2>
+            <p class="section-subtitle">Explore our properties in the most sought-after cities</p>
             
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 <div class="enhanced-card">
                     <div class="stat-icon"><i class="fas fa-city"></i></div>
                     <div class="font-bold text-lg">Casablanca</div>
-                    <div class="text-gray-600">250+ logements</div>
+                    <div class="text-gray-600">250+ properties</div>
                 </div>
                 <div class="enhanced-card">
                     <div class="stat-icon"><i class="fas fa-mosque"></i></div>
                     <div class="font-bold text-lg">Marrakech</div>
-                    <div class="text-gray-600">180+ logements</div>
+                    <div class="text-gray-600">180+ properties</div>
                 </div>
                 <div class="enhanced-card">
                     <div class="stat-icon"><i class="fas fa-umbrella-beach"></i></div>
                     <div class="font-bold text-lg">Agadir</div>
-                    <div class="text-gray-600">120+ logements</div>
+                    <div class="text-gray-600">120+ properties</div>
                 </div>
                 <div class="enhanced-card">
                     <div class="stat-icon"><i class="fas fa-mountain"></i></div>
                     <div class="font-bold text-lg">Fès</div>
-                    <div class="text-gray-600">95+ logements</div>
+                    <div class="text-gray-600">95+ properties</div>
                 </div>
                 <div class="enhanced-card">
                     <div class="stat-icon"><i class="fas fa-anchor"></i></div>
                     <div class="font-bold text-lg">Tanger</div>
-                    <div class="text-gray-600">85+ logements</div>
+                    <div class="text-gray-600">85+ properties</div>
                 </div>
             </div>
         </div>
@@ -278,16 +278,16 @@
     <!-- Enhanced Properties Section -->
     <section class="py-16">
         <div class="container mx-auto px-4">
-            <h2 class="section-title scroll-animate">Dernières Propriétés</h2>
-            <p class="section-subtitle scroll-animate">Découvrez nos logements les plus récents</p>
+            <h2 class="section-title scroll-animate">Latest Properties</h2>
+            <p class="section-subtitle scroll-animate">Discover our most recent properties</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Sample Properties -->
                 <div class="property-card scroll-animate">
                     <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop" alt="Appartement" class="property-image">
                     <div class="property-content">
-                        <h3 class="property-type">Appartement Moderne</h3>
-                        <div class="property-price">8,500 DH/mois</div>
+                        <h3 class="property-type">Modern Apartment</h3>
+                        <div class="property-price">8,500 DH/month</div>
                         <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> Casablanca</div>
                         <div class="flex justify-center gap-1">
                             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
@@ -298,8 +298,8 @@
                 <div class="property-card scroll-animate">
                     <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop" alt="Villa" class="property-image">
                     <div class="property-content">
-                        <h3 class="property-type">Villa de Luxe</h3>
-                        <div class="property-price">15,000 DH/mois</div>
+                        <h3 class="property-type">Luxury Villa</h3>
+                        <div class="property-price">15,000 DH/month</div>
                         <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> Marrakech</div>
                         <div class="flex justify-center gap-1">
                             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">☆</span>
@@ -310,8 +310,8 @@
                 <div class="property-card scroll-animate">
                     <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop" alt="Studio" class="property-image">
                     <div class="property-content">
-                        <h3 class="property-type">Studio Centre-Ville</h3>
-                        <div class="property-price">4,200 DH/mois</div>
+                        <h3 class="property-type">Downtown Studio</h3>
+                        <div class="property-price">4,200 DH/month</div>
                         <div class="text-gray-600 mb-2"><i class="fas fa-map-marker-alt"></i> Rabat</div>
                         <div class="flex justify-center gap-1">
                             <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
@@ -325,29 +325,29 @@
     <!-- Enhanced Stats Section -->
     <section class="stats-section">
         <div class="container mx-auto px-4">
-            <h2 class="section-title text-white scroll-animate">Des Chiffres Qui Parlent</h2>
-            <p class="section-subtitle text-white opacity-90 scroll-animate">L'excellence de notre service à travers des statistiques impressionnantes</p>
+            <h2 class="section-title text-white scroll-animate">Numbers That Speak</h2>
+            <p class="section-subtitle text-white opacity-90 scroll-animate">Excellence of our service through impressive statistics</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="text-center scroll-animate">
                     <div class="stat-icon"><i class="fas fa-home"></i></div>
                     <div class="stat-number" data-target="1250">0</div>
-                    <div class="stat-label">Logements Disponibles</div>
+                    <div class="stat-label">Available Properties</div>
                 </div>
                 <div class="text-center scroll-animate">
                     <div class="stat-icon"><i class="fas fa-users"></i></div>
                     <div class="stat-number" data-target="85000">0</div>
-                    <div class="stat-label">Utilisateurs Actifs</div>
+                    <div class="stat-label">Active Users</div>
                 </div>
                 <div class="text-center scroll-animate">
                     <div class="stat-icon"><i class="fas fa-star"></i></div>
                     <div class="stat-number" data-target="4.9">0</div>
-                    <div class="stat-label">Satisfaction Client</div>
+                    <div class="stat-label">Customer Satisfaction</div>
                 </div>
                 <div class="text-center scroll-animate">
                     <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
                     <div class="stat-number" data-target="320">0</div>
-                    <div class="stat-label">Réservations Mensuelles</div>
+                    <div class="stat-label">Monthly Reservations</div>
                 </div>
             </div>
         </div>
@@ -356,16 +356,16 @@
     <!-- Enhanced CTA Section -->
     <section class="cta-section" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 5rem 0; text-align: center; color: white; position: relative;">
         <div class="container mx-auto px-4">
-            <h2 class="section-title text-white scroll-animate">Prêt à Trouver Votre Chez-Vous ?</h2>
-            <p class="section-subtitle text-white opacity-90 scroll-animate">Rejoignez des milliers de clients satisfaits</p>
+            <h2 class="section-title text-white scroll-animate">Ready to Find Your Home?</h2>
+            <p class="section-subtitle text-white opacity-90 scroll-animate">Join thousands of satisfied customers</p>
             <div class="flex justify-center flex-wrap gap-4 scroll-animate">
                 <a href="{{ route('signup') }}" class="btn btn-white">
                     <i class="fas fa-rocket"></i>
-                    Commencer Maintenant
+                    Get Started Now
                 </a>
                 <a href="{{ route('login') }}" class="btn btn-outline">
                     <i class="fas fa-sign-in-alt"></i>
-                    Se Connecter
+                    Sign In
                 </a>
             </div>
         </div>
@@ -378,7 +378,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                 <div>
                     <h3 class="text-xl font-bold mb-4">FindStay</h3>
-                    <p class="mb-4">Trouvez votre chez-vous avec FindStay. Facile, rapide, fiable.</p>
+                    <p class="mb-4">Find your home with FindStay. Easy, fast, reliable.</p>
                     <div class="flex gap-4">
                         <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-facebook"></i></a>
                         <a href="#" class="text-2xl hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
@@ -389,17 +389,17 @@
                 <div>
                     <h3 class="text-xl font-bold mb-4">Services</h3>
                     <div class="footer-links space-y-2">
-                        <a href="#properties" class="block hover:text-blue-400 transition">Propriétés</a>
-                        <a href="#stats" class="block hover:text-blue-400 transition">Statistiques</a>
-                        <a href="#" class="block hover:text-blue-400 transition">À Propos</a>
+                        <a href="#properties" class="block hover:text-blue-400 transition">Properties</a>
+                        <a href="#stats" class="block hover:text-blue-400 transition">Statistics</a>
+                        <a href="#" class="block hover:text-blue-400 transition">About</a>
                         <a href="#" class="block hover:text-blue-400 transition">Contact</a>
                     </div>
                 </div>
                 <div>
                     <h3 class="text-xl font-bold mb-4">Pages</h3>
                     <div class="footer-links space-y-2">
-                        <a href="{{ route('login') }}" class="block hover:text-blue-400 transition">Connexion</a>
-                        <a href="{{ route('signup') }}" class="block hover:text-blue-400 transition">Inscription</a>
+                        <a href="{{ route('login') }}" class="block hover:text-blue-400 transition">Login</a>
+                        <a href="{{ route('signup') }}" class="block hover:text-blue-400 transition">Sign Up</a>
                     </div>
                 </div>
                 <div>
@@ -410,7 +410,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 pt-4 text-center">
-                <p>&copy; 2025 FindStay. Tous droits réservés.</p>
+                <p>&copy; 2025 FindStay. All rights reserved.</p>
             </div>
         </div>
     </footer>

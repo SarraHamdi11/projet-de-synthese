@@ -116,7 +116,8 @@ class MessageController extends Controller
     public function fetch($receiverId)
     {
         $messages = Message::where(function($query) use ($receiverId) {
-            $query->where('sender_id', Auth::id())
+            $query->where('sender_id', Auth::id());
+        })->get();
                   ->where('receiver_id', $receiverId);
         })->orWhere(function($query) use ($receiverId) {
             $query->where('sender_id', $receiverId)
