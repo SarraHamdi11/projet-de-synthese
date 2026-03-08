@@ -257,8 +257,8 @@
 
                                         <!-- Action Buttons -->
                                         <div class="d-grid gap-2">
-                                            <a href="{{ route('showReservation', $listing->id) }}" class="btn btn-primary w-100 rounded-pill fw-medium">
-                                                <i class="fas fa-calendar-check me-2"></i>Réserver
+                                            <a href="{{ route('showDetails', $listing->id) }}" class="btn btn-primary w-100 rounded-pill fw-medium">
+                                                <i class="fas fa-calendar-check me-2"></i>Reserve
                                             </a>
                                             <a href="{{ route('showDetails', $listing->id) }}" class="btn btn-outline-primary w-100 rounded-pill fw-medium">
                                                 <i class="fas fa-info-circle me-2"></i>Détails
