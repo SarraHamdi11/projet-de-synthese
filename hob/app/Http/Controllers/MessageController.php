@@ -104,20 +104,11 @@ class MessageController extends Controller
         
         return back()->with('success', 'Message supprimé');
     }
-        foreach ($messages as $message) {
-            if ($message->sender_id === Auth::id()) {
-                broadcast(new MessageRead($message))->toOthers();
-            }
-        }
-
-        return view('messages.show', compact('messages', 'receiver'));
-    }
 
     public function fetch($receiverId)
     {
         $messages = Message::where(function($query) use ($receiverId) {
-            $query->where('sender_id', Auth::id());
-        })->get();
+            $query->where('sender_id', Auth::id())
                   ->where('receiver_id', $receiverId);
         })->orWhere(function($query) use ($receiverId) {
             $query->where('sender_id', $receiverId)
