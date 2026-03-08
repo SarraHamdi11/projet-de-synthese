@@ -278,8 +278,9 @@
                 </form>
             </div>
         </div>
+    @if(isset($annonces) && $annonces->count() > 0)
+            @endif
     </div>
-    @endif
 
     {{-- Enhanced Liste des annonces --}}
     <div class="text-center mb-5">

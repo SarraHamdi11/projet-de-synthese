@@ -175,16 +175,24 @@ class MessageController extends Controller
 
     public function delete(Message $message)
     {
-        if ($message->sender_id === Auth::id()) {
-            $message->update([
-                'is_deleted' => true,
-                'deleted_at' => now()
-            ]);
+        try {
+            if ($message->sender_id === Auth::id()) {
+                $message->update([
+                    'is_deleted' => true,
+                    'deleted_at' => now()
+                ]);
 
-            return response()->json(['success' => true]);
+                return response()->json(['success' => true]);
+            }
+
+            return response()->json(['success' => false], 403);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
         }
-
-        return response()->json(['success' => false], 403);
     }
 
     public function send(Request $request)
