@@ -148,60 +148,10 @@
         display: inline-block;
         margin-bottom: 40px;
     }
-    
-    .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: linear-gradient(135deg, #447892 0%, #244F76 100%);
-        border-radius: 2px;
-    }
-    
-    .btn-modifier-custom {
-        background: #EBDFD5;
-        color: #244F76;
-        border: none;
-        border-radius: 20px;
-        font-weight: 600;
-        padding: 10px 28px;
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: background 0.2s, color 0.2s;
-    }
-    
-    .btn-modifier-custom:hover {
-        background: #d6c3b2;
-        color: #244F76;
-    }
-    
-    .btn-supprimer-custom {
-        background: #EBDFD5;
-        color: #244F76;
-        border: none;
-        border-radius: 20px;
-        font-weight: 600;
-        padding: 10px 28px;
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: background 0.2s, color 0.2s;
-    }
-    
-    .btn-supprimer-custom:hover {
-        background: #d6c3b2;
-        color: #244F76;
-    }
 </style>
 
 <div class="container mx-auto px-4 py-5">
-    {{-- Messages de succès et d'erreur avec style amélioré --}}
+    {{-- Enhanced Messages de succès et d'erreur --}}
     @if(session('success'))
     <div class="alert alert-success alert-custom d-flex align-items-center" role="alert">
         <svg class="me-3" width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
@@ -214,34 +164,23 @@
     </div>
     @endif
 
-    @if(session('error'))
-    <div class="alert alert-danger alert-custom d-flex align-items-center" role="alert">
-        <svg class="me-3" width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-        </svg>
-        <div>
-            <strong>Erreur!</strong> {{ session('error') }}
-        </div>
-        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    @endif
-
-    {{-- Formulaire de création avec design professionnel --}}
+    {{-- Enhanced Formulaire de création --}}
     <div class="text-center mb-5">
-        <h2 class="title-font section-title" style="color:#244F76; font-weight:700; font-size:2.5rem;">
+        <h2 class="section-title animate-in">
+            <i class="fas fa-bullhorn me-2"></i>
             Créer une annonce
         </h2>
-        <p class="text-muted mt-3" style="font-size: 1.1rem;">Publiez votre annonce de colocation en quelques clics</p>
+        <p class="text-muted mt-3 animate-in" style="font-size: var(--font-lg);">Publiez votre annonce de colocation en quelques clics</p>
     </div>
 
     @if($userLogements->count() == 0)
     <div class="row justify-content-center mb-5">
         <div class="col-lg-8">
-            <div class="alert alert-info text-center">
+            <div class="alert alert-info text-center animate-in">
                 <i class="fas fa-info-circle fa-2x mb-3"></i>
                 <h5>Vous devez d'abord créer un logement</h5>
                 <p>Pour pouvoir créer une annonce, vous devez d'abord ajouter un logement à votre profil.</p>
-                <a href="{{ route('locataire.logements.create') }}" class="btn btn-primary-custom mt-3">
+                <a href="{{ route('locataire.logements.create') }}" class="btn btn-primary-custom mt-3 hover-lift">
                     <i class="fas fa-plus me-2"></i>Créer un logement
                 </a>
             </div>
@@ -249,8 +188,8 @@
     </div>
     @else
     <div class="row justify-content-center mb-5">
-        <div class="col-lg-8">
-            <div class="professional-card p-4 p-md-5">
+        <div class="col-lg-10">
+            <div class="professional-card p-4 p-md-5 animate-in">
                 <form id="form-annonce" method="POST" action="{{ route('locataire.annonces.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row g-4">
@@ -262,7 +201,7 @@
                                 <option value="">Choisir un logement...</option>
                                 @foreach($userLogements as $logement)
                                     <option value="{{ $logement->id }}">
-                                        {{ $logement->titre_log ?? 'Logement #' . $logement->id }} - {{ $logement->prix_log ?? 0 }} DH/mois
+                                        <i class="fas fa-home me-1"></i> {{ $logement->titre_log ?? 'Logement #' . $logement->id }} - {{ $logement->prix_log ?? 0 }} DH/mois
                                     </option>
                                 @endforeach
                             </select>
@@ -332,7 +271,7 @@
                     </div>
 
                     <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary-custom btn-lg">
+                        <button type="submit" class="btn btn-primary-custom btn-lg hover-lift">
                             <i class="fas fa-paper-plane me-2"></i>Publier l'annonce
                         </button>
                     </div>
@@ -340,42 +279,35 @@
             </div>
         </div>
     </div>
-    @endif {{-- Liste des annonces avec design amélioré --}}
+    @endif
+
+    {{-- Enhanced Liste des annonces --}}
     <div class="text-center mb-5">
-        <h2 class="title-font section-title" style="color: #244F76; font-size: 2.2rem; font-weight: 700;">
+        <h2 class="section-title animate-in">
+            <i class="fas fa-list me-2"></i>
             Mes Annonces
         </h2>
-        <p class="text-muted mt-3">Gérez vos annonces de colocation</p>
+        <p class="text-muted mt-3 animate-in" style="font-size: var(--font-lg);">Gérez vos annonces de colocation</p>
     </div>
 
     <div class="row g-4" id="annoncesList">
         @if(isset($annonces) && $annonces->count() > 0)
             @foreach ($annonces as $annonce)
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-4 col-md-6 animate-in">
                     <div class="card-annonce">
-                        {{-- Slider photos avec design moderne --}}
-                        @php
-                            $photos = $annonce->logement && $annonce->logement->photos ? json_decode($annonce->logement->photos, true) : [];
-                            $carouselId = 'carouselAnnonce' . $annonce->id;
-                        @endphp
-                        
-                        <div class="position-relative">
-                            @if($photos && count($photos) > 0)
-                                <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner" style="height:220px;">
-                                        @foreach($photos as $idx => $photo)
-                                            <div class="carousel-item {{ $idx === 0 ? 'active' : '' }}">
-                                                <img src="{{ asset($photo) }}" class="d-block w-100 h-100" 
-                                                     alt="Photo logement" style="object-fit:cover;">
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                    @if(count($photos) > 1)
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="next">
+                        @if($annonce->photo_anno)
+                            <img src="{{ asset($annonce->photo_anno) }}" class="card-img-top" alt="Photo" style="height: 220px; object-fit: cover;">
+                        @else
+                            <img src="{{ asset('images/default.jpg') }}" class="card-img-top" alt="Photo" style="height: 220px; object-fit: cover;">
+                        @endif
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $annonce->titre_anno }}</h5>
+                            <p class="card-text">{{ Str::limit($annonce->description_anno, 100) }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge {{ $annonce->disponibilite_annonce ? 'bg-success' : 'bg-secondary' }}">
+                                    {{ $annonce->disponibilite_annonce ? 'Disponible' : 'Non disponible' }}
+                                </span>
+                                <small class="text-muted">{{ $annonce->created_at->format('d/m/Y') }}</small>
                                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                             <span class="visually-hidden">Next</span>
                                         </button>
